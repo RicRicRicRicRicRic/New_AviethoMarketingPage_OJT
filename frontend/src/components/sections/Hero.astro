@@ -1,0 +1,39 @@
+---
+// Hero section - main headline and value proposition
+import VerticalSlideshow from '../ui/VerticalSlideshow.astro';
+
+interface Props {
+	title?: string;
+	subtitle?: string;
+}
+
+const { 
+	title = 'Avietho', 
+	subtitle = 'Independent journalism for a complex world.' 
+} = Astro.props;
+---
+
+<section class="min-h-screen flex items-center justify-center px-4 py-12">
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-7xl mx-auto w-full items-center">
+		<!-- Left Column: Main Hero Content -->
+		<div class="text-center lg:text-left order-1 lg:order-1 max-w-2xl">
+			<h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-[#C9A44C] mb-6 tracking-tight">
+				{title}
+			</h1>
+			<p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
+				{subtitle}
+			</p>
+			<div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+				<slot name="cta-primary" />
+				<slot name="cta-secondary" />
+			</div>
+		</div>
+
+		<!-- Right Column: Vertical Slideshow -->
+		<div class="flex items-center justify-center order-2 lg:order-2">
+			<slot name="slideshow">
+				<VerticalSlideshow />
+			</slot>
+		</div>
+	</div>
+</section>

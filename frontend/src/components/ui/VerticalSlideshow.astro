@@ -1,0 +1,246 @@
+---
+// Vertical Slideshow Component - FIXED
+// Displays client logos in a vertical stack with autoplay and manual navigation
+import type { SlideData } from './SlideshowData.ts';
+import { slideshowData } from './SlideshowData.ts';
+ 
+interface Props {
+	slides?: SlideData[];
+	autoplayDelay?: number;
+}
+ 
+const {
+	slides = slideshowData,
+	autoplayDelay = 5000
+} = Astro.props;
+---
+ 
+<div class="vertical-slideshow w-full max-w-md mx-auto pointer-events-none" data-slides={JSON.stringify(slides)} data-autoplay-delay={autoplayDelay}>
+	<!-- Slides Container -->
+<div class="slides-container relative h-[400px] overflow-hidden rounded-xl bg-transparent cursor-pointer pointer-events-auto" style="contain: strict; overscroll-behavior: contain; touch-action: none;">
+		
+		<!-- Fade overlays for top and bottom -->
+		<div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#0D0D0D] to-transparent pointer-events-none z-10"></div>
+		<div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#0D0D0D] to-transparent pointer-events-none z-10"></div>
+		
+		<div class="slides-wrapper flex flex-col gap-4 h-full overflow-hidden transition-transform duration-700 ease-in-out scrollbar-hide" style="padding: 1100px 16px;">
+			{slides.map((slide, index) => (
+<div
+					class="slide-bar flex items-center gap-4 p-4 rounded-lg bg-white/5 backdrop-blur-md border-2 border-white/30 transition-all duration-700 ease-in-out pointer-events-none opacity-40"
+					data-slide-index={index}
+				>
+						<div class="slide-image flex-shrink-0 w-16 h-16 rounded-md overflow-hidden bg-transparent">
+						<img
+							src={slide.image}
+							alt={slide.clientName}
+							class="w-full h-full object-contain p-2"
+							loading="lazy"
+						/>
+					</div>
+					
+				<div class="slide-text flex-1 min-w-0 overflow-hidden">
+					<h3 class="text-lg font-semibold text-[#F5F5F5] whitespace-nowrap" data-text={slide.clientName}>
+						{slide.clientName}
+					</h3>
+				</div>
+				</div>
+			))}
+		</div>
+	</div>
+</div>
+ 
+<script>
+	interface SlideData {
+		id: number;
+		image: string;
+		clientName: string;
+	}
+ 
+	class VerticalSlideshow {
+		private slides: SlideData[];
+		private currentIndex: number = 0;
+		private autoplayDelay: number;
+		private autoplayInterval: number | null = null;
+		private slideBars: NodeListOf<Element>;
+		private slidesWrapper: HTMLElement | null;
+		private currentSlideEl: Element | null;
+		private totalSlidesEl: Element | null;
+ 
+		constructor(slides: SlideData[], autoplayDelay: number) {
+			this.slides = slides;
+			this.autoplayDelay = autoplayDelay;
+			this.slideBars = document.querySelectorAll('.slide-bar');
+			this.slidesWrapper = document.querySelector('.slides-wrapper');
+			this.currentSlideEl = document.getElementById('current-slide');
+			this.totalSlidesEl = document.getElementById('total-slides');
+			this.init();
+		}
+ 
+		private init(): void {
+			if (this.totalSlidesEl) {
+				this.totalSlidesEl.textContent = String(this.slides.length);
+			}
+ 
+			// Wait for layout + images
+			const raf = () => {
+				this.updateActiveSlide();
+				this.startAutoplay();
+				this.attachNavigation();
+			};
+ 
+			if (document.readyState === 'complete') {
+				requestAnimationFrame(raf);
+			} else {
+				window.addEventListener('load', () => requestAnimationFrame(raf), { once: true });
+			}
+		}
+ 
+		private centerActiveSlide(): void {
+			if (!this.slidesWrapper) return;
+ 
+			const activeBar = this.slideBars[this.currentIndex] as HTMLElement | null;
+			if (!activeBar) return;
+ 
+			const containerH = 400;
+			const activeTop = activeBar.offsetTop;
+			const activeH = activeBar.offsetHeight;
+ 
+			const targetY = (containerH / 2) - (activeH / 2);
+			const translateY = targetY - activeTop;
+ 
+			this.slidesWrapper.style.transform = `translateY(${translateY}px)`;
+		}
+ 
+		private updateActiveSlide(): void {
+			this.slideBars.forEach((bar, i) => {
+				const el = bar as HTMLElement;
+				if (i === this.currentIndex) {
+					el.style.opacity = '1';
+					el.classList.add('border-[#C9A44C]/50');
+					el.classList.remove('border-white/10');
+				} else {
+					el.style.opacity = '0.4';
+					el.classList.remove('border-[#C9A44C]/50');
+					el.classList.add('border-white/10');
+				}
+			});
+ 
+			this.centerActiveSlide();
+ 
+			if (this.currentSlideEl) {
+				this.currentSlideEl.textContent = String(this.currentIndex + 1);
+			}
+ 
+			this.checkTextOverflow();
+		}
+ 
+		private checkTextOverflow(): void {
+			this.slideBars.forEach((bar) => {
+				const heading = bar.querySelector('h3');
+				if (heading) {
+					const parent = heading.parentElement;
+					if (parent && heading.scrollWidth > parent.clientWidth) {
+						heading.classList.add('scrolling-text');
+					} else {
+						heading.classList.remove('scrolling-text');
+					}
+				}
+			});
+		}
+ 
+		private goToSlide(index: number): void {
+			this.currentIndex = ((index % this.slides.length) + this.slides.length) % this.slides.length;
+			this.updateActiveSlide();
+			this.resetAutoplay();
+		}
+ 
+		private nextSlide(): void {
+			this.goToSlide(this.currentIndex + 1);
+		}
+ 
+		private prevSlide(): void {
+			this.goToSlide(this.currentIndex - 1);
+		}
+ 
+		private startAutoplay(): void {
+			this.stopAutoplay();
+			this.autoplayInterval = window.setInterval(() => this.nextSlide(), this.autoplayDelay);
+		}
+ 
+		private stopAutoplay(): void {
+			if (this.autoplayInterval) {
+				clearInterval(this.autoplayInterval);
+				this.autoplayInterval = null;
+			}
+		}
+ 
+		private resetAutoplay(): void {
+			this.stopAutoplay();
+			this.startAutoplay();
+		}
+ 
+		private attachNavigation(): void {
+			const container = document.querySelector('.slides-container') as HTMLElement | null;
+			if (container) {
+				container.addEventListener('wheel', (e) => {
+					e.preventDefault();
+					const wheelEvent = e as WheelEvent;
+					if (wheelEvent.deltaY > 0) {
+						this.nextSlide();
+					} else {
+						this.prevSlide();
+					}
+				}, { passive: false });
+			}
+		}
+	}
+ 
+	// Init
+	const init = () => {
+		const container = document.querySelector('.vertical-slideshow') as HTMLElement | null;
+		if (container) {
+			const data = JSON.parse(container.dataset.slides || '[]') as SlideData[];
+			const delay = parseInt(container.dataset.autoplayDelay || '5000', 10);
+			new VerticalSlideshow(data, delay);
+		}
+	};
+ 
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', init);
+	} else {
+		init();
+	}
+</script>
+ 
+<style>
+	@keyframes scroll-text {
+		0% {
+			transform: translateX(0);
+		}
+		15% {
+			transform: translateX(0);
+		}
+		35% {
+			transform: translateX(calc(-100% + 200px));
+		}
+		50% {
+			transform: translateX(calc(-100% + 200px));
+		}
+		70% {
+			transform: translateX(0);
+		}
+		85% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(0);
+		}
+	}
+ 
+	.scrolling-text {
+		display: inline-block;
+		animation: scroll-text 8s ease-in-out infinite;
+		padding-right: 40px;
+	}
+</style>
+ 

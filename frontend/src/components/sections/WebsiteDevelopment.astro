@@ -1,0 +1,31 @@
+---
+// Website development section - showcasing web development capabilities
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { 
+	title = 'Website Development', 
+	description = 'Custom web solutions built with modern technologies.' 
+} = Astro.props;
+---
+
+<section class="py-20 px-4">
+	<div class="max-w-6xl mx-auto">
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+			<div>
+				<h2 class="text-3xl md:text-4xl font-bold text-[#C9A44C] mb-6">
+					{title}
+				</h2>
+				<p class="text-lg text-gray-300 mb-6 leading-relaxed">
+					{description}
+				</p>
+				<slot name="features" />
+			</div>
+			<div class="bg-[#0F0F0F] p-8 rounded-lg border border-gray-800">
+				<slot name="visual" />
+			</div>
+		</div>
+	</div>
+</section>

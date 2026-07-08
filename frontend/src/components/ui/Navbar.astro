@@ -1,5 +1,8 @@
 ---
 // Navbar component with TypeScript interface
+import { Image } from 'astro:assets';
+import logo from '../../assets/logo/Avietho_logo.png';
+
 interface NavLink {
 	href: string;
 	label: string;
@@ -16,19 +19,23 @@ const navLinks: NavLink[] = [
 <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
 	<div class="px-6 py-4">
 		<div class="flex items-center justify-between max-w-7xl mx-auto">
-			<!-- Logo/Brand -->
-			<div class="flex-shrink-0">
-				<a href="/" class="text-xl font-semibold text-white hover:text-[#C9A44C] transition-colors">
-					Avietho
-				</a>
-			</div>
+		<!-- Logo/Brand -->
+		<div class="flex-shrink-0">
+			<a href="/" class="block hover:opacity-80 transition-opacity">
+				<Image 
+					src={logo} 
+					alt="Avietho Logo" 
+					class="h-auto w-20"
+				/>
+			</a>
+		</div>
 
 			<!-- Desktop Navigation -->
 			<div class="hidden md:flex items-center gap-x-8">
 				{navLinks.map((link) => (
 					<a
 						href={link.href}
-						class="text-white transition hover:text-[#C9A44C] text-sm font-medium"
+						class="text-white transition hover:text-[#C9A44C] text-base font-medium"
 					>
 						{link.label}
 					</a>

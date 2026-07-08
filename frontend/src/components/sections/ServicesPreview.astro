@@ -1,0 +1,125 @@
+---
+// Services preview section - overview of offered services
+import Image from 'astro/components/Image.astro';
+
+type ServiceId = 'journalism' | 'storytelling' | 'data' | 'protection';
+
+interface Service {
+	id: ServiceId;
+	title: string;
+	description: string;
+	iconPath: string;
+}
+
+interface Props {
+	title?: string;
+	services?: Service[];
+}
+
+// Type-safe icon mapping
+const iconMap: Record<ServiceId, string> = {
+	journalism: '/src/assets/icons/publicrelations_icon.png',
+	storytelling: '/src/assets/icons/mulimediaBranding_icon.png',
+	data: '/src/assets/icons/digitalSocialMediaMarketing_icon.png',
+	protection: '/src/assets/icons/webDevelopment_icon.png'
+};
+
+const { 
+	title = 'Our Services',
+	services = [
+		{
+			id: 'journalism',
+			title: 'Investigative Journalism',
+			description: 'Deep-dive reporting that uncovers truth and holds power accountable.',
+			iconPath: iconMap.journalism
+		},
+		{
+			id: 'storytelling',
+			title: 'Digital Storytelling',
+			description: 'Engaging multimedia narratives that resonate with modern audiences.',
+			iconPath: iconMap.storytelling
+		},
+		{
+			id: 'data',
+			title: 'Data Analysis',
+			description: 'Rigorous data-driven insights to support evidence-based reporting.',
+			iconPath: iconMap.data
+		},
+		{
+			id: 'protection',
+			title: 'Source Protection',
+			description: 'Secure communication channels to protect whistleblowers and sources.',
+			iconPath: iconMap.protection
+		}
+	]
+} = Astro.props;
+---
+
+<section id="services" class="py-20 px-4 bg-[#0F0F0F]">
+	<div class="max-w-6xl mx-auto">
+		<h2 class="text-3xl md:text-4xl font-bold text-center text-[#C9A44C] mb-12">
+			{title}
+		</h2>
+		
+		<div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+			{services.map((service) => (
+				<div 
+					class="service-card opacity-0 translate-y-8 transition-all duration-700 ease-out bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-6 hover:border-[#C9A44C]/50 hover:bg-white/10 group"
+				>
+					<div class="flex justify-center mb-4">
+						<Image 
+							src={service.iconPath}
+							alt={`${service.title} icon`}
+							class="h-8 w-8 transition-all duration-300 icon-filter"
+							width={32}
+							height={32}
+						/>
+					</div>
+					<h3 class="text-xl font-semibold text-white mb-3 text-center">
+						{service.title}
+					</h3>
+					<p class="text-gray-300 text-sm leading-relaxed text-center">
+						{service.description}
+					</p>
+				</div>
+			))}
+		</div>
+	</div>
+</section>
+
+<script>
+	// Intersection Observer for smooth entry animation
+	const observerOptions = {
+		root: null,
+		rootMargin: '0px',
+		threshold: 0.1
+	};
+
+	const observer = new IntersectionObserver((entries) => {
+		entries.forEach((entry) => {
+			if (entry.isIntersecting) {
+				// Add animation class when section enters viewport
+				const cards = entry.target.querySelectorAll('.service-card');
+				cards.forEach((card, index) => {
+					setTimeout(() => {
+						card.classList.remove('opacity-0', 'translate-y-8');
+						card.classList.add('opacity-100', 'translate-y-0');
+					}, index * 100); // Staggered animation
+				});
+			} else {
+				// Remove animation class when section leaves viewport
+				const cards = entry.target.querySelectorAll('.service-card');
+				cards.forEach((card) => {
+					card.classList.remove('opacity-100', 'translate-y-0');
+					card.classList.add('opacity-0', 'translate-y-8');
+				});
+			}
+		});
+	}, observerOptions);
+
+	// Observe the services grid
+	const servicesGrid = document.getElementById('services-grid');
+	if (servicesGrid) {
+		observer.observe(servicesGrid);
+	}
+</script>
