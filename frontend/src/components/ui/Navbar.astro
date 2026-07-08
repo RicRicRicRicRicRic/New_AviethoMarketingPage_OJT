@@ -1,0 +1,52 @@
+---
+// Navbar component with TypeScript interface
+interface NavLink {
+	href: string;
+	label: string;
+}
+
+const navLinks: NavLink[] = [
+	{ href: '/', label: 'Home' },
+	{ href: '/services', label: 'Our Services' },
+	{ href: '/projects', label: 'Our Projects' },
+	{ href: '/about', label: 'About' },
+];
+---
+
+<nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+	<div class="px-6 py-4">
+		<div class="flex items-center justify-between max-w-7xl mx-auto">
+			<!-- Logo/Brand -->
+			<div class="flex-shrink-0">
+				<a href="/" class="text-xl font-semibold text-white hover:text-[#C9A44C] transition-colors">
+					Avietho
+				</a>
+			</div>
+
+			<!-- Desktop Navigation -->
+			<div class="hidden md:flex items-center gap-x-8">
+				{navLinks.map((link) => (
+					<a
+						href={link.href}
+						class="text-white transition hover:text-[#C9A44C] text-sm font-medium"
+					>
+						{link.label}
+					</a>
+				))}
+			</div>
+
+			<!-- Mobile menu button (placeholder for future implementation) -->
+			<div class="md:hidden">
+				<button
+					type="button"
+					class="text-white hover:text-[#C9A44C] p-2 transition-colors"
+					aria-label="Open menu"
+				>
+					<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+					</svg>
+				</button>
+			</div>
+		</div>
+	</div>
+</nav>

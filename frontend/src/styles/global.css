@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #0A0A0A;
+    --foreground: #F5F5F5;
+    --accent: #C9A44C;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply text-gray-300 hover:text-white transition-colors duration-200;
+  }
+}
