@@ -1,59 +1,329 @@
 ---
-// Navbar component with TypeScript interface
-import { Image } from 'astro:assets';
-import logo from '../../assets/logo/Avietho_logo.png';
+// Navbar.astro — sticky, glass-blurred nav modeled on resend.com/home's
+// motion language (blur-on-scroll, underline-trace hover, staggered
+// mobile reveal) but rebuilt on our own editorial theme. Colors are
+// sourced from the skills.md content-collection entry, same pattern as
+// ChatWidget.astro, so the palette never drifts out of sync.
+
+import { getEntry } from "astro:content";
+import { Image } from "astro:assets";
+import logo from "../../assets/logo/Avietho_logo.png";
 
 interface NavLink {
-	href: string;
-	label: string;
+  href: string;
+  label: string;
 }
 
 const navLinks: NavLink[] = [
-	{ href: '/', label: 'Home' },
-	{ href: '/services', label: 'Our Services' },
-	{ href: '/projects', label: 'Our Projects' },
-	{ href: '/about', label: 'About' },
+  { href: "/", label: "Home" },
+  { href: "/services", label: "Our Services" },
+  { href: "/projects", label: "Our Projects" },
+  { href: "/about", label: "About" },
 ];
+
+// Pulled from skills.md's frontmatter rather than hard-coded — see
+// ChatWidget.astro for the same pattern.
+const skillsEntry = await getEntry("docs", "skills");
+
+const themeData = skillsEntry?.data?.theme ?? {
+  mode: "dark",
+  background: "#0A0A0A",
+  accent: "#C9A44C",
+  textPrimary: "#F5F5F5",
+};
+
+const theme = {
+  background: themeData.background,
+  accent: themeData.accent,
+  textPrimary: themeData.textPrimary,
+  textMuted: themeData.mode === "dark" ? "#8A8A8A" : "#6B6B6B",
+  border: themeData.mode === "dark" ? "rgba(245,245,245,0.08)" : "rgba(10,10,10,0.08)",
+  glass: themeData.mode === "dark" ? "rgba(10,10,10,0.55)" : "rgba(255,255,255,0.65)",
+  glassScrolled: themeData.mode === "dark" ? "rgba(10,10,10,0.86)" : "rgba(255,255,255,0.9)",
+};
 ---
 
-<nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
-	<div class="px-6 py-4">
-		<div class="flex items-center justify-between max-w-7xl mx-auto">
-		<!-- Logo/Brand -->
-		<div class="flex-shrink-0">
-			<a href="/" class="block hover:opacity-80 transition-opacity">
-				<Image 
-					src={logo} 
-					alt="Avietho Logo" 
-					class="h-auto w-20"
-				/>
-			</a>
-		</div>
+<nav id="site-nav" class="nav-root" style={`--background:${theme.background}; --accent:${theme.accent}; --text-primary:${theme.textPrimary}; --text-muted:${theme.textMuted}; --border:${theme.border}; --glass:${theme.glass}; --glass-scrolled:${theme.glassScrolled};`}>
+  <div class="nav-inner">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="nav-logo" aria-label="Home">
+        <Image src={logo} alt="Avietho Logo" class="h-auto w-14" />
+      </a>
 
-			<!-- Desktop Navigation -->
-			<div class="hidden md:flex items-center gap-x-8">
-				{navLinks.map((link) => (
-					<a
-						href={link.href}
-						class="text-white transition hover:text-[#C9A44C] text-base font-medium"
-					>
-						{link.label}
-					</a>
-				))}
-			</div>
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center gap-x-2">
+        {navLinks.map((link) => (
+          <a href={link.href} class="nav-link">
+            <span>{link.label}</span>
+          </a>
+        ))}
+      </div>
 
-			<!-- Mobile menu button (placeholder for future implementation) -->
-			<div class="md:hidden">
-				<button
-					type="button"
-					class="text-white hover:text-[#C9A44C] p-2 transition-colors"
-					aria-label="Open menu"
-				>
-					<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-					</svg>
-				</button>
-			</div>
-		</div>
-	</div>
+      <!-- Desktop CTA -->
+      <div class="hidden md:block">
+        <a href="/" class="nav-cta">Get Started</a>
+      </div>
+
+      <!-- Mobile menu button -->
+      <button id="menu-toggle" type="button" class="menu-toggle md:hidden" aria-label="Open menu" aria-expanded="false">
+        <span class="menu-bar bar-top"></span>
+        <span class="menu-bar bar-mid"></span>
+        <span class="menu-bar bar-bottom"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile panel -->
+  <div id="mobile-panel" class="mobile-panel">
+    <div class="mobile-panel-inner">
+      {navLinks.map((link, i) => (
+        <a href={link.href} class="mobile-link" style={`--i:${i};`}>
+          {link.label}
+        </a>
+      ))}
+      <a href="/subscribe" class="mobile-cta" style={`--i:${navLinks.length};`}>Subscribe</a>
+    </div>
+  </div>
 </nav>
+
+<script>
+  // Scroll state: nav condenses and its glass panel opacifies, mirroring
+  // resend.com's subtle shrink-on-scroll. Mobile menu: hamburger morphs
+  // into an X and the panel reveals with a staggered link fade — the
+  // signature motion moment for this component (mirrored, quieter, in
+  // gold rather than resend's monochrome).
+  const nav = document.getElementById("site-nav") as HTMLElement;
+  const toggle = document.getElementById("menu-toggle") as HTMLButtonElement;
+  const panel = document.getElementById("mobile-panel") as HTMLDivElement;
+
+  const SCROLL_THRESHOLD = 24;
+
+  function onScroll(): void {
+    if (window.scrollY > SCROLL_THRESHOLD) {
+      nav.classList.add("is-scrolled");
+    } else {
+      nav.classList.remove("is-scrolled");
+    }
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  let open = false;
+  function setMenu(next: boolean): void {
+    open = next;
+    toggle.setAttribute("aria-expanded", String(open));
+    nav.classList.toggle("menu-open", open);
+    panel.classList.toggle("is-open", open);
+    document.body.style.overflow = open ? "hidden" : "";
+  }
+
+  toggle.addEventListener("click", () => setMenu(!open));
+
+  panel.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => setMenu(false))
+  );
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 768 && open) setMenu(false);
+  });
+</script>
+
+<style>
+  .nav-root {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    color: var(--text-primary);
+    animation: nav-enter 0.5s ease both;
+  }
+
+  .nav-inner {
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.35s ease, padding 0.3s ease, box-shadow 0.35s ease;
+  }
+
+  .nav-inner > div {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    transition: padding 0.3s ease;
+  }
+
+  .nav-root.is-scrolled .nav-inner {
+    background: var(--glass-scrolled);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .nav-root.is-scrolled .nav-inner > div {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .nav-logo {
+    display: block;
+    opacity: 1;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .nav-logo:hover {
+    opacity: 0.82;
+    transform: translateY(-1px);
+  }
+
+  /* ---------- Underline-trace hover (signature motion) ---------- */
+  .nav-link {
+    position: relative;
+    display: inline-block;
+    padding: 4px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .nav-link span {
+    position: relative;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .nav-link:hover {
+    color: var(--text-primary);
+  }
+  .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 18px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--background);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: filter 0.2s ease, transform 0.2s ease;
+  }
+  .nav-cta:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+
+  /* ---------- Mobile hamburger -> X ---------- */
+  .menu-toggle {
+    position: relative;
+    width: 32px;
+    height: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .menu-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.2s ease, top 0.3s ease;
+  }
+  .bar-top { top: 2px; }
+  .bar-mid { top: 11px; }
+  .bar-bottom { top: 20px; }
+
+  .nav-root.menu-open .bar-top {
+    top: 11px;
+    transform: rotate(45deg);
+  }
+  .nav-root.menu-open .bar-mid {
+    opacity: 0;
+  }
+  .nav-root.menu-open .bar-bottom {
+    top: 11px;
+    transform: rotate(-45deg);
+  }
+
+  /* ---------- Mobile panel ---------- */
+  .mobile-panel {
+    max-height: 0;
+    overflow: hidden;
+    background: var(--glass-scrolled);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    transition: max-height 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .mobile-panel.is-open {
+    max-height: 420px;
+  }
+  .mobile-panel-inner {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 24px 20px;
+  }
+  .mobile-link,
+  .mobile-cta {
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  .mobile-cta {
+    color: var(--accent);
+    border-bottom: none;
+    font-weight: 600;
+  }
+  .mobile-panel.is-open .mobile-link,
+  .mobile-panel.is-open .mobile-cta {
+    animation: link-in 0.35s ease forwards;
+    animation-delay: calc(var(--i) * 0.05s);
+  }
+  .mobile-link:hover {
+    color: var(--text-primary);
+  }
+
+  @keyframes nav-enter {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes link-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-root,
+    .nav-inner,
+    .nav-inner > div,
+    .nav-logo,
+    .nav-link::after,
+    .nav-cta,
+    .menu-bar,
+    .mobile-panel,
+    .mobile-link,
+    .mobile-cta {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+</style>
