@@ -1,0 +1,96 @@
+---
+// Work Slideshow Component
+// Enhanced with smooth continuous infinite scroll animation
+
+interface WorkSlide {
+	imagePath: string;
+	alt: string;
+}
+
+const workSlides: WorkSlide[] = [
+	{ imagePath: '/src/assets/slides/work_slide1.jpg', alt: 'Work example 1' },
+	{ imagePath: '/src/assets/slides/work_slide2.jpg', alt: 'Work example 2' },
+	{ imagePath: '/src/assets/slides/work_slide3.jpg', alt: 'Work example 3' },
+	{ imagePath: '/src/assets/slides/work_slide4.jpg', alt: 'Work example 4' },
+	{ imagePath: '/src/assets/slides/work_slide5.jpg', alt: 'Work example 5' },
+	{ imagePath: '/src/assets/slides/work_slide6.jpg', alt: 'Work example 6' },
+	{ imagePath: '/src/assets/slides/work_slide7.jpg', alt: 'Work example 7' },
+	{ imagePath: '/src/assets/slides/work_slide8.jpg', alt: 'Work example 8' },
+	{ imagePath: '/src/assets/slides/work_slide9.jpg', alt: 'Work example 9' },
+	{ imagePath: '/src/assets/slides/work_slide10.jpg', alt: 'Work example 10' },
+	{ imagePath: '/src/assets/slides/work_slide11.jpg', alt: 'Work example 11' },
+];
+
+const slidesData = JSON.stringify(workSlides);
+---
+
+<div class="work-slideshow w-full" data-slides={slidesData}>
+	<div class="relative w-full overflow-hidden rounded-xl">
+		<div class="slides-track flex gap-6" id="slides-track">
+			</div>
+
+		<div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background-overlay to-transparent z-20 pointer-events-none"></div>
+		
+		<div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background-overlay to-transparent z-20 pointer-events-none"></div>
+	</div>
+</div>
+
+<script>
+	interface WorkSlide {
+		imagePath: string;
+		alt: string;
+	}
+
+	const slidesTrack = document.getElementById('slides-track');
+	const container = document.querySelector('.work-slideshow') as HTMLElement;
+	const slidesData = container?.getAttribute('data-slides');
+
+	if (slidesTrack && slidesData) {
+		const slides: WorkSlide[] = JSON.parse(slidesData);
+		
+		// Create content by duplicating the array to ensure seamless looping
+		const renderSlides = () => {
+			const html = [...slides, ...slides].map(slide => `
+				<div class="flex-shrink-0 w-[340px] md:w-[400px] lg:w-[460px]">
+					<div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-xl">
+						<img 
+							src="${slide.imagePath}" 
+							alt="${slide.alt}" 
+							class="w-full h-full object-cover"
+							loading="lazy"
+						/>
+					</div>
+				</div>
+			`).join('');
+			slidesTrack.innerHTML = html;
+		};
+
+		renderSlides();
+	}
+</script>
+
+<style>
+	.slides-track {
+		/* Animation: name duration timing-function iteration-count */
+		animation: scroll 15s linear infinite;
+	}
+
+	/* Pause animation on hover */
+	.work-slideshow:hover .slides-track {
+		animation-play-state: paused;
+	}
+
+	@keyframes scroll {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			/* Slides move until exactly half the track width (the original set) is translated */
+			transform: translateX(-50%);
+		}
+	}
+
+	.work-slideshow .absolute {
+		z-index: 20;
+	}
+</style>
