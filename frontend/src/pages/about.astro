@@ -1,5 +1,5 @@
 ---
-// About page
+// About page with premium hero section and story sections
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
@@ -13,5 +13,548 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 				Our mission, methodology, and commitment to independent journalism.
 			</p>
 		</div>
-	</div>
+	<!-- Hero Section -->
+	<section class="relative min-h-screen flex items-center px-4 py-20 overflow-hidden" style="background-color: #090909;">
+		<div class="absolute inset-0 overflow-hidden pointer-events-none">
+			<div class="absolute -top-20 -left-20 w-96 h-96 bg-[#C9A44C] rounded-full opacity-20 blur-3xl"></div>
+			<div class="absolute -top-20 -right-20 w-80 h-80 bg-[#C9A44C] rounded-full opacity-15 blur-3xl"></div>
+			<div class="absolute -bottom-20 -left-20 w-72 h-72 bg-[#C9A44C] rounded-full opacity-15 blur-3xl"></div>
+			<div class="absolute -bottom-20 -right-20 w-96 h-96 bg-[#C9A44C] rounded-full opacity-20 blur-3xl"></div>
+		</div>
+
+		<div class="relative z-10 max-w-7xl mx-auto w-full">
+			<div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-center">
+				<div class="lg:col-span-3 animate-fade-up">
+					<p class="text-sm md:text-base font-semibold tracking-widest text-[#C9A44C] mb-6">ABOUT AVIETHO</p>
+
+					<h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+						About<br />
+						<span class="text-[#C9A44C]">Digital Marketing</span>
+					</h1>
+
+					<p class="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed max-w-2xl">
+						At Avietho Digital Marketing, we help businesses grow through creative strategies, innovative technology, and impactful digital experiences. We believe every brand has a unique story, and our mission is to transform those stories into meaningful connections that drive real business results.
+					</p>
+
+					<a href="#learn-more" class="inline-block px-10 py-4 bg-[#C9A44C] text-[#0A0A0A] font-semibold rounded hover:bg-[#B8943F] transition-all duration-300 hover:scale-105 shadow-lg shadow-[#C9A44C]/20">
+						Learn More
+					</a>
+				</div>
+
+				<div class="lg:col-span-2">
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<a href="#experience" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.3)] cursor-pointer">
+							<div class="text-3xl md:text-4xl font-bold text-[#C9A44C] mb-2">5+</div>
+							<div class="text-base font-semibold text-white mb-3">Years of Experience</div>
+							<p class="text-sm text-gray-400 leading-relaxed">Delivering creative digital marketing solutions since 2018 while helping businesses establish a stronger online presence.</p>
+						</a>
+
+						<a href="#projects" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.3)] cursor-pointer">
+							<div class="text-3xl md:text-4xl font-bold text-[#C9A44C] mb-2">100+</div>
+							<div class="text-base font-semibold text-white mb-3">Projects Completed</div>
+							<p class="text-sm text-gray-400 leading-relaxed">Successfully completed branding, web development, social media, and digital marketing campaigns across multiple industries.</p>
+						</a>
+
+						<a href="#clients" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.3)] cursor-pointer">
+							<div class="text-3xl md:text-4xl font-bold text-[#C9A44C] mb-2">50+</div>
+							<div class="text-base font-semibold text-white mb-3">Happy Clients</div>
+							<p class="text-sm text-gray-400 leading-relaxed">Trusted by businesses that continue to partner with Avietho for long-term digital growth and marketing success.</p>
+						</a>
+
+						<a href="#satisfaction" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.3)] cursor-pointer">
+							<div class="text-3xl md:text-4xl font-bold text-[#C9A44C] mb-2">95%</div>
+							<div class="text-base font-semibold text-white mb-3">Client Satisfaction</div>
+							<p class="text-sm text-gray-400 leading-relaxed">Maintaining strong client relationships by delivering quality work, measurable results, and reliable support.</p>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 1: Our Story -->
+	<section class="relative py-24 px-4 overflow-hidden" style="background-color: #0B0B0B;">
+		<div class="absolute inset-0 overflow-hidden pointer-events-none">
+			<div class="absolute top-20 left-10 w-72 h-72 bg-[#C9A44C] rounded-full opacity-10 blur-3xl"></div>
+			<div class="absolute bottom-20 right-10 w-80 h-80 bg-[#C9A44C] rounded-full opacity-10 blur-3xl"></div>
+		</div>
+
+		<div class="relative z-10 max-w-7xl mx-auto">
+			<div class="text-center mb-16 animate-fade-up">
+				<p class="text-sm md:text-base font-semibold tracking-widest text-[#C9A44C] mb-4">OUR JOURNEY</p>
+				<h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Our Story</h2>
+				<p class="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">Since 2018, Avietho Digital Marketing has continuously evolved by combining creativity, strategy, and technology to help businesses, government agencies, and political leaders establish meaningful digital connections.</p>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.1s;">
+					<div class="w-12 h-12 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6">
+						<svg class="w-6 h-6 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+						</svg>
+					</div>
+					<div class="inline-block px-4 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full mb-4">
+						<span class="text-sm font-semibold text-[#C9A44C]">2018</span>
+					</div>
+					<h3 class="text-2xl font-bold text-white mb-4">Foundation</h3>
+					<p class="text-gray-300 leading-relaxed">Avietho Digital Marketing was established in Muntinlupa City, Philippines with a vision of helping businesses build a stronger digital presence through creative solutions, strategic planning, and innovative technology. From humble beginnings, the company laid the foundation for long-term partnerships built on trust and measurable results.</p>
+				</div>
+
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.2s;">
+					<div class="w-12 h-12 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6">
+						<svg class="w-6 h-6 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+						</svg>
+					</div>
+					<div class="inline-block px-4 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full mb-4">
+						<span class="text-sm font-semibold text-[#C9A44C]">2020</span>
+					</div>
+					<h3 class="text-2xl font-bold text-white mb-4">Growth & Expansion</h3>
+					<p class="text-gray-300 leading-relaxed">As demand for digital transformation increased, Avietho expanded its expertise to include political campaigns, government agencies, multimedia production, branding, and integrated digital marketing solutions. This milestone marked the company's growth into a full-service creative digital agency.</p>
+				</div>
+
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.3s;">
+					<div class="w-12 h-12 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6">
+						<svg class="w-6 h-6 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+						</svg>
+					</div>
+					<div class="inline-block px-4 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full mb-4">
+						<span class="text-sm font-semibold text-[#C9A44C]">2023 - Present</span>
+					</div>
+					<h3 class="text-2xl font-bold text-white mb-4">Innovation</h3>
+					<p class="text-gray-300 leading-relaxed">Today, Avietho continues to innovate by combining modern technology with data-driven strategies. Through web development, multimedia production, branding, and digital campaigns, the company delivers impactful solutions tailored to the ever-changing Philippine digital landscape.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 2: The Name "Avietho" -->
+	<section class="relative py-24 px-4 overflow-hidden" style="background-color: #090909;">
+		<div class="absolute inset-0 overflow-hidden pointer-events-none">
+			<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#C9A44C] rounded-full opacity-5 blur-3xl"></div>
+		</div>
+
+		<div class="relative z-10 max-w-7xl mx-auto">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+				<div class="animate-fade-up">
+					<div class="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-10 md:p-12">
+						<h2 class="text-3xl md:text-4xl font-bold text-white mb-6">The Name "Avietho"</h2>
+						<p class="text-lg text-gray-300 leading-relaxed mb-6">The name "Avietho" holds a special meaning inspired by the initials of its founders. It represents unity, creativity, family, and the shared vision that became the foundation of the company. More than just a name, Avietho symbolizes innovation, trust, and the commitment to helping clients succeed in an increasingly digital world.</p>
+						<p class="text-lg text-gray-300 leading-relaxed">Every project we undertake reflects our belief that every organization has a unique story worth telling. Our mission is to transform those stories into engaging digital experiences that build stronger brands and lasting relationships.</p>
+					</div>
+				</div>
+
+				<div class="animate-fade-up" style="animation-delay: 0.2s;">
+					<div class="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-10 md:p-12 text-center overflow-hidden">
+						<div class="absolute top-10 right-10 w-20 h-20 bg-[#C9A44C] rounded-full opacity-10 blur-xl"></div>
+						<div class="absolute bottom-10 left-10 w-16 h-16 bg-[#C9A44C] rounded-full opacity-10 blur-xl"></div>
+
+						<div class="relative z-10 mb-8">
+							<div class="w-32 h-32 mx-auto bg-[#C9A44C]/10 rounded-full flex items-center justify-center border border-[#C9A44C]/30">
+								<span class="text-4xl font-bold text-[#C9A44C]">A</span>
+							</div>
+						</div>
+
+						<div class="relative z-10 mb-4">
+							<p class="text-sm font-semibold tracking-widest text-[#C9A44C] mb-2">FOUNDED BY SIBLINGS</p>
+							<h3 class="text-2xl md:text-3xl font-bold text-white">Milarosa & George</h3>
+						</div>
+
+						<p class="relative z-10 text-gray-300 leading-relaxed">Avietho was built on collaboration, creativity, and a shared passion for delivering innovative digital solutions that create lasting impact.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 3: Who We Serve -->
+	<section class="relative py-24 px-4 overflow-hidden" style="background-color: #0B0B0B;">
+		<div class="absolute inset-0 overflow-hidden pointer-events-none">
+			<div class="absolute top-40 right-20 w-80 h-80 bg-[#C9A44C] rounded-full opacity-10 blur-3xl"></div>
+			<div class="absolute bottom-40 left-20 w-72 h-72 bg-[#C9A44C] rounded-full opacity-10 blur-3xl"></div>
+		</div>
+
+		<div class="relative z-10 max-w-7xl mx-auto">
+			<div class="text-center mb-16 animate-fade-up">
+				<p class="text-sm md:text-base font-semibold tracking-widest text-[#C9A44C] mb-4">WHAT WE DO</p>
+				<h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Empowering Brands Through Digital Innovation</h2>
+				<div class="max-w-4xl mx-auto space-y-4 text-lg text-gray-300 leading-relaxed">
+					<p>We empower diverse clients, including political figures, government agencies, and businesses, with innovative and adaptable digital strategies designed to strengthen their presence and create meaningful engagement.</p>
+					<p>Our team specializes in comprehensive multimedia production, creating compelling videos, graphics, branding materials, websites, and interactive digital content that effectively communicates every client's message.</p>
+					<p>By combining strategic planning, social listening, audience research, and media analysis, we develop impactful campaigns specifically tailored to the evolving Philippine market while remaining flexible enough to adapt to future digital trends.</p>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.1s;">
+					<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6">
+						<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+						</svg>
+					</div>
+					<h3 class="text-xl font-bold text-white mb-3">Strategic Planning</h3>
+					<p class="text-gray-300 leading-relaxed">Developing data-driven strategies aligned with organizational goals.</p>
+				</div>
+
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.2s;">
+					<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6">
+						<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+						</svg>
+					</div>
+					<h3 class="text-xl font-bold text-white mb-3">Multimedia Production</h3>
+					<p class="text-gray-300 leading-relaxed">Creating engaging videos, graphics, photography, and interactive content.</p>
+				</div>
+
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.3s;">
+					<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6">
+						<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+						</svg>
+					</div>
+					<h3 class="text-xl font-bold text-white mb-3">Digital Marketing</h3>
+					<p class="text-gray-300 leading-relaxed">Helping brands connect with audiences through creative digital campaigns.</p>
+				</div>
+
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.4s;">
+					<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6">
+						<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+						</svg>
+					</div>
+					<h3 class="text-xl font-bold text-white mb-3">Media Analysis</h3>
+					<p class="text-gray-300 leading-relaxed">Using insights, analytics, and social listening to improve campaign performance.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 4: Call to Action -->
+	<section class="relative py-24 px-4 overflow-hidden" style="background-color: #090909;">
+		<div class="absolute inset-0 overflow-hidden pointer-events-none">
+			<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#C9A44C] rounded-full opacity-10 blur-3xl"></div>
+		</div>
+
+		<div class="relative z-10 max-w-4xl mx-auto text-center animate-fade-up">
+			<h2 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+				Let's Build Something<br />
+				<span class="text-[#C9A44C]">Meaningful Together</span>
+			</h2>
+
+			<p class="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed max-w-3xl mx-auto">
+				Whether you're a growing business, a government institution, or a public leader, Avietho is ready to transform your ideas into impactful digital experiences that inspire audiences and deliver measurable results.
+			</p>
+
+			<div class="flex flex-col sm:flex-row gap-4 justify-center">
+				<a href="#get-started" class="inline-block px-10 py-4 bg-[#C9A44C] text-[#0A0A0A] font-semibold rounded hover:bg-[#B8943F] transition-all duration-300 hover:scale-105 shadow-lg shadow-[#C9A44C]/20">
+					Get Started
+				</a>
+				<a href="/services" class="inline-block px-10 py-4 border border-[#C9A44C] text-[#C9A44C] font-semibold rounded hover:bg-[#C9A44C] hover:text-[#0A0A0A] transition-all duration-300">
+					Our Services
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 5: Our Values -->
+	<section class="relative py-24 px-4 overflow-hidden" style="background-color: #0B0B0B;">
+		<div class="absolute inset-0 overflow-hidden pointer-events-none">
+			<div class="absolute top-0 left-1/4 w-96 h-96 bg-[#C9A44C] rounded-full opacity-5 blur-3xl"></div>
+			<div class="absolute bottom-0 right-1/4 w-80 h-80 bg-[#C9A44C] rounded-full opacity-5 blur-3xl"></div>
+		</div>
+
+		<div class="relative z-10 max-w-7xl mx-auto">
+			<div class="text-center mb-20 animate-fade-up">
+				<p class="text-sm md:text-base font-semibold tracking-widest text-[#C9A44C] mb-4">CORE PRINCIPLES</p>
+				<h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Our Values</h2>
+				<p class="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">Our values guide every project we undertake. They shape how we collaborate, innovate, and deliver meaningful digital experiences that create lasting impact for every client.</p>
+			</div>
+
+			<div class="flex items-center justify-center mb-16">
+				<div class="flex-1 h-px bg-gradient-to-r from-transparent via-[#C9A44C]/50 to-transparent"></div>
+				<div class="mx-4 w-2 h-2 bg-[#C9A44C] rotate-45"></div>
+				<div class="flex-1 h-px bg-gradient-to-r from-transparent via-[#C9A44C]/50 to-transparent"></div>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 md:p-10 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.1s;">
+					<div class="w-16 h-16 bg-gradient-to-br from-[#C9A44C] to-[#B8943F] rounded-full flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
+						<svg class="w-8 h-8 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+						</svg>
+					</div>
+					<h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Strategic Excellence</h3>
+					<p class="text-gray-300 leading-relaxed mb-6">We develop data-driven strategies that transform ideas into measurable business growth. Every campaign is carefully planned to maximize reach, engagement, and long-term success.</p>
+					<div class="flex flex-wrap gap-2">
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Analytics</span>
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">ROI Focus</span>
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Performance</span>
+					</div>
+				</div>
+
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 md:p-10 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.2s;">
+					<div class="w-16 h-16 bg-gradient-to-br from-[#C9A44C] to-[#B8943F] rounded-full flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
+						<svg class="w-8 h-8 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+						</svg>
+					</div>
+					<h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Innovation</h3>
+					<p class="text-gray-300 leading-relaxed mb-6">We continuously embrace emerging technologies, creative thinking, and modern digital solutions to help our clients stay ahead in an ever-changing landscape.</p>
+					<div class="flex flex-wrap gap-2">
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Creative Solutions</span>
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Latest Technology</span>
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Future Ready</span>
+					</div>
+				</div>
+
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 md:p-10 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.3s;">
+					<div class="w-16 h-16 bg-gradient-to-br from-[#C9A44C] to-[#B8943F] rounded-full flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
+						<svg class="w-8 h-8 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+						</svg>
+					</div>
+					<h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Partnership</h3>
+					<p class="text-gray-300 leading-relaxed mb-6">Strong relationships are built through trust, collaboration, and open communication. We work alongside our clients as long-term partners rather than simply providing services.</p>
+					<div class="flex flex-wrap gap-2">
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Trust</span>
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Collaboration</span>
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Support</span>
+					</div>
+				</div>
+
+				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 md:p-10 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.4s;">
+					<div class="w-16 h-16 bg-gradient-to-br from-[#C9A44C] to-[#B8943F] rounded-full flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
+						<svg class="w-8 h-8 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+						</svg>
+					</div>
+					<h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Local Expertise</h3>
+					<p class="text-gray-300 leading-relaxed mb-6">With deep knowledge of the Philippine digital landscape, audience behavior, and cultural trends, we create campaigns that genuinely connect with local communities while remaining globally competitive.</p>
+					<div class="flex flex-wrap gap-2">
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Philippine Market</span>
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Cultural Insight</span>
+						<span class="px-3 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full text-xs font-medium text-[#C9A44C]">Audience Research</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-10 md:p-12 text-center animate-fade-up" style="animation-delay: 0.5s;">
+				<div class="w-20 h-1 bg-gradient-to-r from-transparent via-[#C9A44C] to-transparent mx-auto mb-8"></div>
+				<h3 class="text-2xl md:text-3xl font-bold text-white mb-6">Driven by Purpose, Inspired by Innovation</h3>
+				<p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">Every strategy we create is built on integrity, creativity, and measurable results. Our commitment to excellence enables us to deliver impactful digital solutions that help businesses, government agencies, and organizations thrive in the evolving Philippine digital landscape.</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 6: What We Do -->
+	<section class="relative py-24 px-4 overflow-hidden" style="background-color: #090909;">
+		<div class="absolute inset-0 overflow-hidden pointer-events-none">
+			<div class="absolute top-20 left-1/4 w-80 h-80 bg-[#C9A44C] rounded-full opacity-5 blur-3xl"></div>
+			<div class="absolute bottom-20 right-1/4 w-72 h-72 bg-[#C9A44C] rounded-full opacity-5 blur-3xl"></div>
+		</div>
+
+		<div class="relative z-10 max-w-7xl mx-auto">
+			<div class="text-center mb-16 animate-fade-up">
+				<p class="text-sm md:text-base font-semibold tracking-widest text-[#C9A44C] mb-4">OUR EXPERTISE</p>
+				<h2 class="text-3xl md:text-5xl font-bold text-white mb-6">What We Do</h2>
+				<p class="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">We provide comprehensive digital solutions that help businesses, government agencies, organizations, and public leaders strengthen their online presence. From strategic communication and multimedia production to web development and digital campaigns, every service is designed to create meaningful engagement and measurable results.</p>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+				<a href="/services/digital-pr" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 md:p-10 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.1s;">
+					<div class="flex items-start justify-between mb-6">
+						<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+							<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+							</svg>
+						</div>
+						<svg class="w-6 h-6 text-[#C9A44C] opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</div>
+					<h3 class="text-2xl font-bold text-white mb-3">Digital PR</h3>
+					<p class="text-gray-300 leading-relaxed mb-4">Build and protect your brand's reputation through strategic communication, media relations, influencer collaborations, and digital storytelling that connects with your audience.</p>
+					<span class="inline-flex items-center text-[#C9A44C] font-medium group-hover:translate-x-1 transition-transform duration-300">
+						Learn More
+						<svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</span>
+				</a>
+
+				<a href="/services/social-media" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 md:p-10 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.2s;">
+					<div class="flex items-start justify-between mb-6">
+						<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+							<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 111.024 5.435l-6.632 3.316m6.632-3.316l6.632 3.316" />
+							</svg>
+						</div>
+						<svg class="w-6 h-6 text-[#C9A44C] opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</div>
+					<h3 class="text-2xl font-bold text-white mb-3">Social Media Management</h3>
+					<p class="text-gray-300 leading-relaxed mb-4">Develop engaging social media strategies that grow communities, increase brand awareness, and build lasting relationships with your audience.</p>
+					<span class="inline-flex items-center text-[#C9A44C] font-medium group-hover:translate-x-1 transition-transform duration-300">
+						Learn More
+						<svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</span>
+				</a>
+
+				<a href="/services/video-production" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 md:p-10 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.3s;">
+					<div class="flex items-start justify-between mb-6">
+						<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+							<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+							</svg>
+						</div>
+						<svg class="w-6 h-6 text-[#C9A44C] opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</div>
+					<h3 class="text-2xl font-bold text-white mb-3">Video Production</h3>
+					<p class="text-gray-300 leading-relaxed mb-4">Produce professional videos, live streaming content, promotional materials, and visual storytelling that communicate your brand with impact.</p>
+					<span class="inline-flex items-center text-[#C9A44C] font-medium group-hover:translate-x-1 transition-transform duration-300">
+						Learn More
+						<svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</span>
+				</a>
+
+				<a href="/services/web-development" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 md:p-10 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.4s;">
+					<div class="flex items-start justify-between mb-6">
+						<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+							<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+							</svg>
+						</div>
+						<svg class="w-6 h-6 text-[#C9A44C] opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</div>
+					<h3 class="text-2xl font-bold text-white mb-3">Web Development</h3>
+					<p class="text-gray-300 leading-relaxed mb-4">Create modern, responsive, and scalable websites that deliver exceptional user experiences while supporting your business goals.</p>
+					<span class="inline-flex items-center text-[#C9A44C] font-medium group-hover:translate-x-1 transition-transform duration-300">
+						Learn More
+						<svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</span>
+				</a>
+			</div>
+
+			<div class="text-center animate-fade-up" style="animation-delay: 0.5s;">
+				<h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Every Great Brand Starts with the Right Strategy</h3>
+				<p class="text-lg text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">Whether you're launching a new business, managing a public campaign, or strengthening your organization's digital presence, Avietho delivers tailored solutions designed to help you grow with confidence.</p>
+				<a href="/services" class="inline-block px-10 py-4 bg-[#C9A44C] text-[#0A0A0A] font-semibold rounded hover:bg-[#B8943F] transition-all duration-300 hover:scale-105 shadow-lg shadow-[#C9A44C]/20">
+					View All Services
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 7: Our Clients -->
+	<section class="relative py-24 px-4 overflow-hidden" style="background-color: #0B0B0B;">
+		<div class="absolute inset-0 overflow-hidden pointer-events-none">
+			<div class="absolute top-20 right-10 w-72 h-72 bg-[#C9A44C] rounded-full opacity-10 blur-3xl"></div>
+			<div class="absolute bottom-20 left-10 w-80 h-80 bg-[#C9A44C] rounded-full opacity-10 blur-3xl"></div>
+		</div>
+
+		<div class="relative z-10 max-w-7xl mx-auto">
+			<div class="text-center mb-16 animate-fade-up">
+				<p class="text-sm md:text-base font-semibold tracking-widest text-[#C9A44C] mb-4">WHO WE SERVE</p>
+				<h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Our Clients</h2>
+				<p class="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">We proudly collaborate with a diverse range of clients across the Philippines, delivering tailored digital marketing solutions that address unique goals, strengthen public engagement, and create measurable results. Whether supporting businesses, government institutions, or public leaders, our team develops strategies that make a lasting impact.</p>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+				<a href="/clients/political-figures" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.1s;">
+					<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
+						<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+						</svg>
+					</div>
+					<h3 class="text-xl font-bold text-white mb-3">Political Figures</h3>
+					<p class="text-gray-300 leading-relaxed mb-4">Strategic digital campaigns, branding, multimedia production, and communication solutions designed for political leaders, candidates, and public officials.</p>
+					<span class="inline-flex items-center text-[#C9A44C] font-medium group-hover:translate-x-1 transition-transform duration-300">
+						Learn More
+						<svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</span>
+				</a>
+
+				<a href="/clients/government-agencies" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.2s;">
+					<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
+						<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+						</svg>
+					</div>
+					<h3 class="text-xl font-bold text-white mb-3">Government Agencies</h3>
+					<p class="text-gray-300 leading-relaxed mb-4">Digital transformation, public communication, multimedia production, and citizen engagement strategies for government institutions.</p>
+					<span class="inline-flex items-center text-[#C9A44C] font-medium group-hover:translate-x-1 transition-transform duration-300">
+						Learn More
+						<svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</span>
+				</a>
+
+				<a href="/clients/businesses" class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_40px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.3s;">
+					<div class="w-14 h-14 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
+						<svg class="w-7 h-7 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M12 18h.01M7 21h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2z" />
+						</svg>
+					</div>
+					<h3 class="text-xl font-bold text-white mb-3">Businesses</h3>
+					<p class="text-gray-300 leading-relaxed mb-4">Complete digital marketing solutions that help businesses strengthen their online presence, generate leads, and achieve sustainable growth.</p>
+					<span class="inline-flex items-center text-[#C9A44C] font-medium group-hover:translate-x-1 transition-transform duration-300">
+						Learn More
+						<svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+						</svg>
+					</span>
+				</a>
+			</div>
+
+			<div class="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-10 md:p-12 text-center animate-fade-up" style="animation-delay: 0.5s;">
+				<div class="w-20 h-1 bg-gradient-to-r from-transparent via-[#C9A44C] to-transparent mx-auto mb-8"></div>
+				<h3 class="text-2xl md:text-3xl font-bold text-white mb-6">Tailored Solutions for Every Client</h3>
+				<p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto mb-8">Every organization has different goals and challenges. At Avietho, we take time to understand each client's vision before developing customized digital strategies that deliver meaningful and measurable results.</p>
+				<a href="/contact" class="inline-block px-10 py-4 bg-[#C9A44C] text-[#0A0A0A] font-semibold rounded hover:bg-[#B8943F] transition-all duration-300 hover:scale-105 shadow-lg shadow-[#C9A44C]/20">
+					Contact Our Team
+				</a>
+			</div>
+		</div>
+	</section>
 </BaseLayout>
+
+<style>
+	@keyframes fadeUp {
+		from {
+			opacity: 0;
+			transform: translateY(30px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.animate-fade-up {
+		opacity: 0;
+		animation: fadeUp 0.8s ease-out forwards;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.animate-fade-up {
+			animation: none;
+			opacity: 1;
+		}
+	}
+</style>
