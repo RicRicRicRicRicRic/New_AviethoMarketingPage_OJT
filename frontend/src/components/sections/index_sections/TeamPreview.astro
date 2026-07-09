@@ -14,27 +14,27 @@ interface TeamMember {
 
 const teamMembers: TeamMember[] = [
 	{
-		name: 'Jojo',
-		jobTitle: 'Lead Developer',
-		description: 'Expert in full-stack development with a passion for creating scalable web applications and leading technical teams.',
+		name: 'Jojo Bayais',
+		jobTitle: 'Photographer',
+		description: 'Jojo Bayais is a talented photographer and project coordinator who blends creative vision with efficient logistics. He excels at capturing compelling imagery while ensuring smooth project execution through strong communication and artistic intuition.',
 		imagePath: '/src/assets/imgs/Jojo.C6Py2ZmB.png'
 	},
 	{
-		name: 'Migz',
-		jobTitle: 'UI/UX Designer',
-		description: 'Creative designer focused on crafting intuitive user experiences and beautiful interfaces that drive engagement.',
+		name: 'Migz Junsay',
+		jobTitle: 'Creative Director',
+		description: 'Migz Junsay is a versatile Creative Director with over a decade of experience in video editing, 3D animation, graphic design, and photography. He transforms ideas into captivating visual stories, guiding projects from concept to final production with artistic and technical expertise.',
 		imagePath: '/src/assets/imgs/Migz.Cv05ODRL.png'
 	},
 	{
-		name: 'Mike',
-		jobTitle: 'Project Manager',
-		description: 'Experienced project manager ensuring timely delivery of complex digital solutions with agile methodologies.',
+		name: 'Mike Manuel',
+		jobTitle: 'Videographer and Photographer',
+		description: 'Mike Manuel is a passionate videographer and photographer who turns ordinary moments into extraordinary visual stories. With a keen eye for composition, light, and emotion, he creates compelling content across photography and cinematography.',
 		imagePath: '/src/assets/imgs/Mike.Bh9zLmXr.png'
 	},
 	{
-		name: 'Rickie',
-		jobTitle: 'DevOps Engineer',
-		description: 'Infrastructure specialist optimizing deployment pipelines and ensuring system reliability and performance.',
+		name: 'Rickie Javier',
+		jobTitle: 'Public Relations Specialist & Social Media Manager',
+		description: 'Rickie Javier, Editor-in-Chief of Avietho Digital, is a skilled PR specialist and social media manager with a background in Journalism. She excels at content strategy, team leadership, and brand communication across multiple platforms.',
 		imagePath: '/src/assets/imgs/Rickie.DM98aSYR.png'
 	}
 ];
@@ -49,10 +49,10 @@ let currentIndex = 0;
 			<!-- Left Column: Name and Job Title -->
 			<div class="flex flex-col items-center text-center lg:justify-center lg:text-left lg:items-start space-y-4">
 				<div id="team-info" class="transition-all duration-500 ease-in-out">
-					<h2 class="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-2" id="team-name">
+					<h2 class="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-2 transition-all duration-500 ease-in-out" id="team-name">
 						{teamMembers[currentIndex].name}
 					</h2>
-					<p class="text-lg md:text-xl lg:text-2xl text-accent font-medium" id="team-job-title">
+					<p class="text-lg md:text-xl lg:text-2xl text-accent font-medium transition-all duration-500 ease-in-out" id="team-job-title">
 						{teamMembers[currentIndex].jobTitle}
 					</p>
 				</div>
@@ -66,7 +66,7 @@ let currentIndex = 0;
 			<!-- Right Column: Description -->
 			<div class="flex flex-col justify-center items-center text-center lg:text-left lg:items-start">
 				<div id="team-description" class="transition-all duration-500 ease-in-out">
-					<p class="text-base md:text-lg text-foreground/80 leading-relaxed" id="team-desc">
+					<p class="text-base md:text-lg text-foreground/80 leading-relaxed transition-all duration-500 ease-in-out" id="team-desc">
 						{teamMembers[currentIndex].description}
 					</p>
 				</div>
