@@ -20,8 +20,8 @@ const {
 <div class="slides-container relative h-[400px] overflow-hidden rounded-xl bg-transparent cursor-pointer pointer-events-auto" style="contain: strict; overscroll-behavior: contain; touch-action: none;">
 		
 		<!-- Fade overlays for top and bottom -->
-		<div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#0D0D0D] to-transparent pointer-events-none z-10"></div>
-		<div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#0D0D0D] to-transparent pointer-events-none z-10"></div>
+		<div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background-overlay to-transparent pointer-events-none z-10"></div>
+		<div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background-overlay to-transparent pointer-events-none z-10"></div>
 		
 		<div class="slides-wrapper flex flex-col gap-4 h-full overflow-hidden transition-transform duration-700 ease-in-out scrollbar-hide" style="padding: 1100px 16px;">
 			{slides.map((slide, index) => (
@@ -39,7 +39,7 @@ const {
 					</div>
 					
 				<div class="slide-text flex-1 min-w-0 overflow-hidden">
-					<h3 class="text-lg font-semibold text-[#F5F5F5] whitespace-nowrap" data-text={slide.clientName}>
+					<h3 class="text-lg font-semibold text-foreground whitespace-nowrap" data-text={slide.clientName}>
 						{slide.clientName}
 					</h3>
 				</div>
@@ -116,11 +116,11 @@ const {
 				const el = bar as HTMLElement;
 				if (i === this.currentIndex) {
 					el.style.opacity = '1';
-					el.classList.add('border-[#C9A44C]/50');
+					el.classList.add('border-accent/50');
 					el.classList.remove('border-white/10');
 				} else {
 					el.style.opacity = '0.4';
-					el.classList.remove('border-[#C9A44C]/50');
+					el.classList.remove('border-accent/50');
 					el.classList.add('border-white/10');
 				}
 			});

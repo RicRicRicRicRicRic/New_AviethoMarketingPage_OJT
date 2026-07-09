@@ -55,25 +55,25 @@ const {
 } = Astro.props;
 ---
 
-<section id="services" class="py-20 px-4 bg-[#0F0F0F]">
+<section id="services" class="py-20 px-4 bg-background-elevated">
 	<div class="max-w-6xl mx-auto">
-		<h2 class="text-3xl md:text-4xl font-bold text-center text-[#C9A44C] mb-12">
+		<h2 class="text-3xl md:text-4xl font-bold text-center text-accent mb-12">
 			{title}
 		</h2>
 		
 		<div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 			{services.map((service) => (
 				<div 
-					class="service-card opacity-0 translate-y-8 transition-all duration-700 ease-out bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-6 hover:border-[#C9A44C]/50 hover:bg-white/10 group"
+				class="service-card opacity-0 translate-y-8 transition-all duration-700 ease-out bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-6 hover:border-accent/50 hover:bg-white/10 group"
 				>
 					<div class="flex justify-center mb-4">
-						<Image 
-							src={service.iconPath}
-							alt={`${service.title} icon`}
-							class="h-8 w-8 transition-all duration-300 icon-filter"
-							width={32}
-							height={32}
-						/>
+					<Image 
+						src={service.iconPath}
+						alt={`${service.title} icon`}
+						class="h-8 w-8 icon-idle group-hover:icon-hover"
+						width={32}
+						height={32}
+					/>
 					</div>
 					<h3 class="text-xl font-semibold text-white mb-3 text-center">
 						{service.title}

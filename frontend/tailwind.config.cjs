@@ -4,9 +4,19 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				background: '#0A0A0A',
-				foreground: '#F5F5F5',
-				accent: '#C9A44C',
+				background: 'var(--color-background)',
+				'background-elevated': 'var(--color-background-elevated)',
+				'background-overlay': 'var(--color-background-overlay)',
+				'background-card': 'var(--color-background-card)',
+				foreground: 'var(--color-foreground)',
+				accent: 'var(--color-accent)',
+				'accent-hover': 'var(--color-accent-hover)',
+				muted: 'var(--color-muted)',
+				'muted-hover': 'var(--color-muted-hover)',
+			},
+			fontFamily: {
+				sans: ['var(--font-body)'],
+				heading: ['var(--font-heading)'],
 			},
 		},
 	},

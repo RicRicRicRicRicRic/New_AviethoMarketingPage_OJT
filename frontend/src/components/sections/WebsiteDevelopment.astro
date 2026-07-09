@@ -9,13 +9,15 @@ const {
 	title = 'Website Development', 
 	description = 'Custom web solutions built with modern technologies.' 
 } = Astro.props;
+
+import websiteDevelopmentGif from '../../assets/gif/websiteDevelopment.gif';
 ---
 
 <section class="py-20 px-4">
 	<div class="max-w-6xl mx-auto">
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 			<div>
-				<h2 class="text-3xl md:text-4xl font-bold text-[#C9A44C] mb-6">
+			<h2 class="text-3xl md:text-4xl font-bold text-accent mb-6">
 					{title}
 				</h2>
 				<p class="text-lg text-gray-300 mb-6 leading-relaxed">
@@ -23,9 +25,16 @@ const {
 				</p>
 				<slot name="features" />
 			</div>
-			<div class="bg-[#0F0F0F] p-8 rounded-lg border border-gray-800">
-				<slot name="visual" />
+		<div class="flex justify-center items-center">
+			<div class="relative rounded-xl border border-white/10 overflow-hidden max-w-lg w-full h-40">
+					<img 
+						src={websiteDevelopmentGif.src} 
+						alt="Technology stack visualization"
+						class="w-full h-full object-contain" 
+						loading="lazy"
+					/>
 			</div>
+		</div>
 		</div>
 	</div>
 </section>
