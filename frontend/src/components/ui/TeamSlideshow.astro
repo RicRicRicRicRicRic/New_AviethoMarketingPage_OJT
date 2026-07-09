@@ -1,7 +1,8 @@
 ---
 // Team Slideshow Component
-// Reusable slideshow for displaying team members with interactive navigation
-// No autoplay - updates only on user input
+// Reusable slideshow for displaying team members.
+// Autoplays on an interval, and can be dragged (mouse or touch) to move
+// between slides instead of using prev/next buttons.
 
 interface TeamMember {
 	name: string;
@@ -21,7 +22,10 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 
 <div class="team-slideshow w-full" data-team-members={teamData} data-current-index={currentIndex}>
 	<!-- Slideshow Wrapper -->
-	<div class="slideshow-wrapper relative w-full max-w-md h-[350px] md:h-[475px] overflow-hidden">
+	<div
+		class="slideshow-wrapper relative w-full max-w-md h-[350px] md:h-[475px] overflow-hidden cursor-grab select-none"
+		id="slideshow-wrapper"
+	>
 		{slotOffsets.map((offset, i) => {
 			const member = teamMembers[(currentIndex + offset + teamMembers.length) % teamMembers.length];
 			const isActive = offset === 0;
@@ -35,29 +39,12 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 					<img
 						src={member.imagePath}
 						alt={alt}
-						class={`w-full h-full object-cover rounded-lg ${isActive ? 'shadow-2xl' : 'shadow-lg'}`}
+						draggable="false"
+						class={`w-full h-full object-cover rounded-lg pointer-events-none ${isActive ? 'shadow-2xl' : 'shadow-lg'}`}
 					/>
 				</div>
 			);
 		})}
-	</div>
-
-	<!-- Navigation Buttons -->
-	<div class="flex justify-center items-center gap-4 mt-6 z-30">
-		<button
-			id="prev-btn"
-			class="px-6 py-3 bg-accent/20 hover:bg-accent/40 text-foreground rounded-lg backdrop-blur-sm border border-accent/30 transition-all duration-300 font-medium hover:translate-y-[-2px] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] active:translate-y-0"
-			aria-label="Previous team member"
-		>
-			← Previous
-		</button>
-		<button
-			id="next-btn"
-			class="px-6 py-3 bg-accent/20 hover:bg-accent/40 text-foreground rounded-lg backdrop-blur-sm border border-accent/30 transition-all duration-300 font-medium hover:translate-y-[-2px] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] active:translate-y-0"
-			aria-label="Next team member"
-		>
-			Next →
-		</button>
 	</div>
 </div>
 
@@ -71,22 +58,32 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 
 	const SLOT_CLASSES = ['is-farleft', 'is-left', 'is-center', 'is-right', 'is-farright'];
 	const SLOT_OFFSETS = [-2, -1, 0, 1, 2];
-	const SLIDE_DURATION = 500;
+	const SLIDE_DURATION = 900;
+	const AUTOPLAY_DELAY = 4500;
+	const DRAG_THRESHOLD = 60;
 
 	class TeamSlideshow {
 		private members: TeamMember[];
 		private currentIndex: number;
-		private prevBtn: HTMLElement | null;
-		private nextBtn: HTMLElement | null;
+		private wrapper: HTMLElement | null;
 		private slotOrder: HTMLElement[];
 		private isAnimating: boolean;
+		private autoplayTimer: ReturnType<typeof setInterval> | null;
+		private isDragging: boolean;
+		private dragStartX: number;
+		private dragDeltaX: number;
+		private pointerId: number | null;
 
 		constructor(members: TeamMember[], startIndex: number) {
 			this.members = members;
 			this.currentIndex = startIndex;
 			this.isAnimating = false;
-			this.prevBtn = document.getElementById('prev-btn');
-			this.nextBtn = document.getElementById('next-btn');
+			this.autoplayTimer = null;
+			this.isDragging = false;
+			this.dragStartX = 0;
+			this.dragDeltaX = 0;
+			this.pointerId = null;
+			this.wrapper = document.getElementById('slideshow-wrapper');
 
 			this.slotOrder = [0, 1, 2, 3, 4]
 				.map((i) => document.getElementById(`image-slot-${i}`))
@@ -96,7 +93,8 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 		}
 
 		private init(): void {
-			this.attachNavigation();
+			this.attachDrag();
+			this.startAutoplay();
 		}
 
 		private applySlots(): void {
@@ -155,21 +153,95 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 			}, SLIDE_DURATION);
 		}
 
-		private attachNavigation(): void {
-			if (this.nextBtn) {
-				this.nextBtn.addEventListener('click', () => this.next());
-			}
+		private startAutoplay(): void {
+			this.stopAutoplay();
+			this.autoplayTimer = setInterval(() => {
+				if (!this.isDragging) this.next();
+			}, AUTOPLAY_DELAY);
+		}
 
-			if (this.prevBtn) {
-				this.prevBtn.addEventListener('click', () => this.prev());
+		private stopAutoplay(): void {
+			if (this.autoplayTimer) {
+				clearInterval(this.autoplayTimer);
+				this.autoplayTimer = null;
 			}
+		}
 
-			// Keyboard navigation
+		private setDragOffset(px: number): void {
+			if (!this.wrapper) return;
+			// Damp the drag so it feels like it's dragging the whole stack
+			// rather than just the center slide.
+			this.wrapper.style.transform = `translateX(${px * 0.6}px)`;
+		}
+
+		private resetDragOffset(animate: boolean): void {
+			if (!this.wrapper) return;
+			this.wrapper.style.transition = animate ? `transform ${SLIDE_DURATION}ms cubic-bezier(0.22, 1, 0.36, 1)` : 'none';
+			this.wrapper.style.transform = 'translateX(0px)';
+			if (animate) {
+				window.setTimeout(() => {
+					if (this.wrapper) this.wrapper.style.transition = 'none';
+				}, SLIDE_DURATION);
+			}
+		}
+
+		private attachDrag(): void {
+			if (!this.wrapper) return;
+
+			const onPointerDown = (e: PointerEvent) => {
+				this.isDragging = true;
+				this.pointerId = e.pointerId;
+				this.dragStartX = e.clientX;
+				this.dragDeltaX = 0;
+				this.wrapper?.setPointerCapture(e.pointerId);
+				this.wrapper?.classList.add('is-dragging');
+				this.stopAutoplay();
+			};
+
+			const onPointerMove = (e: PointerEvent) => {
+				if (!this.isDragging || e.pointerId !== this.pointerId) return;
+				this.dragDeltaX = e.clientX - this.dragStartX;
+				this.setDragOffset(this.dragDeltaX);
+			};
+
+			const endDrag = (e: PointerEvent) => {
+				if (!this.isDragging || e.pointerId !== this.pointerId) return;
+				this.isDragging = false;
+				this.wrapper?.classList.remove('is-dragging');
+
+				if (this.dragDeltaX <= -DRAG_THRESHOLD) {
+					this.next();
+				} else if (this.dragDeltaX >= DRAG_THRESHOLD) {
+					this.prev();
+				}
+
+				this.resetDragOffset(true);
+				this.dragDeltaX = 0;
+				this.pointerId = null;
+				this.startAutoplay();
+			};
+
+			this.wrapper.addEventListener('pointerdown', onPointerDown);
+			this.wrapper.addEventListener('pointermove', onPointerMove);
+			this.wrapper.addEventListener('pointerup', endDrag);
+			this.wrapper.addEventListener('pointercancel', endDrag);
+
+			// Pause autoplay while the pointer is simply hovering, resume on leave.
+			this.wrapper.addEventListener('mouseenter', () => this.stopAutoplay());
+			this.wrapper.addEventListener('mouseleave', () => {
+				if (!this.isDragging) this.startAutoplay();
+			});
+
+			// Keyboard navigation stays available for accessibility.
 			document.addEventListener('keydown', (e: KeyboardEvent) => {
 				if (e.key === 'ArrowRight') {
+					this.stopAutoplay();
 					this.next();
+					this.startAutoplay();
 				} else if (e.key === 'ArrowLeft') {
+					this.stopAutoplay();
 					this.prev();
+					this.startAutoplay();
 				}
 			});
 		}
@@ -181,7 +253,7 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 		if (container) {
 			const membersData = container.getAttribute('data-team-members');
 			const startIndexAttr = container.getAttribute('data-current-index');
-			
+
 			if (membersData) {
 				const members: TeamMember[] = JSON.parse(membersData);
 				const startIndex = startIndexAttr ? parseInt(startIndexAttr, 10) : 0;
@@ -203,6 +275,13 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 	 * These styles are necessary for the fixed-slot sliding carousel animation
 	 */
 
+	.slideshow-wrapper {
+		touch-action: pan-y;
+	}
+	.slideshow-wrapper.is-dragging {
+		cursor: grabbing;
+	}
+
 	/* Base image slot positioning */
 	.image-slot {
 		position: absolute;
@@ -213,8 +292,11 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 		--tx: 0%;
 		--scale: 1;
 		transform: translate(var(--tx), -50%) scale(var(--scale));
-		transition: left 0.5s ease-in-out, width 0.5s ease-in-out, transform 0.5s ease-in-out,
-			opacity 0.5s ease-in-out, filter 0.5s ease-in-out;
+		transition: left 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+			width 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+			transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+			opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+			filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 	}
 
 	.image-slot img {
@@ -289,6 +371,12 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 		}
 		.image-slot.is-center {
 			height: 20rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.image-slot {
+			transition-duration: 0.01ms !important;
 		}
 	}
 </style>
