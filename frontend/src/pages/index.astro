@@ -98,6 +98,25 @@ import WorkShowcase from '../components/sections/index_sections/WorkShowcase.ast
 		</slot>
 	</TeamPreview>
 
+	<Socials>
+		<slot name="social-links" slot="social-links">
+			<div class="flex flex-wrap justify-center gap-4">
+				<a href="#" class="px-6 py-3 bg-background-card border border-gray-800 rounded hover:border-accent transition-colors">
+					<span class="text-accent">Twitter</span>
+				</a>
+				<a href="#" class="px-6 py-3 bg-background-card border border-gray-800 rounded hover:border-accent transition-colors">
+					<span class="text-accent">LinkedIn</span>
+				</a>
+				<a href="#" class="px-6 py-3 bg-background-card border border-gray-800 rounded hover:border-accent transition-colors">
+					<span class="text-accent">RSS Feed</span>
+				</a>
+				<a href="#" class="px-6 py-3 bg-background-card border border-gray-800 rounded hover:border-accent transition-colors">
+					<span class="text-accent">Email</span>
+				</a>
+			</div>
+		</slot>
+	</Socials>
+
 	<WorkShowcase title="Our Work">
 		<slot name="work-item-1" slot="work-item-1">
 			<div class="bg-background-card p-6 rounded-lg border border-gray-800">
@@ -122,22 +141,4 @@ import WorkShowcase from '../components/sections/index_sections/WorkShowcase.ast
 		</slot>
 	</WorkShowcase>
 
-	<Socials title="Connect With Us">
-		<slot name="social-links" slot="social-links">
-			<div class="flex flex-wrap justify-center gap-4">
-				<a href="#" class="px-6 py-3 bg-background-card border border-gray-800 rounded hover:border-accent transition-colors">
-					<span class="text-accent">Twitter</span>
-				</a>
-				<a href="#" class="px-6 py-3 bg-background-card border border-gray-800 rounded hover:border-accent transition-colors">
-					<span class="text-accent">LinkedIn</span>
-				</a>
-				<a href="#" class="px-6 py-3 bg-background-card border border-gray-800 rounded hover:border-accent transition-colors">
-					<span class="text-accent">RSS Feed</span>
-				</a>
-				<a href="#" class="px-6 py-3 bg-background-card border border-gray-800 rounded hover:border-accent transition-colors">
-					<span class="text-accent">Email</span>
-				</a>
-			</div>
-		</slot>
-	</Socials>
 </BaseLayout>

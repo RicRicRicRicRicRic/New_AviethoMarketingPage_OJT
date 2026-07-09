@@ -1,22 +1,72 @@
 ---
-// Socials section - social media links and engagement
+// Socials section - social media impact and engagement
 interface Props {
 	title?: string;
 }
 
-const { title = 'Connect With Us' } = Astro.props;
+const { title = 'SOCIAL MEDIA IMPACT' } = Astro.props;
 ---
 
-<section class="py-20 px-4">
-	<div class="max-w-4xl mx-auto text-center">
-		<h2 class="text-3xl md:text-4xl font-bold text-accent mb-8">
-			{title}
-		</h2>
-		<p class="text-lg text-gray-300 mb-12 max-w-2xl mx-auto">
-			Follow us for the latest updates, insights, and stories from the world of independent journalism.
-		</p>
-		<div class="flex flex-wrap justify-center gap-6">
-			<slot name="social-links" />
+<section class="bg-background-elevated py-12 px-4">
+	<div class="max-w-6xl mx-auto">
+		<!-- Header -->
+		<div class="text-center mb-10">
+			<p class="text-xs uppercase tracking-widest text-accent mb-3 font-medium">
+				Innovate, Create and Connect
+			</p>
+			<h2 class="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4">
+				{title}
+			</h2>
+			<p class="text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+				We craft scroll-stopping stories that turn attention into action — building community, sparking conversation, and driving measurable growth for your brand.
+			</p>
+		</div>
+
+		<!-- Stats Grid -->
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+			<div class="text-center">
+				<p class="text-3xl md:text-4xl font-bold text-accent mb-2">46K</p>
+				<p class="text-base text-gray-300">Facebook Followers</p>
+			</div>
+			<div class="text-center">
+				<p class="text-3xl md:text-4xl font-bold text-accent mb-2">100+</p>
+				<p class="text-base text-gray-300">Projects Done</p>
+			</div>
+			<div class="text-center">
+				<p class="text-3xl md:text-4xl font-bold text-accent mb-2">50+</p>
+				<p class="text-base text-gray-300">Happy Clients</p>
+			</div>
+		</div>
+
+		<!-- Divider -->
+		<hr class="border-muted mb-8" />
+
+		<!-- Feature List -->
+		<div class="max-w-3xl mx-auto mb-8">
+			<ul class="flex flex-col items-center gap-3">
+				<li class="flex items-center max-w-2xl">
+					<span class="text-accent text-xl mr-3 flex-shrink-0">—</span>
+					<p class="text-base text-gray-300 text-center flex-1">Consistent brand presence that stays top-of-mind</p>
+				</li>
+				<li class="flex items-center max-w-2xl">
+					<span class="text-accent text-xl mr-3 flex-shrink-0">—</span>
+					<p class="text-base text-gray-300 text-center flex-1">Data-driven content that converts audiences into customers</p>
+				</li>
+				<li class="flex items-center max-w-2xl">
+					<span class="text-accent text-xl mr-3 flex-shrink-0">—</span>
+					<p class="text-base text-gray-300 text-center flex-1">Platform-native creative built for engagement and reach</p>
+				</li>
+			</ul>
+		</div>
+
+		<!-- CTA Buttons -->
+		<div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+			<button class="bg-accent text-background px-6 py-3 rounded-lg font-semibold text-base hover:bg-accent-hover transition-colors duration-300 w-full sm:w-auto">
+				Boost my social impact →
+			</button>
+			<button class="bg-transparent border-2 border-accent text-accent px-6 py-3 rounded-lg font-semibold text-base hover:bg-accent hover:text-background transition-colors duration-300 w-full sm:w-auto">
+				See real results
+			</button>
 		</div>
 	</div>
 </section>
