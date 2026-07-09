@@ -11,30 +11,138 @@ const {
 } = Astro.props;
 
 import websiteDevelopmentGif from '../../assets/gif/websiteDevelopment.gif';
+
+// Content data for the switcher
+const contentData = [
+	{
+		id: 'frontend',
+		label: 'Frontend',
+		title: 'Frontend Technologies',
+		content: '⚛️ React, ⚡ Next.js, 🎨 Tailwind CSS, 🔷 TypeScript'
+	},
+	{
+		id: 'backend',
+		label: 'Backend',
+		title: 'Backend Technologies',
+		content: '🟢 Node.js, 🐍 Python, ☕ Java, 🔵 PHP'
+	},
+	{
+		id: 'database',
+		label: 'Database/Cloud',
+		title: 'Database & Cloud',
+		content: '🐘 PostgreSQL, 🍃 MongoDB, ☁️ AWS, 🔷 Vercel'
+	},
+	{
+		id: 'tools',
+		label: 'Tools/CMS',
+		title: 'Tools & CMS',
+		content: '📝 WordPress, 🛒 Shopify, 🎨 Figma, 📊 Google Analytics'
+	}
+];
 ---
 
 <section class="py-20 px-4">
 	<div class="max-w-6xl mx-auto">
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 			<div>
-			<h2 class="text-3xl md:text-4xl font-bold text-accent mb-6">
-					{title}
-				</h2>
-				<p class="text-lg text-gray-300 mb-6 leading-relaxed">
-					{description}
-				</p>
+				<!-- Switcher Buttons -->
+				<div class="flex flex-wrap gap-2 mb-6">
+					{contentData.map((item) => (
+						<button
+							data-switcher-btn={item.id}
+							class="switcher-btn px-4 py-2 rounded-full border border-white/10 hover:border-accent transition-all duration-300 text-sm font-body text-gray-300 hover:text-accent"
+						>
+							{item.label}
+						</button>
+					))
+					}
+				</div>
+
+				<!-- Dynamic Content Area -->
+				<div id="content-display" class="transition-opacity duration-300">
+					<h2 class="text-3xl md:text-4xl font-heading text-accent mb-6" id="content-title">
+						{contentData[0].title}
+					</h2>
+					<p class="text-lg font-body text-gray-300 mb-6 leading-relaxed" id="content-paragraph">
+						{contentData[0].content}
+					</p>
+				</div>
+
 				<slot name="features" />
 			</div>
-		<div class="flex justify-center items-center">
-			<div class="relative rounded-xl border border-white/10 overflow-hidden max-w-lg w-full h-40">
+			<div class="flex justify-center items-center">
+				<div class="relative rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-4 w-full max-w-[300px]">
 					<img 
 						src={websiteDevelopmentGif.src} 
 						alt="Technology stack visualization"
-						class="w-full h-full object-contain" 
+						class="block w-full h-auto object-contain"
 						loading="lazy"
 					/>
+				</div>
 			</div>
-		</div>
 		</div>
 	</div>
 </section>
+
+<script>
+	// Content data (duplicated for client-side access)
+	const contentData = [
+		{
+			id: 'frontend',
+			title: 'Frontend Technologies',
+			content: '⚛️ React, ⚡ Next.js, 🎨 Tailwind CSS, 🔷 TypeScript'
+		},
+		{
+			id: 'backend',
+			title: 'Backend Technologies',
+			content: '🟢 Node.js, 🐍 Python, ☕ Java, 🔵 PHP'
+		},
+		{
+			id: 'database',
+			title: 'Database & Cloud',
+			content: '🐘 PostgreSQL, 🍃 MongoDB, ☁️ AWS, 🔷 Vercel'
+		},
+		{
+			id: 'tools',
+			title: 'Tools & CMS',
+			content: '📝 WordPress, 🛒 Shopify, 🎨 Figma, 📊 Google Analytics'
+		}
+	];
+
+	// Get DOM elements
+	const buttons = document.querySelectorAll('[data-switcher-btn]');
+	const contentDisplay = document.getElementById('content-display');
+	const contentTitle = document.getElementById('content-title');
+	const contentParagraph = document.getElementById('content-paragraph');
+
+	// Set initial active state
+	if (buttons.length > 0) {
+		buttons[0].classList.add('border-accent', 'text-accent');
+	}
+
+	// Add click handlers to buttons
+	buttons.forEach(button => {
+		button.addEventListener('click', () => {
+			const targetId = button.getAttribute('data-switcher-btn');
+			const content = contentData.find(item => item.id === targetId);
+
+			if (content && contentDisplay && contentTitle && contentParagraph) {
+				// Update button states
+				buttons.forEach(btn => {
+					btn.classList.remove('border-accent', 'text-accent');
+				});
+				button.classList.add('border-accent', 'text-accent');
+
+				// Fade out
+				contentDisplay.style.opacity = '0';
+
+				// Update content and fade in
+				setTimeout(() => {
+					contentTitle.textContent = content.title;
+					contentParagraph.textContent = content.content;
+					contentDisplay.style.opacity = '1';
+				}, 300);
+			}
+		});
+	});
+</script>
