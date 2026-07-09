@@ -5,4 +5,7 @@
  - python app.py
 
 
-
+# Frontend Project Setup Guide
+- cd frontend
+- npm install
+- npm run dev

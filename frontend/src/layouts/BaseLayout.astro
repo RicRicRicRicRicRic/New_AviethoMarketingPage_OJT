@@ -2,6 +2,7 @@
 // Base layout component with global styles and navigation
 import '../styles/global.css';
 import Navbar from '../components/ui/Navbar.astro';
+import ChatWidget from '../components/ui/ChatWidget.astro';
 
 interface Props {
 	title?: string;
@@ -25,5 +26,7 @@ const { title = 'Avietho' } = Astro.props;
 		<main>
 			<slot />
 		</main>
+		<slot />
+    	<ChatWidget />
 	</body>
 </html>
