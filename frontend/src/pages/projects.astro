@@ -1,17 +1,490 @@
 ---
 // Our Projects page
+// Hero mood modeled on elyse-residence-dev.webflow.io (full-bleed imagery,
+// bold serif type, moody overlay). Gallery motion modeled on
+// ancestry.com/stories-of-us/record-gallery — a scattered "photograph"
+// masonry grid with category filter pills, hover-straighten tilt, and a
+// cascading stagger-in reveal, rather than a static stack of full panels.
+// Content is the exact project catalogue from
+// marketing.aviethodigital.com/projects/. Theme is sourced from skills.md's
+// content-collection entry, same pattern as ChatWidget.astro / Navbar.astro
+// / services.astro.
+
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getEntry } from 'astro:content';
+
+const skillsEntry = await getEntry('docs', 'skills');
+
+const themeData = skillsEntry?.data?.theme ?? {
+  mode: 'dark',
+  background: '#0A0A0A',
+  accent: '#C9A44C',
+  textPrimary: '#F5F5F5',
+};
+
+const theme = {
+  background: themeData.background,
+  accent: themeData.accent,
+  textPrimary: themeData.textPrimary,
+  textMuted: themeData.mode === 'dark' ? '#B5B5B5' : '#5A5A5A',
+  card: themeData.mode === 'dark' ? '#141414' : '#FAFAFA',
+};
+
+interface Project {
+  number: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  category: string;
+}
+
+const IMG = (name: string) => `https://marketing.aviethodigital.com/_astro/${name}`;
+
+const categories = ['All', 'Digital PR', 'Social Media', 'Video Production', 'Post-Production', 'Live Streaming', 'Specialized'];
+
+const projects: Project[] = [
+  { number: '01', title: 'Digital PR Campaign', subtitle: 'Online Media Relations & Influencer Marketing', image: IMG('1.KNT2S5C-.jpg'), category: 'Digital PR' },
+  { number: '02', title: 'Social Media Management', subtitle: 'Content Creation & Community Engagement', image: IMG('2.DSXYZ2xp.jpg'), category: 'Social Media' },
+  { number: '03', title: 'Corporate Video Production', subtitle: 'Professional Business & Marketing Videos', image: IMG('3.vxFrgydp.jpg'), category: 'Video Production' },
+  { number: '04', title: 'Live Streaming Services', subtitle: 'Multi-Platform Event & Business Streaming', image: IMG('4.DXWurs_c.jpg'), category: 'Live Streaming' },
+  { number: '05', title: 'Event Videography', subtitle: 'Conference, Wedding & Concert Coverage', image: IMG('5.C55rukGK.jpg'), category: 'Video Production' },
+  { number: '06', title: 'Video Post-Production', subtitle: 'Editing, Color Grading & Motion Graphics', image: IMG('6.3WwCAlP6.jpg'), category: 'Post-Production' },
+  { number: '07', title: 'Online Reputation Management', subtitle: 'Brand Monitoring & Digital PR Strategy', image: IMG('7.MIxQhPxn.jpg'), category: 'Digital PR' },
+  { number: '08', title: 'Drone Videography', subtitle: 'Aerial Video & Photography Services', image: IMG('8.Dz641avr.jpg'), category: 'Specialized' },
+  { number: '09', title: 'Video Marketing & SEO', subtitle: 'Optimized Video Content & Analytics', image: IMG('9.RJIDsAe3.jpg'), category: 'Specialized' },
+  { number: '10', title: 'Commercial & Advertising', subtitle: 'TV Commercials & Digital Video Ads', image: IMG('10.CPh0a7DE.jpg'), category: 'Video Production' },
+];
+
+// Deterministic "scattered photograph" tilt per card, cycling through a
+// handful of small rotation values instead of a random() call (keeps
+// server-rendered markup stable between builds).
+const TILTS = [-3, 2, -1.5, 3, -2.5, 1.5, -3.5, 2.5, -1, 3.5];
 ---
 
 <BaseLayout title="Avietho - Our Projects">
-	<div class="min-h-screen flex items-center justify-center">
-		<div class="text-center">
-		<h1 class="text-4xl md:text-6xl font-bold text-accent mb-4">
-				Our Projects
-			</h1>
-			<p class="text-xl text-gray-300">
-				In-depth reporting and long-form narrative projects.
-			</p>
-		</div>
-	</div>
+  <main class="projects-page" style={`--background:${theme.background}; --accent:${theme.accent}; --text-primary:${theme.textPrimary}; --text-muted:${theme.textMuted}; --card:${theme.card};`}>
+
+    <!-- Hero -->
+    <section class="hero" style={`background-image: linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.8) 70%, var(--background) 100%), url(${projects[0].image});`}>
+      <div class="hero-inner reveal">
+        <p class="eyebrow">Portfolio</p>
+        <h1 class="hero-title">Our Portfolio<br /><em>Projects</em></h1>
+        <p class="hero-sub">A behind-the-scenes look into the systems we&rsquo;ve shipped &mdash; and the results they delivered.</p>
+      </div>
+      <div class="scroll-cue reveal">
+        <span></span>
+        Scroll
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery">
+      <div class="gallery-head reveal">
+        <p class="eyebrow">The Work</p>
+        <h2 class="gallery-title">All Projects</h2>
+      </div>
+
+      <!-- Category filter -->
+      <div class="filters reveal" role="tablist" aria-label="Filter projects by category">
+        {categories.map((cat, i) => (
+          <button
+            type="button"
+            class={`filter-pill ${i === 0 ? 'is-active' : ''}`}
+            data-filter={cat}
+            role="tab"
+            aria-selected={i === 0 ? 'true' : 'false'}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <!-- Scattered photograph grid -->
+      <div class="grid">
+        {projects.map((p, i) => (
+          <a
+            href="#"
+            class="card reveal"
+            data-category={p.category}
+            style={`--tilt:${TILTS[i % TILTS.length]}deg; --delay:${(i % 6) * 70}ms;`}
+          >
+            <div class="card-photo">
+              <img src={p.image} alt={p.title} loading="lazy" />
+              <span class="card-number">{p.number}</span>
+            </div>
+            <div class="card-caption">
+              <span class="card-category">{p.category}</span>
+              <h3 class="card-title">{p.title}</h3>
+              <p class="card-subtitle">{p.subtitle}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <p class="empty-state" id="empty-state" hidden>No projects in this category yet.</p>
+    </section>
+
+    <!-- Closing -->
+    <section class="closing reveal">
+      <div class="closing-rule"></div>
+      <h2 class="closing-title">Every project, a system<br /><em>shipped and delivered.</em></h2>
+      <div class="closing-actions">
+        <a href="tel:+6397831987" class="closing-link">+63 978 3198 7</a>
+        <a href="mailto:marketing.avietho@gmail.com" class="closing-link">marketing.avietho@gmail.com</a>
+      </div>
+    </section>
+  </main>
 </BaseLayout>
+
+<script>
+  // 1) Scroll-reveal for hero/headers/cards, with each card cascading in
+  //    using its own --delay custom property (Ancestry's masonry gallery
+  //    staggers rather than popping everything in at once).
+  // 2) Category filter pills re-flow the grid with a fade+scale transition.
+  const revealEls = document.querySelectorAll<HTMLElement>('.reveal');
+  const revealIo = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealIo.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -6% 0px' }
+  );
+  revealEls.forEach((el) => revealIo.observe(el));
+
+  const pills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
+  const cards = document.querySelectorAll<HTMLAnchorElement>('.card');
+  const emptyState = document.getElementById('empty-state') as HTMLParagraphElement;
+
+  function applyFilter(filter: string): void {
+    let visibleCount = 0;
+    cards.forEach((card) => {
+      const matches = filter === 'All' || card.dataset.category === filter;
+      if (matches) visibleCount++;
+      card.classList.toggle('is-filtered-out', !matches);
+    });
+    emptyState.hidden = visibleCount !== 0;
+  }
+
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      pills.forEach((p) => {
+        p.classList.remove('is-active');
+        p.setAttribute('aria-selected', 'false');
+      });
+      pill.classList.add('is-active');
+      pill.setAttribute('aria-selected', 'true');
+      applyFilter(pill.dataset.filter ?? 'All');
+    });
+  });
+</script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+  .projects-page {
+    background: var(--background);
+    color: var(--text-primary);
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    min-height: 92svh;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+  }
+  .hero-inner {
+    max-width: 900px;
+  }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    font-weight: 500;
+    font-size: clamp(3rem, 9vw, 7rem);
+    line-height: 1.02;
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-sub {
+    margin-top: 32px;
+    font-size: clamp(15px, 1.6vw, 18px);
+    color: var(--text-muted);
+    max-width: 46ch;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .scroll-cue span {
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scroll-cue-move 2s ease-in-out infinite;
+  }
+  @keyframes scroll-cue-move {
+    0% { transform: scaleY(0.3); opacity: 0.4; }
+    50% { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(0.3); opacity: 0.4; }
+  }
+
+  /* ---------- Gallery header ---------- */
+  .gallery {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 120px 24px 40px;
+  }
+  .gallery-head {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .gallery-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(2rem, 4.4vw, 3.2rem);
+    color: var(--text-primary);
+  }
+
+  /* ---------- Filter pills ---------- */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 64px;
+  }
+  .filter-pill {
+    font: inherit;
+    cursor: pointer;
+    padding: 9px 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(245, 245, 245, 0.14);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  }
+  .filter-pill:hover {
+    color: var(--text-primary);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .filter-pill.is-active {
+    color: var(--background);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* ---------- Scattered photograph grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 56px 32px;
+    padding: 20px 0 60px;
+  }
+  @media (min-width: 720px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 72px 40px;
+    }
+  }
+  @media (min-width: 1100px) {
+    .grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transform: rotate(var(--tilt)) translateY(0);
+    transition: transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.4s ease;
+    transition-delay: 0s, 0s;
+  }
+  .card:hover {
+    transform: rotate(0deg) translateY(-10px) scale(1.045);
+    z-index: 2;
+  }
+  .card.is-filtered-out {
+    opacity: 0;
+    transform: rotate(var(--tilt)) scale(0.85);
+    pointer-events: none;
+    position: absolute;
+    visibility: hidden;
+  }
+
+  .card-photo {
+    position: relative;
+    background: var(--card);
+    padding: 10px 10px 0;
+    border-radius: 3px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.4s ease;
+  }
+  .card:hover .card-photo {
+    box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55), 0 6px 14px rgba(0, 0, 0, 0.35);
+  }
+  .card-photo img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    filter: saturate(0.94) contrast(1.02);
+  }
+  .card-number {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: #fff;
+    background: rgba(10, 10, 10, 0.55);
+    backdrop-filter: blur(4px);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .card-caption {
+    padding: 14px 6px 20px;
+    text-align: center;
+  }
+  .card-category {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 19px;
+    color: var(--text-primary);
+    line-height: 1.25;
+  }
+  .card-subtitle {
+    margin-top: 6px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 40px 0;
+  }
+
+  /* ---------- Closing ---------- */
+  .closing {
+    padding: 100px 24px 160px;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .closing-rule {
+    width: 1px;
+    height: 64px;
+    background: linear-gradient(to bottom, transparent, var(--accent));
+    margin: 0 auto 48px;
+  }
+  .closing-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(1.9rem, 4.4vw, 3.2rem);
+    line-height: 1.2;
+    color: var(--text-primary);
+  }
+  .closing-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .closing-actions {
+    margin-top: 44px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 28px;
+  }
+  .closing-link {
+    font-size: 15px;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .closing-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* ---------- Scroll reveal (cascading via --delay) ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease var(--delay, 0ms), transform 0.7s ease var(--delay, 0ms);
+  }
+  .card.reveal {
+    transform: rotate(var(--tilt)) translateY(24px);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .card.reveal.is-visible {
+    transform: rotate(var(--tilt)) translateY(0);
+  }
+  .card.reveal.is-visible:hover {
+    transform: rotate(0deg) translateY(-10px) scale(1.045);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .card {
+      opacity: 1;
+      transform: none !important;
+      transition: none !important;
+    }
+    .scroll-cue span {
+      animation: none;
+    }
+  }
+</style>
