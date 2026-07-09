@@ -13,9 +13,9 @@
     --color-background-card: #1A1A1A;
     --color-foreground: #F5F5F5;
     --color-accent: #C9A44C;
-    --color-accent-hover: #B8943F;
+    --color-accent-hover: #ffb301;
     --color-muted: rgba(255, 255, 255, 0.1);
-    --color-muted-hover: rgba(255, 255, 255, 0.2);
+    --color-muted-hover: rgba(255, 255, 255, 0.45);
 
     /* Typography */
     --font-heading: 'Playfair Display', serif;
@@ -62,19 +62,13 @@
   }
 }
 
-@layer components {
-  .nav-link {
-    @apply text-gray-300 hover:text-white transition-colors duration-200;
-  }
-}
-
 @layer utilities {
-  .icon-idle {
-    filter: invert(100%) sepia(4%) saturate(25%) hue-rotate(265deg) brightness(112%) contrast(92%);
-    transition: filter 0.3s ease-in-out;
-  }
+	.icon-idle {
+		filter: invert(100%) sepia(4%) saturate(25%) hue-rotate(265deg) brightness(112%) contrast(92%);
+		transition: filter 0.3s ease-in-out;
+	}
 
-  .icon-hover {
-    filter: invert(68%) sepia(35%) saturate(624%) hue-rotate(4deg) brightness(91%) contrast(89%);
-  }
+	.icon-hover {
+		filter: invert(68%) sepia(35%) saturate(624%) hue-rotate(4deg) brightness(91%) contrast(89%);
+	}
 }

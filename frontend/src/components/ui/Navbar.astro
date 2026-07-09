@@ -1,329 +1,201 @@
 ---
-// Navbar.astro — sticky, glass-blurred nav modeled on resend.com/home's
-// motion language (blur-on-scroll, underline-trace hover, staggered
-// mobile reveal) but rebuilt on our own editorial theme. Colors are
-// sourced from the skills.md content-collection entry, same pattern as
-// ChatWidget.astro, so the palette never drifts out of sync.
-
-import { getEntry } from "astro:content";
+// Navbar.astro — sticky, glass-blurred navigation
+// Refactored to use Tailwind utility classes and design system tokens
 import { Image } from "astro:assets";
 import logo from "../../assets/logo/Avietho_logo.png";
 
 interface NavLink {
-  href: string;
-  label: string;
+	href: string;
+	label: string;
 }
 
 const navLinks: NavLink[] = [
-  { href: "/", label: "Home" },
-  { href: "/services", label: "Our Services" },
-  { href: "/projects", label: "Our Projects" },
-  { href: "/about", label: "About" },
+	{ href: "/", label: "Home" },
+	{ href: "/services", label: "Our Services" },
+	{ href: "/projects", label: "Our Projects" },
+	{ href: "/about", label: "About" },
 ];
 
-// Pulled from skills.md's frontmatter rather than hard-coded — see
-// ChatWidget.astro for the same pattern.
-const skillsEntry = await getEntry("docs", "skills");
-
-const themeData = skillsEntry?.data?.theme ?? {
-  mode: "dark",
-  background: "#0A0A0A",
-  accent: "#C9A44C",
-  textPrimary: "#F5F5F5",
-};
-
-const theme = {
-  background: themeData.background,
-  accent: themeData.accent,
-  textPrimary: themeData.textPrimary,
-  textMuted: themeData.mode === "dark" ? "#8A8A8A" : "#6B6B6B",
-  border: themeData.mode === "dark" ? "rgba(245,245,245,0.08)" : "rgba(10,10,10,0.08)",
-  glass: themeData.mode === "dark" ? "rgba(10,10,10,0.55)" : "rgba(255,255,255,0.65)",
-  glassScrolled: themeData.mode === "dark" ? "rgba(10,10,10,0.86)" : "rgba(255,255,255,0.9)",
-};
 ---
 
-<nav id="site-nav" class="nav-root" style={`--background:${theme.background}; --accent:${theme.accent}; --text-primary:${theme.textPrimary}; --text-muted:${theme.textMuted}; --border:${theme.border}; --glass:${theme.glass}; --glass-scrolled:${theme.glassScrolled};`}>
-  <div class="nav-inner">
-    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
-      <!-- Logo -->
-      <a href="/" class="nav-logo" aria-label="Home">
-        <Image src={logo} alt="Avietho Logo" class="h-auto w-14" />
-      </a>
+<nav
+	id="site-nav"
+	class="sticky top-0 z-50 w-full font-body text-foreground animate-nav-enter"
+>
+	<div
+		id="nav-container"
+		class="bg-background-overlay/80 backdrop-blur-md border-b border-muted transition-all duration-300"
+	>
+		<div
+			id="nav-inner"
+			class="max-w-7xl mx-auto px-6 flex items-center justify-between py-2.5 transition-all duration-300"
+		>
+			<!-- Logo -->
+			<a href="/" class="block font-heading" aria-label="Home">
+				<Image
+					src={logo}
+					alt="Avietho Logo"
+					class="h-auto w-14 transition-opacity duration-200 hover:opacity-82"
+				/>
+			</a>
 
-      <!-- Desktop Navigation -->
-      <div class="hidden md:flex items-center gap-x-2">
-        {navLinks.map((link) => (
-          <a href={link.href} class="nav-link">
-            <span>{link.label}</span>
-          </a>
-        ))}
-      </div>
+			<!-- Desktop Navigation -->
+			<div class="hidden md:flex items-center gap-x-2">
+				{navLinks.map((link) => (
+					<a
+						href={link.href}
+						class="relative inline-block px-3.5 py-1 text-sm font-medium text-[var(--color-foreground)] hover:text-[var(--color-accent-hover)] transition-colors duration-200"
+					>
+						<span class="relative">
+							{link.label}
+							<span
+								class="absolute left-3.5 right-3.5 -bottom-1 h-px bg-accent origin-left scale-x-0 transition-transform duration-300 ease-out"
+							></span>
+						</span>
+					</a>
+				))}
+			</div>
 
-      <!-- Desktop CTA -->
-      <div class="hidden md:block">
-        <a href="/" class="nav-cta">Get Started</a>
-      </div>
+			<!-- Desktop CTA -->
+			<div class="hidden md:block">
+				<a
+					href="/"
+					class="inline-flex items-center px-[18px] py-[7px] rounded-full bg-accent text-background text-sm font-semibold transition-all duration-200 hover:brightness-110 hover:-translate-y-px"
+				>
+					Get Started
+				</a>
+			</div>
 
-      <!-- Mobile menu button -->
-      <button id="menu-toggle" type="button" class="menu-toggle md:hidden" aria-label="Open menu" aria-expanded="false">
-        <span class="menu-bar bar-top"></span>
-        <span class="menu-bar bar-mid"></span>
-        <span class="menu-bar bar-bottom"></span>
-      </button>
-    </div>
-  </div>
+			<!-- Mobile menu button -->
+			<button
+				id="menu-toggle"
+				type="button"
+				class="relative w-8 h-6 bg-transparent border-none cursor-pointer p-0 md:hidden"
+				aria-label="Open menu"
+				aria-expanded="false"
+			>
+				<span
+					id="menu-bar-1"
+					class="menu-bar absolute left-0 right-0 h-0.5 bg-foreground rounded transition-all duration-300"
+					style="top: 0;"
+				></span>
+				<span
+					id="menu-bar-2"
+					class="menu-bar absolute left-0 right-0 h-0.5 bg-foreground rounded transition-all duration-300"
+					style="top: 11px;"
+				></span>
+				<span
+					id="menu-bar-3"
+					class="menu-bar absolute left-0 right-0 h-0.5 bg-foreground rounded transition-all duration-300"
+					style="top: 22px;"
+				></span>
+			</button>
+		</div>
+	</div>
 
-  <!-- Mobile panel -->
-  <div id="mobile-panel" class="mobile-panel">
-    <div class="mobile-panel-inner">
-      {navLinks.map((link, i) => (
-        <a href={link.href} class="mobile-link" style={`--i:${i};`}>
-          {link.label}
-        </a>
-      ))}
-      <a href="/subscribe" class="mobile-cta" style={`--i:${navLinks.length};`}>Subscribe</a>
-    </div>
-  </div>
+	<!-- Mobile panel -->
+	<div
+		id="mobile-panel"
+		class="max-h-0 overflow-hidden bg-background-overlay/80 backdrop-blur-md border-t border-muted transition-all duration-400 ease-out"
+	>
+		<div class="flex flex-col px-6 py-2 pb-5">
+			{navLinks.map((link, i) => (
+				<a
+					href={link.href}
+					class="py-3 text-base font-medium text-[var(--color-foreground)] no-underline border-b border-muted opacity-0 -translate-y-1.5 transition-colors duration-200 hover:text-[var(--color-accent-hover)]"
+					style="--i: {i};"
+				>
+					{link.label}
+				</a>
+			))}
+			<a
+				href="/subscribe"
+				class="py-3 text-base font-semibold text-accent no-underline border-b-0 opacity-0 -translate-y-1.5"
+				style="--i: {navLinks.length};"
+			>
+				Subscribe
+			</a>
+		</div>
+	</div>
 </nav>
 
 <script>
-  // Scroll state: nav condenses and its glass panel opacifies, mirroring
-  // resend.com's subtle shrink-on-scroll. Mobile menu: hamburger morphs
-  // into an X and the panel reveals with a staggered link fade — the
-  // signature motion moment for this component (mirrored, quieter, in
-  // gold rather than resend's monochrome).
-  const nav = document.getElementById("site-nav") as HTMLElement;
-  const toggle = document.getElementById("menu-toggle") as HTMLButtonElement;
-  const panel = document.getElementById("mobile-panel") as HTMLDivElement;
+	// Scroll state: navbar condenses and glass opacifies on scroll
+	const nav = document.getElementById("site-nav") as HTMLElement;
+	const navContainer = document.getElementById("nav-container") as HTMLElement;
+	const navInner = document.getElementById("nav-inner") as HTMLElement;
+	const toggle = document.getElementById("menu-toggle") as HTMLButtonElement;
+	const panel = document.getElementById("mobile-panel") as HTMLDivElement;
+	const menuBar1 = document.getElementById("menu-bar-1") as HTMLElement;
+	const menuBar2 = document.getElementById("menu-bar-2") as HTMLElement;
+	const menuBar3 = document.getElementById("menu-bar-3") as HTMLElement;
+	const SCROLL_THRESHOLD = 24;
 
-  const SCROLL_THRESHOLD = 24;
+	function onScroll(): void {
+		const isScrolled = window.scrollY > SCROLL_THRESHOLD;
+		
+		// Apply Tailwind classes conditionally based on scroll state
+		if (isScrolled) {
+			navContainer.classList.remove("bg-background-overlay/80");
+			navContainer.classList.add("bg-background-overlay/90", "shadow-lg");
+			navInner.classList.remove("py-2.5");
+			navInner.classList.add("py-2");
+		} else {
+			navContainer.classList.remove("bg-background-overlay/90", "shadow-lg");
+			navContainer.classList.add("bg-background-overlay/80");
+			navInner.classList.remove("py-2");
+			navInner.classList.add("py-2.5");
+		}
+	}
 
-  function onScroll(): void {
-    if (window.scrollY > SCROLL_THRESHOLD) {
-      nav.classList.add("is-scrolled");
-    } else {
-      nav.classList.remove("is-scrolled");
-    }
-  }
+	window.addEventListener("scroll", onScroll, { passive: true });
+	onScroll();
 
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+	let open = false;
+	function setMenu(next: boolean): void {
+		open = next;
+		toggle.setAttribute("aria-expanded", String(open));
+		
+		// Toggle menu bar animations directly
+		if (open) {
+			menuBar1.style.top = "11px";
+			menuBar1.classList.add("rotate-45");
+			menuBar2.classList.add("opacity-0");
+			menuBar3.style.top = "11px";
+			menuBar3.classList.add("-rotate-45");
+		} else {
+			menuBar1.style.top = "0";
+			menuBar1.classList.remove("rotate-45");
+			menuBar2.classList.remove("opacity-0");
+			menuBar3.style.top = "22px";
+			menuBar3.classList.remove("-rotate-45");
+		}
+		
+		// Toggle mobile panel
+		if (open) {
+			panel.style.maxHeight = "420px";
+			panel.querySelectorAll("a").forEach((a, i) => {
+				a.classList.add("animate-link-in");
+				a.style.animationDelay = `${i * 0.05}s`;
+			});
+		} else {
+			panel.style.maxHeight = "0px";
+			panel.querySelectorAll("a").forEach((a) => {
+				a.classList.remove("animate-link-in");
+				a.style.animationDelay = "";
+			});
+		}
+		
+		document.body.style.overflow = open ? "hidden" : "";
+	}
 
-  let open = false;
-  function setMenu(next: boolean): void {
-    open = next;
-    toggle.setAttribute("aria-expanded", String(open));
-    nav.classList.toggle("menu-open", open);
-    panel.classList.toggle("is-open", open);
-    document.body.style.overflow = open ? "hidden" : "";
-  }
+	toggle.addEventListener("click", () => setMenu(!open));
 
-  toggle.addEventListener("click", () => setMenu(!open));
+	panel.querySelectorAll("a").forEach((a) =>
+		a.addEventListener("click", () => setMenu(false))
+	);
 
-  panel.querySelectorAll("a").forEach((a) =>
-    a.addEventListener("click", () => setMenu(false))
-  );
-
-  window.addEventListener("resize", () => {
-    if (window.innerWidth >= 768 && open) setMenu(false);
-  });
+	window.addEventListener("resize", () => {
+		if (window.innerWidth >= 768 && open) setMenu(false);
+	});
 </script>
-
-<style>
-  .nav-root {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    width: 100%;
-    color: var(--text-primary);
-    animation: nav-enter 0.5s ease both;
-  }
-
-  .nav-inner {
-    background: var(--glass);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border);
-    transition: background 0.35s ease, padding 0.3s ease, box-shadow 0.35s ease;
-  }
-
-  .nav-inner > div {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    transition: padding 0.3s ease;
-  }
-
-  .nav-root.is-scrolled .nav-inner {
-    background: var(--glass-scrolled);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-  }
-
-  .nav-root.is-scrolled .nav-inner > div {
-    padding-top: 7px;
-    padding-bottom: 7px;
-  }
-
-  .nav-logo {
-    display: block;
-    opacity: 1;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-  .nav-logo:hover {
-    opacity: 0.82;
-    transform: translateY(-1px);
-  }
-
-  /* ---------- Underline-trace hover (signature motion) ---------- */
-  .nav-link {
-    position: relative;
-    display: inline-block;
-    padding: 4px 14px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  .nav-link span {
-    position: relative;
-  }
-  .nav-link::after {
-    content: "";
-    position: absolute;
-    left: 14px;
-    right: 14px;
-    bottom: 4px;
-    height: 1px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
-  }
-  .nav-link:hover {
-    color: var(--text-primary);
-  }
-  .nav-link:hover::after {
-    transform: scaleX(1);
-  }
-
-  .nav-cta {
-    display: inline-flex;
-    align-items: center;
-    padding: 7px 18px;
-    border-radius: 999px;
-    background: var(--accent);
-    color: var(--background);
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: filter 0.2s ease, transform 0.2s ease;
-  }
-  .nav-cta:hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
-  }
-
-  /* ---------- Mobile hamburger -> X ---------- */
-  .menu-toggle {
-    position: relative;
-    width: 32px;
-    height: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-  }
-  .menu-bar {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--text-primary);
-    border-radius: 2px;
-    transition: transform 0.3s ease, opacity 0.2s ease, top 0.3s ease;
-  }
-  .bar-top { top: 2px; }
-  .bar-mid { top: 11px; }
-  .bar-bottom { top: 20px; }
-
-  .nav-root.menu-open .bar-top {
-    top: 11px;
-    transform: rotate(45deg);
-  }
-  .nav-root.menu-open .bar-mid {
-    opacity: 0;
-  }
-  .nav-root.menu-open .bar-bottom {
-    top: 11px;
-    transform: rotate(-45deg);
-  }
-
-  /* ---------- Mobile panel ---------- */
-  .mobile-panel {
-    max-height: 0;
-    overflow: hidden;
-    background: var(--glass-scrolled);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border);
-    transition: max-height 0.4s cubic-bezier(0.65, 0, 0.35, 1);
-  }
-  .mobile-panel.is-open {
-    max-height: 420px;
-  }
-  .mobile-panel-inner {
-    display: flex;
-    flex-direction: column;
-    padding: 8px 24px 20px;
-  }
-  .mobile-link,
-  .mobile-cta {
-    padding: 12px 0;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text-muted);
-    text-decoration: none;
-    border-bottom: 1px solid var(--border);
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  .mobile-cta {
-    color: var(--accent);
-    border-bottom: none;
-    font-weight: 600;
-  }
-  .mobile-panel.is-open .mobile-link,
-  .mobile-panel.is-open .mobile-cta {
-    animation: link-in 0.35s ease forwards;
-    animation-delay: calc(var(--i) * 0.05s);
-  }
-  .mobile-link:hover {
-    color: var(--text-primary);
-  }
-
-  @keyframes nav-enter {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes link-in {
-    from { opacity: 0; transform: translateY(-6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .nav-root,
-    .nav-inner,
-    .nav-inner > div,
-    .nav-logo,
-    .nav-link::after,
-    .nav-cta,
-    .menu-bar,
-    .mobile-panel,
-    .mobile-link,
-    .mobile-cta {
-      animation: none !important;
-      transition: none !important;
-    }
-  }
-</style>
