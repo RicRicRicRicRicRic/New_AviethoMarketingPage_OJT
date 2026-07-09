@@ -5,6 +5,20 @@ interface Props {
 }
 
 const { title = 'SOCIAL MEDIA IMPACT' } = Astro.props;
+
+// Import social media icons
+import facebookIcon from '/src/assets/icons/facebook_icon.png';
+import instagramIcon from '/src/assets/icons/instagram_icon.png';
+import tiktokIcon from '/src/assets/icons/tiktok_icon.png';
+import youtubeIcon from '/src/assets/icons/youtube_icon.png';
+
+// Social media icons array (only the 4 main platforms)
+const socialIcons = [
+	{ name: 'Facebook', src: facebookIcon.src, alt: 'Facebook' },
+	{ name: 'Instagram', src: instagramIcon.src, alt: 'Instagram' },
+	{ name: 'TikTok', src: tiktokIcon.src, alt: 'TikTok' },
+	{ name: 'YouTube', src: youtubeIcon.src, alt: 'YouTube' },
+];
 ---
 
 <section class="bg-background-elevated py-12 px-4">
@@ -67,6 +81,64 @@ const { title = 'SOCIAL MEDIA IMPACT' } = Astro.props;
 			<button class="bg-transparent border-2 border-accent text-accent px-6 py-3 rounded-lg font-semibold text-base hover:bg-accent hover:text-background transition-colors duration-300 w-full sm:w-auto">
 				See real results
 			</button>
+		</div>
+
+		<!-- Connect with us Section -->
+		<div class="relative mt-10 h-16" x-data="{ open: false }">
+			<!-- Connect with us Trigger Button -->
+			<div 
+				class="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
+				:class="open ? 'opacity-0 pointer-events-none' : 'opacity-100'"
+			>
+				<button 
+					@click="open = true"
+					class="text-accent underline underline-offset-4 text-lg font-medium hover:text-accent-hover transition-colors duration-300"
+				>
+					Connect with us
+				</button>
+			</div>
+
+			<!-- Social Tray (Horizontal Bar) -->
+			<div 
+				x-show="open"
+				x-transition:enter="transition transform duration-500 ease-out"
+				x-transition:enter-start="translate-x-full opacity-0"
+				x-transition:enter-end="translate-x-0 opacity-100"
+				x-transition:leave="transition transform duration-500 ease-in"
+				x-transition:leave-start="translate-x-0 opacity-100"
+				x-transition:leave-end="translate-x-full opacity-0"
+				class="absolute left-1/4 w-1/2 inset-y-0 flex bg-background-elevated border border-accent/20 rounded-lg shadow-2xl items-center justify-between px-4 "
+				@click.away="open = false"
+			>
+				<!-- Back Button -->
+				<button 
+					@click="open = false"
+					class="flex items-center justify-center w-10 h-10 rounded-full bg-background border border-accent/20 text-accent hover:bg-accent hover:text-background transition-all duration-300 flex-shrink-0 mr-6"
+					title="Back"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right rotate-180">
+						<path d="m12 19-7-7 7-7" />
+						<path d="M19 12H5" />
+					</svg>
+				</button>
+
+				<!-- Social Icons Row (Centered) -->
+				<div class="flex-grow flex items-center justify-center gap-4">
+					{socialIcons.map((icon) => (
+						<a 
+							href="#" 
+							class="h-12 w-12 rounded-full flex items-center justify-center bg-background border border-accent/20 hover:scale-110 hover:bg-accent/10 transition-all duration-300 group flex-shrink-0"
+							title={icon.name}
+						>
+							<img 
+								src={icon.src} 
+								alt={icon.alt} 
+								class="w-6 h-6 object-contain icon-idle group-hover:icon-hover transition-all"
+							/>
+						</a>
+					))}
+				</div>
+			</div>
 		</div>
 	</div>
 </section>
