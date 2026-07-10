@@ -37,16 +37,16 @@ const socialIcons = [
 		</div>
 
 		<!-- Stats Grid -->
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-			<div class="text-center">
+		<div class="grid grid-cols-1 sm:grid-cols-3 mb-8">
+			<div class="text-center ">
 				<p class="text-3xl md:text-4xl font-bold text-accent mb-2">46K</p>
 				<p class="text-base text-gray-300">Facebook Followers</p>
 			</div>
-			<div class="text-center">
+			<div class="text-center ">
 				<p class="text-3xl md:text-4xl font-bold text-accent mb-2">100+</p>
 				<p class="text-base text-gray-300">Projects Done</p>
 			</div>
-			<div class="text-center">
+			<div class="text-center ">
 				<p class="text-3xl md:text-4xl font-bold text-accent mb-2">50+</p>
 				<p class="text-base text-gray-300">Happy Clients</p>
 			</div>
@@ -98,32 +98,31 @@ const socialIcons = [
 				</button>
 			</div>
 
-			<!-- Social Tray (Horizontal Bar) -->
-			<div 
-				x-show="open"
-				x-transition:enter="transition transform duration-500 ease-out"
-				x-transition:enter-start="translate-x-full opacity-0"
-				x-transition:enter-end="translate-x-0 opacity-100"
-				x-transition:leave="transition transform duration-500 ease-in"
-				x-transition:leave-start="translate-x-0 opacity-100"
-				x-transition:leave-end="translate-x-full opacity-0"
-			class="absolute left-1/4 w-1/2 inset-y-0 flex bg-[var(--color-background-overlay)] border border-accent/20 rounded-lg shadow-2xl items-center justify-between px-4"
-				@click.away="open = false"
+		<!-- Social Tray (Horizontal Bar) -->
+		<div 
+			x-show="open"
+			x-transition:enter="transition transform duration-500 ease-out"
+			x-transition:enter-start="translate-x-full opacity-0"
+			x-transition:enter-end="translate-x-0 opacity-100"
+			x-transition:leave="transition transform duration-500 ease-in"
+			x-transition:leave-start="translate-x-0 opacity-100"
+			x-transition:leave-end="translate-x-full opacity-0"
+		class="absolute left-1/4 w-1/2 inset-y-0 flex bg-white/10 backdrop-blur-md border border-white/10 rounded-lg shadow-lg items-center justify-center px-4"
+		>
+			<!-- Back Button -->
+			<button 
+				@click="open = false"
+				class="absolute left-4 flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-background)] border border-accent/20 text-accent hover:bg-accent hover:text-background transition-all duration-300 flex-shrink-0"
+				title="Back"
 			>
-				<!-- Back Button -->
-				<button 
-					@click="open = false"
-					class="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-background)] border border-accent/20 text-accent hover:bg-accent hover:text-background transition-all duration-300 flex-shrink-0 mr-6"
-					title="Back"
-				>
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right rotate-180">
-						<path d="m12 19-7-7 7-7" />
-						<path d="M19 12H5" />
-					</svg>
-				</button>
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right rotate-180">
+					<path d="m12 19-7-7 7-7" />
+					<path d="M19 12H5" />
+				</svg>
+			</button>
 
-				<!-- Social Icons Row (Centered) -->
-				<div class="flex-grow flex items-center justify-center gap-4">
+			<!-- Social Icons Row (Centered) -->
+			<div class="flex items-center justify-center gap-4">
 					{socialIcons.map((icon) => (
 						<a 
 							href="#" 
