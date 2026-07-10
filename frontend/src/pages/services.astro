@@ -310,6 +310,7 @@ const categories: Category[] = [
         <div class="panel-media">
           <img src={cat.heroImage} alt={cat.title} loading="lazy" />
         </div>
+        <div class="panel-scrim"></div>
         <div class="panel-body">
           <span class="panel-number">{cat.number}</span>
           <h2 class="panel-title">{cat.title}</h2>
@@ -427,6 +428,7 @@ const categories: Category[] = [
 
   /* ---------- Panels ---------- */
   .panel {
+    position: relative;
     max-width: 1200px;
     margin: 0 auto;
     padding: 72px 24px;
@@ -436,6 +438,57 @@ const categories: Category[] = [
     border-top: 1px solid var(--border);
     scroll-margin-top: 90px;
   }
+
+  /* Mobile only: the photo becomes the panel's full-bleed background so
+     text stays readable, instead of stacking above it as its own block.
+     Desktop layout/motion below is untouched. */
+  .panel-scrim {
+    display: none;
+  }
+  @media (max-width: 899px) {
+    .panel {
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .panel-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: 0;
+      border: none;
+      opacity: 0;
+      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .panel.is-visible .panel-media {
+      opacity: 1;
+    }
+    .panel-media img {
+      max-height: none;
+      height: 100%;
+    }
+    .panel-scrim {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+        180deg,
+        rgba(10, 10, 10, 0.55) 0%,
+        rgba(10, 10, 10, 0.85) 45%,
+        var(--background) 90%
+      );
+      opacity: 0;
+      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .panel.is-visible .panel-scrim {
+      opacity: 1;
+    }
+    .panel-body {
+      position: relative;
+      z-index: 2;
+    }
+  }
+
   @media (min-width: 900px) {
     .panel {
       grid-template-columns: 0.85fr 1.15fr;
