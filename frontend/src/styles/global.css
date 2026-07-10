@@ -22,6 +22,8 @@
     --color-text-muted: #9A9A9A;
     --color-surface: #131313;
     --color-border: rgba(245, 245, 245, 0.10);
+    --color-text-subtle: #B5B5B5;
+    --color-card: #141414;
 
     /* Typography */
     --font-heading: 'Playfair Display', serif;

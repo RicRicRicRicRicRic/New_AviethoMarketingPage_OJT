@@ -5,19 +5,23 @@ import { getEntry } from 'astro:content';
 
 const skillsEntry = await getEntry('docs', 'skills');
 
-const themeData = skillsEntry?.data?.theme ?? {
-  mode: 'dark',
-  background: '#0A0A0A',
-  accent: '#C9A44C',
-  textPrimary: '#F5F5F5',
-};
+// If the CMS supplies a theme entry, honor it exactly as before. Otherwise,
+// fall back to the site's design tokens from global.css (via var(--...))
+// instead of duplicating hardcoded hex values here. This keeps the page in
+// sync with the global palette by default while still allowing a CMS
+// override, same pattern as services.astro / ChatWidget.astro / Navbar.astro.
+const themeData = skillsEntry?.data?.theme ?? null;
 
 const theme = {
-  background: themeData.background,
-  accent: themeData.accent,
-  textPrimary: themeData.textPrimary,
-  textMuted: themeData.mode === 'dark' ? '#B5B5B5' : '#5A5A5A',
-  card: themeData.mode === 'dark' ? '#141414' : '#FAFAFA',
+  background: themeData?.background ?? 'var(--color-background)',
+  accent: themeData?.accent ?? 'var(--color-accent)',
+  textPrimary: themeData?.textPrimary ?? 'var(--color-foreground)',
+  textMuted: themeData
+    ? (themeData.mode === 'dark' ? '#B5B5B5' : '#5A5A5A')
+    : 'var(--color-text-subtle)',
+  card: themeData
+    ? (themeData.mode === 'dark' ? '#141414' : '#FAFAFA')
+    : 'var(--color-card)',
 };
 
 interface Project {
