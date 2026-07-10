@@ -3,6 +3,10 @@
 // Reusable slideshow for displaying team members.
 // Autoplays on an interval, and can be dragged (mouse or touch) to move
 // between slides instead of using prev/next buttons.
+//
+// Slots are centered with left:50% + translateX/scale only (no animated
+// left/width), so the center card stays mathematically centered at any
+// viewport size instead of drifting mid-transition on small screens.
 
 interface TeamMember {
 	name: string;
@@ -23,7 +27,7 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 <div class="team-slideshow w-full" data-team-members={teamData} data-current-index={currentIndex}>
 	<!-- Slideshow Wrapper -->
 	<div
-		class="slideshow-wrapper relative w-full max-w-md h-[350px] md:h-[475px] overflow-hidden cursor-grab select-none"
+		class="slideshow-wrapper relative w-full max-w-md mx-auto h-[350px] md:h-[475px] overflow-hidden cursor-grab select-none"
 		id="slideshow-wrapper"
 	>
 		{slotOffsets.map((offset, i) => {
@@ -275,26 +279,25 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 	 * These styles are necessary for the fixed-slot sliding carousel animation
 	 */
 
-	.slideshow-wrapper {
-		touch-action: pan-y;
-	}
 	.slideshow-wrapper.is-dragging {
 		cursor: grabbing;
 	}
 
-	/* Base image slot positioning */
+	/* Base image slot: centered via left:50%, every slot the same size —
+	   only transform (translateX + scale), opacity, and filter animate.
+	   This keeps the center card mathematically centered at any viewport
+	   width, instead of the old left/width combination that could drift
+	   mid-transition on small screens. */
 	.image-slot {
 		position: absolute;
 		top: 50%;
-		width: 33.333%;
-		border-radius: 0.5rem;
-		overflow: hidden;
+		left: 50%;
+		width: 62%;
+		height: 14rem;
 		--tx: 0%;
 		--scale: 1;
-		transform: translate(var(--tx), -50%) scale(var(--scale));
-		transition: left 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-			width 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-			transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+		transform: translate(-50%, -50%) translateX(var(--tx)) scale(var(--scale));
+		transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
 			opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
 			filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 	}
@@ -305,68 +308,50 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 		display: block;
 	}
 
-	/* Off-screen left (fully clipped by overflow-hidden) */
 	.image-slot.is-farleft {
-		left: 0;
-		--tx: -100%;
+		--tx: -118%;
 		--scale: 0.6;
 		opacity: 0;
 		filter: grayscale(1) blur(2px);
 		z-index: 5;
-		height: 14rem;
 	}
 
-	/* Visible left slot */
 	.image-slot.is-left {
-		left: 0;
-		--tx: 0%;
+		--tx: -60%;
 		--scale: 0.75;
 		opacity: 0.5;
 		filter: grayscale(1) blur(1px);
 		z-index: 10;
-		height: 14rem;
 	}
 
-	/* Visible center slot */
 	.image-slot.is-center {
-		left: 50%;
-		width: 66.666%;
-		height: 16rem;
-		--tx: -50%;
+		--tx: 0%;
 		--scale: 1;
 		opacity: 1;
 		filter: none;
 		z-index: 20;
+		height: 16rem;
 	}
 
-	/* Visible right slot */
 	.image-slot.is-right {
-		left: 100%;
-		--tx: -100%;
+		--tx: 60%;
 		--scale: 0.75;
 		opacity: 0.5;
 		filter: grayscale(1) blur(1px);
 		z-index: 10;
-		height: 14rem;
 	}
 
-	/* Off-screen right (fully clipped by overflow-hidden) */
 	.image-slot.is-farright {
-		left: 100%;
-		--tx: 0%;
+		--tx: 118%;
 		--scale: 0.6;
 		opacity: 0;
 		filter: grayscale(1) blur(2px);
 		z-index: 5;
-		height: 14rem;
 	}
 
 	/* Responsive heights for medium screens and up */
 	@media (min-width: 768px) {
-		.image-slot.is-farleft,
-		.image-slot.is-left,
-		.image-slot.is-right,
-		.image-slot.is-farright {
+		.image-slot {
 			height: 18rem;
 		}
 		.image-slot.is-center {
