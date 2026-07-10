@@ -20,26 +20,30 @@ const {
 
 // Pull the `theme` object straight from skills.md's frontmatter
 // (collection: "docs", slug: "skills") instead of restating the hex
-// values here. Falls back to sane defaults only if the entry or field
-// is ever missing, so the widget never hard-fails a build.
+// values here. If the CMS entry (or the theme field on it) is missing,
+// fall back to the site's design tokens from global.css (via var(--...))
+// rather than duplicating hex values in this file, so the widget stays in
+// sync with the global palette by default while a CMS override still wins
+// when present.
 const skillsEntry = await getEntry("docs", "skills");
 
-const themeData = skillsEntry?.data?.theme ?? {
-  mode: "dark",
-  background: "#0A0A0A",
-  accent: "#C9A44C",
-  textPrimary: "#F5F5F5",
-};
+const themeData = skillsEntry?.data?.theme ?? null;
 
 const theme = {
-  background: themeData.background,
-  accent: themeData.accent,
-  textPrimary: themeData.textPrimary,
+  background: themeData?.background ?? "var(--color-background)",
+  accent: themeData?.accent ?? "var(--color-accent)",
+  textPrimary: themeData?.textPrimary ?? "var(--color-foreground)",
   // Derived tokens not present in the schema — computed relative to the
   // sourced values rather than invented independently.
-  surface: themeData.mode === "dark" ? "#151515" : "#F0F0F0",
-  textMuted: themeData.mode === "dark" ? "#A3A3A3" : "#5A5A5A",
-  border: themeData.mode === "dark" ? "#2A2A2A" : "#DDDDDD",
+  surface: themeData
+    ? (themeData.mode === "dark" ? "#151515" : "#F0F0F0")
+    : "var(--color-chat-surface)",
+  textMuted: themeData
+    ? (themeData.mode === "dark" ? "#A3A3A3" : "#5A5A5A")
+    : "var(--color-chat-muted)",
+  border: themeData
+    ? (themeData.mode === "dark" ? "#2A2A2A" : "#DDDDDD")
+    : "var(--color-chat-border)",
 };
 ---
 
