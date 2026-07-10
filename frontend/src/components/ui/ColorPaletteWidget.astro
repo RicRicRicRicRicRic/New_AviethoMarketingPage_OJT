@@ -15,73 +15,26 @@ const {} = Astro.props;
   <!-- Expanded Panel -->
   <div 
     id="color-palette-panel"
-    class="hidden absolute bottom-full mb-3 left-0 p-4 rounded-lg bg-background-elevated border border-accent/20 shadow-2xl backdrop-blur-md"
+    class="hidden absolute top-full mt-3 left-0 p-3 rounded-lg bg-background-elevated border border-accent/20 shadow-2xl backdrop-blur-md"
     style="width: 240px;"
   >
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-3">
-      <h3 class="text-sm font-semibold text-foreground font-heading">Theme Colors</h3>
-      <button 
-        id="close-panel-btn"
-        class="text-muted hover:text-foreground transition-colors"
-        aria-label="Close panel"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
+    <!-- Theme List -->
+    <div class="space-y-2 text-sm">
+      <button class="w-full text-left px-3 py-2 rounded bg-accent/10 text-foreground hover:bg-accent/20 transition-colors">
+        Default
       </button>
-    </div>
-
-    <!-- Color Grid -->
-    <div class="grid grid-cols-2 gap-2 text-xs">
-      <!-- Background Colors -->
-      <div class="space-y-1">
-        <p class="text-muted font-medium">Backgrounds</p>
-        <div class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded bg-background border border-muted"></div>
-          <span class="text-foreground/80">#0A0A0A</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded bg-background-elevated border border-muted"></div>
-          <span class="text-foreground/80">#0F0F0F</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded bg-background-card border border-muted"></div>
-          <span class="text-foreground/80">#1A1A1A</span>
-        </div>
-      </div>
-
-      <!-- Accent Colors -->
-      <div class="space-y-1">
-        <p class="text-muted font-medium">Accents</p>
-        <div class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded bg-accent"></div>
-          <span class="text-foreground/80">#C9A44C</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded bg-accent-hover"></div>
-          <span class="text-foreground/80">#ffb301</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded bg-foreground"></div>
-          <span class="text-foreground/80">#F5F5F5</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Muted Colors -->
-    <div class="mt-3 pt-3 border-t border-muted/20">
-      <p class="text-muted font-medium text-xs mb-2">Muted</p>
-      <div class="flex gap-2">
-        <div class="flex items-center gap-1">
-          <div class="w-5 h-5 rounded bg-muted"></div>
-          <span class="text-foreground/60 text-[10px]">10%</span>
-        </div>
-        <div class="flex items-center gap-1">
-          <div class="w-5 h-5 rounded bg-muted-hover"></div>
-          <span class="text-foreground/60 text-[10px]">45%</span>
-        </div>
-      </div>
+      <button class="w-full text-left px-3 py-2 rounded text-foreground/80 hover:bg-accent/10 transition-colors">
+        Blush Noir
+      </button>
+      <button class="w-full text-left px-3 py-2 rounded text-foreground/80 hover:bg-accent/10 transition-colors">
+        Deep Forest
+      </button>
+      <button class="w-full text-left px-3 py-2 rounded text-foreground/80 hover:bg-accent/10 transition-colors">
+        Sunset Ember
+      </button>
+      <button class="w-full text-left px-3 py-2 rounded text-foreground/80 hover:bg-accent/10 transition-colors">
+        Lavender Slate
+      </button>
     </div>
   </div>
 
@@ -104,13 +57,11 @@ const {} = Astro.props;
     const widgetEl = document.getElementById('color-palette-widget');
     const buttonEl = document.getElementById('color-palette-button');
     const panelEl = document.getElementById('color-palette-panel');
-    const closeBtnEl = document.getElementById('close-panel-btn');
     
     // Type-safe element references
     const widget: HTMLElement = widgetEl!;
     const button: HTMLElement = buttonEl!;
     const panel: HTMLElement = panelEl!;
-    const closeBtn: HTMLElement = closeBtnEl!;
 
     // State
     let isExpanded = false;
@@ -122,23 +73,178 @@ const {} = Astro.props;
     let initialTop = 80;
     let currentLeft = 24;
     let currentTop = 80;
+    let currentTheme = 'Default';
+
+    // Theme definitions
+    const themes = {
+      'Default': {
+        '--color-background': '#0A0A0A',
+        '--color-background-elevated': '#0F0F0F',
+        '--color-background-overlay': '#0D0D0D',
+        '--color-background-card': '#1A1A1A',
+        '--color-foreground': '#F5F5F5',
+        '--color-accent': '#C9A44C',
+        '--color-accent-hover': '#ffb301',
+        '--color-muted': 'rgba(255, 255, 255, 0.1)',
+        '--color-muted-hover': 'rgba(255, 255, 255, 0.45)'
+      },
+      'Blush Noir': {
+        '--color-background': '#0F0E0E',
+        '--color-background-elevated': '#171515',
+        '--color-background-overlay': '#121111',
+        '--color-background-card': '#211E1E',
+        '--color-foreground': '#F2EFEF',
+        '--color-accent': '#E1A7A7',
+        '--color-accent-hover': '#F2C4C4',
+        '--color-muted': 'rgba(225, 167, 167, 0.08)',
+        '--color-muted-hover': 'rgba(225, 167, 167, 0.25)'
+      },
+      'Deep Forest': {
+        '--color-background': '#080D08',
+        '--color-background-elevated': '#0D140D',
+        '--color-background-overlay': '#0A120A',
+        '--color-background-card': '#162116',
+        '--color-foreground': '#E8F0E8',
+        '--color-accent': '#4CAF50',
+        '--color-accent-hover': '#66BB6A',
+        '--color-muted': 'rgba(76, 175, 80, 0.15)',
+        '--color-muted-hover': 'rgba(76, 175, 80, 0.45)'
+      },
+      'Sunset Ember': {
+        '--color-background': '#0D0C0B',
+        '--color-background-elevated': '#141211',
+        '--color-background-overlay': '#110F0E',
+        '--color-background-card': '#1C1917',
+        '--color-foreground': '#E7E5E4',
+        '--color-accent': '#D97706',
+        '--color-accent-hover': '#F59E0B',
+        '--color-muted': 'rgba(217, 119, 6, 0.1)',
+        '--color-muted-hover': 'rgba(217, 119, 6, 0.3)'
+      },
+      'Lavender Slate': {
+        '--color-background': '#0F0F14',
+        '--color-background-elevated': '#16161D',
+        '--color-background-overlay': '#121218',
+        '--color-background-card': '#1F1F28',
+        '--color-foreground': '#E0E0E6',
+        '--color-accent': '#8B5CF6',
+        '--color-accent-hover': '#A78BFA',
+        '--color-muted': 'rgba(139, 92, 246, 0.1)',
+        '--color-muted-hover': 'rgba(139, 92, 246, 0.3)'
+      }
+    };
 
     // Load saved position
     const savedX = localStorage.getItem('colorPaletteX');
     const savedY = localStorage.getItem('colorPaletteY');
+    const savedTheme = localStorage.getItem('colorPaletteTheme');
     
     if (savedX && savedY) {
       currentLeft = parseFloat(savedX);
       currentTop = parseFloat(savedY);
+      
+      // Validate saved position is within viewport
+      const widgetSize = 64;
+      const padding = 8;
+      const isInViewport = currentLeft >= 0 && currentTop >= 0 &&
+                          currentLeft <= window.innerWidth - widgetSize &&
+                          currentTop <= window.innerHeight - widgetSize;
+      
+      if (!isInViewport) {
+        // Reset to top-left if outside viewport
+        currentLeft = padding;
+        currentTop = padding;
+      }
+      
       widget.style.left = currentLeft + 'px';
       widget.style.top = currentTop + 'px';
     }
 
-    // Toggle panel
+    // Load saved theme
+    if (savedTheme && themes[savedTheme as keyof typeof themes]) {
+      currentTheme = savedTheme;
+      applyTheme(savedTheme);
+      updateThemeHighlight();
+    }
+
+    // Apply theme to CSS variables and body class
+    function applyTheme(themeName: string) {
+      const theme = themes[themeName as keyof typeof themes];
+      if (!theme) return;
+
+      const root = document.documentElement;
+      const body = document.body;
+      
+      // Remove all theme classes from body
+      Object.keys(themes).forEach(key => {
+        const className = 'theme-' + key.toLowerCase().replace(/\s+/g, '-');
+        body.classList.remove(className);
+      });
+      
+      // Add current theme class to body
+      const themeClass = 'theme-' + themeName.toLowerCase().replace(/\s+/g, '-');
+      body.classList.add(themeClass);
+      
+      // Apply CSS variables
+      Object.entries(theme).forEach(([property, value]) => {
+        root.style.setProperty(property, value);
+      });
+    }
+
+    // Update theme button highlighting
+    function updateThemeHighlight() {
+      const buttons = panel.querySelectorAll('button');
+      buttons.forEach(button => {
+        const themeName = button.textContent?.trim();
+        if (themeName === currentTheme) {
+          button.classList.remove('text-foreground/80', 'hover:bg-accent/10');
+          button.classList.add('bg-accent/10', 'text-foreground');
+        } else {
+          button.classList.remove('bg-accent/10', 'text-foreground');
+          button.classList.add('text-foreground/80', 'hover:bg-accent/10');
+        }
+      });
+    }
+
+    // Toggle panel with dynamic positioning
     function togglePanel() {
       if (!hasMoved) {
         isExpanded = !isExpanded;
         if (isExpanded) {
+          // Calculate available space
+          const widgetRect = button.getBoundingClientRect();
+          const widgetSize = 64;
+          const panelHeight = 200; // Approximate panel height
+          const panelWidth = 240;
+          const margin = 12;
+          
+          const spaceBelow = window.innerHeight - widgetRect.bottom - margin;
+          const spaceAbove = widgetRect.top - margin;
+          const spaceRight = window.innerWidth - widgetRect.right - margin;
+          const spaceLeft = widgetRect.left - margin;
+          
+          // Reset classes
+          panel.classList.remove('top-full', 'bottom-full', 'left-0', 'right-0', 'mt-3', 'mb-3');
+          
+          // Vertical positioning - default is below (top-full)
+          if (spaceBelow < panelHeight && spaceAbove > spaceBelow) {
+            // Not enough space below, position above
+            panel.classList.add('bottom-full', 'mb-3');
+          } else {
+            // Default: position below
+            panel.classList.add('top-full', 'mt-3');
+          }
+          
+          // Horizontal positioning - default is left (left-0)
+          if (spaceRight < panelWidth && spaceLeft > spaceRight) {
+            // Not enough space to the right, position to the left
+            panel.classList.add('right-0');
+          } else {
+            // Default: position to the left
+            panel.classList.add('left-0');
+          }
+          
+          updateThemeHighlight();
           panel.classList.remove('hidden');
         } else {
           panel.classList.add('hidden');
@@ -148,9 +254,26 @@ const {} = Astro.props;
     }
 
     button.addEventListener('click', togglePanel);
-    closeBtn.addEventListener('click', () => {
-      isExpanded = false;
-      panel.classList.add('hidden');
+
+    // Add click handlers to theme buttons
+    const themeButtons = panel.querySelectorAll('button');
+    themeButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const themeName = btn.textContent?.trim();
+        if (themeName && themes[themeName as keyof typeof themes]) {
+          currentTheme = themeName;
+          applyTheme(themeName);
+          updateThemeHighlight();
+          localStorage.setItem('colorPaletteTheme', themeName);
+          
+          // Close panel after selection
+          setTimeout(() => {
+            isExpanded = false;
+            panel.classList.add('hidden');
+          }, 150);
+        }
+      });
     });
 
     // Start drag
@@ -174,6 +297,40 @@ const {} = Astro.props;
       document.addEventListener('touchend', endDrag);
     }
 
+    // Update panel position dynamically
+    function updatePanelPosition() {
+      const widgetRect = button.getBoundingClientRect();
+      const panelHeight = 200; // Approximate panel height
+      const panelWidth = 240;
+      const margin = 12;
+      
+      const spaceBelow = window.innerHeight - widgetRect.bottom - margin;
+      const spaceAbove = widgetRect.top - margin;
+      const spaceRight = window.innerWidth - widgetRect.right - margin;
+      const spaceLeft = widgetRect.left - margin;
+      
+      // Reset classes
+      panel.classList.remove('top-full', 'bottom-full', 'left-0', 'right-0', 'mt-3', 'mb-3');
+      
+      // Vertical positioning - default is below (top-full)
+      if (spaceBelow < panelHeight && spaceAbove > spaceBelow) {
+        // Not enough space below, position above
+        panel.classList.add('bottom-full', 'mb-3');
+      } else {
+        // Default: position below
+        panel.classList.add('top-full', 'mt-3');
+      }
+      
+      // Horizontal positioning - default is left (left-0)
+      if (spaceRight < panelWidth && spaceLeft > spaceRight) {
+        // Not enough space to the right, position to the left
+        panel.classList.add('right-0');
+      } else {
+        // Default: position to the left
+        panel.classList.add('left-0');
+      }
+    }
+
     // On drag
     function onDrag(e: Event) {
       e.preventDefault();
@@ -189,11 +346,32 @@ const {} = Astro.props;
         hasMoved = true;
       }
 
-      // Update position
+      // Update position with viewport constraints
+      const widgetSize = 64; // 64px (h-16 w-16)
+      const padding = 8; // Minimum padding from edges
+      
       currentLeft = initialLeft + deltaX;
       currentTop = initialTop + deltaY;
+      
+      // Constrain to viewport
+      currentLeft = Math.max(padding, Math.min(currentLeft, window.innerWidth - widgetSize - padding));
+      currentTop = Math.max(padding, Math.min(currentTop, window.innerHeight - widgetSize - padding));
+      
+      // Reset to top-left if somehow outside viewport
+      if (currentLeft < 0 || currentTop < 0 || 
+          currentLeft > window.innerWidth - widgetSize || 
+          currentTop > window.innerHeight - widgetSize) {
+        currentLeft = padding;
+        currentTop = padding;
+      }
+      
       widget.style.left = currentLeft + 'px';
       widget.style.top = currentTop + 'px';
+      
+      // Update panel position if expanded
+      if (isExpanded) {
+        updatePanelPosition();
+      }
     }
 
     // End drag
@@ -213,6 +391,23 @@ const {} = Astro.props;
     // Add drag listeners
     button.addEventListener('mousedown', startDrag);
     button.addEventListener('touchstart', startDrag, { passive: false });
+
+    // Keep widget in viewport on window resize
+    function keepInViewport() {
+      const widgetSize = 64;
+      const padding = 8;
+      
+      currentLeft = Math.max(padding, Math.min(currentLeft, window.innerWidth - widgetSize - padding));
+      currentTop = Math.max(padding, Math.min(currentTop, window.innerHeight - widgetSize - padding));
+      
+      widget.style.left = currentLeft + 'px';
+      widget.style.top = currentTop + 'px';
+    }
+
+    window.addEventListener('resize', keepInViewport);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(keepInViewport, 100);
+    });
 
     // Close panel when clicking away
     document.addEventListener('click', (e) => {
