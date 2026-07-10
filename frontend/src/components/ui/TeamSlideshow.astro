@@ -1,13 +1,6 @@
 ---
 // Team Slideshow Component
 // Reusable slideshow for displaying team members.
-// Autoplays on an interval, and can be dragged (mouse or touch) to move
-// between slides instead of using prev/next buttons.
-//
-// Slots are centered with left:50% + translateX/scale only (no animated
-// left/width), so the center card stays mathematically centered at any
-// viewport size instead of drifting mid-transition on small screens.
-
 interface TeamMember {
 	name: string;
 	jobTitle: string;
@@ -19,15 +12,13 @@ const teamMembers: TeamMember[] = Astro.props.teamMembers;
 const currentIndex: number = Astro.props.currentIndex ?? 0;
 const teamData = JSON.stringify(teamMembers);
 
-// Five fixed slots: far-left, left, center, right, far-right.
 const slotPositions = ['is-farleft', 'is-left', 'is-center', 'is-right', 'is-farright'];
 const slotOffsets = [-2, -1, 0, 1, 2];
 ---
 
 <div class="team-slideshow w-full" data-team-members={teamData} data-current-index={currentIndex}>
-	<!-- Slideshow Wrapper -->
 	<div
-		class="slideshow-wrapper relative w-full max-w-md mx-auto h-[350px] md:h-[475px] overflow-hidden cursor-grab select-none"
+		class="slideshow-wrapper relative w-full max-w-md h-[350px] md:h-[475px] overflow-hidden cursor-grab select-none"
 		id="slideshow-wrapper"
 	>
 		{slotOffsets.map((offset, i) => {
@@ -62,7 +53,6 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 
 	const SLOT_CLASSES = ['is-farleft', 'is-left', 'is-center', 'is-right', 'is-farright'];
 	const SLOT_OFFSETS = [-2, -1, 0, 1, 2];
-	const SLIDE_DURATION = 900;
 	const AUTOPLAY_DELAY = 4500;
 	const DRAG_THRESHOLD = 60;
 
@@ -71,7 +61,6 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 		private currentIndex: number;
 		private wrapper: HTMLElement | null;
 		private slotOrder: HTMLElement[];
-		private isAnimating: boolean;
 		private autoplayTimer: ReturnType<typeof setInterval> | null;
 		private isDragging: boolean;
 		private dragStartX: number;
@@ -81,18 +70,15 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 		constructor(members: TeamMember[], startIndex: number) {
 			this.members = members;
 			this.currentIndex = startIndex;
-			this.isAnimating = false;
 			this.autoplayTimer = null;
 			this.isDragging = false;
 			this.dragStartX = 0;
 			this.dragDeltaX = 0;
 			this.pointerId = null;
 			this.wrapper = document.getElementById('slideshow-wrapper');
-
 			this.slotOrder = [0, 1, 2, 3, 4]
 				.map((i) => document.getElementById(`image-slot-${i}`))
 				.filter((el): el is HTMLElement => el !== null);
-
 			this.init();
 		}
 
@@ -101,67 +87,49 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 			this.startAutoplay();
 		}
 
-		private applySlots(): void {
-			this.slotOrder.forEach((el, i) => {
-				SLOT_CLASSES.forEach((c) => el.classList.remove(c));
-				el.classList.add(SLOT_CLASSES[i]);
+		private applySlots(animate = false): void {
+				this.slotOrder.forEach((el, i) => {
+						SLOT_CLASSES.forEach((c) => el.classList.remove(c));
+						el.classList.add(SLOT_CLASSES[i]);
+						
+						el.style.transition = animate ? 'all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none';
+						el.style.transform = ''; 
 
-				const offset = SLOT_OFFSETS[i];
-				const member = this.members[(this.currentIndex + offset + this.members.length) % this.members.length];
-				const img = el.querySelector('img');
-				if (img) {
-					img.src = member.imagePath;
-					img.alt = offset === 0 ? member.name : offset < 0 ? 'Previous team member' : 'Next team member';
-				}
-			});
+						const offset = SLOT_OFFSETS[i];
+						const member = this.members[(this.currentIndex + offset + this.members.length) % this.members.length];
+						const img = el.querySelector('img');
+						if (img) {
+								img.src = member.imagePath;
+								img.alt = offset === 0 ? member.name : offset < 0 ? 'Previous team member' : 'Next team member';
+						}
+				});
 
-			// Dispatch event for text updates
-			const currentMember = this.members[this.currentIndex];
-			const event = new CustomEvent('slideshowChanged', {
-				detail: { member: currentMember },
-				bubbles: true
-			});
-			document.dispatchEvent(event);
+				// ADD THIS LINE: Dispatch the event so TeamPreview can hear it
+				const currentMember = this.members[this.currentIndex];
+				document.dispatchEvent(new CustomEvent('slideshowChanged', { 
+						detail: { member: currentMember }, 
+						bubbles: true 
+				}));
 		}
 
 		private next(): void {
-			if (this.isAnimating) return;
-			this.isAnimating = true;
-
 			this.currentIndex = (this.currentIndex + 1) % this.members.length;
-
-			const [leaving, ...rest] = this.slotOrder;
-			this.slotOrder = [...rest, leaving];
-
-			this.applySlots();
-
-			setTimeout(() => {
-				this.isAnimating = false;
-			}, SLIDE_DURATION);
+			// Rotate the DOM elements array rather than moving elements
+			const leaving = this.slotOrder.shift()!;
+			this.slotOrder.push(leaving);
+			this.applySlots(true);
 		}
 
 		private prev(): void {
-			if (this.isAnimating) return;
-			this.isAnimating = true;
-
 			this.currentIndex = (this.currentIndex - 1 + this.members.length) % this.members.length;
-
-			const leaving = this.slotOrder[this.slotOrder.length - 1];
-			const rest = this.slotOrder.slice(0, -1);
-			this.slotOrder = [leaving, ...rest];
-
-			this.applySlots();
-
-			setTimeout(() => {
-				this.isAnimating = false;
-			}, SLIDE_DURATION);
+			const entering = this.slotOrder.pop()!;
+			this.slotOrder.unshift(entering);
+			this.applySlots(true);
 		}
 
 		private startAutoplay(): void {
 			this.stopAutoplay();
-			this.autoplayTimer = setInterval(() => {
-				if (!this.isDragging) this.next();
-			}, AUTOPLAY_DELAY);
+			this.autoplayTimer = setInterval(() => { if (!this.isDragging) this.next(); }, AUTOPLAY_DELAY);
 		}
 
 		private stopAutoplay(): void {
@@ -171,55 +139,38 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 			}
 		}
 
-		private setDragOffset(px: number): void {
-			if (!this.wrapper) return;
-			// Damp the drag so it feels like it's dragging the whole stack
-			// rather than just the center slide.
-			this.wrapper.style.transform = `translateX(${px * 0.6}px)`;
-		}
-
-		private resetDragOffset(animate: boolean): void {
-			if (!this.wrapper) return;
-			this.wrapper.style.transition = animate ? `transform ${SLIDE_DURATION}ms cubic-bezier(0.22, 1, 0.36, 1)` : 'none';
-			this.wrapper.style.transform = 'translateX(0px)';
-			if (animate) {
-				window.setTimeout(() => {
-					if (this.wrapper) this.wrapper.style.transition = 'none';
-				}, SLIDE_DURATION);
-			}
-		}
-
 		private attachDrag(): void {
 			if (!this.wrapper) return;
-
 			const onPointerDown = (e: PointerEvent) => {
 				this.isDragging = true;
 				this.pointerId = e.pointerId;
 				this.dragStartX = e.clientX;
 				this.dragDeltaX = 0;
 				this.wrapper?.setPointerCapture(e.pointerId);
-				this.wrapper?.classList.add('is-dragging');
 				this.stopAutoplay();
 			};
 
 			const onPointerMove = (e: PointerEvent) => {
 				if (!this.isDragging || e.pointerId !== this.pointerId) return;
 				this.dragDeltaX = e.clientX - this.dragStartX;
-				this.setDragOffset(this.dragDeltaX);
+				const centerSlot = this.slotOrder[2]; // Index 2 is always is-center
+				if (centerSlot) {
+					centerSlot.style.transition = 'none';
+					centerSlot.style.transform = `translateX(${this.dragDeltaX}px) translateY(-50%) scale(1)`;
+				}
 			};
 
 			const endDrag = (e: PointerEvent) => {
 				if (!this.isDragging || e.pointerId !== this.pointerId) return;
 				this.isDragging = false;
-				this.wrapper?.classList.remove('is-dragging');
-
-				if (this.dragDeltaX <= -DRAG_THRESHOLD) {
-					this.next();
-				} else if (this.dragDeltaX >= DRAG_THRESHOLD) {
-					this.prev();
+				
+				if (this.dragDeltaX <= -DRAG_THRESHOLD) this.next();
+				else if (this.dragDeltaX >= DRAG_THRESHOLD) this.prev();
+				else {
+					const centerSlot = this.slotOrder[2];
+					centerSlot.style.transition = 'transform 0.3s ease-out';
+					centerSlot.style.transform = '';
 				}
-
-				this.resetDragOffset(true);
 				this.dragDeltaX = 0;
 				this.pointerId = null;
 				this.startAutoplay();
@@ -229,35 +180,14 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 			this.wrapper.addEventListener('pointermove', onPointerMove);
 			this.wrapper.addEventListener('pointerup', endDrag);
 			this.wrapper.addEventListener('pointercancel', endDrag);
-
-			// Pause autoplay while the pointer is simply hovering, resume on leave.
-			this.wrapper.addEventListener('mouseenter', () => this.stopAutoplay());
-			this.wrapper.addEventListener('mouseleave', () => {
-				if (!this.isDragging) this.startAutoplay();
-			});
-
-			// Keyboard navigation stays available for accessibility.
-			document.addEventListener('keydown', (e: KeyboardEvent) => {
-				if (e.key === 'ArrowRight') {
-					this.stopAutoplay();
-					this.next();
-					this.startAutoplay();
-				} else if (e.key === 'ArrowLeft') {
-					this.stopAutoplay();
-					this.prev();
-					this.startAutoplay();
-				}
-			});
 		}
 	}
 
-	// Initialize
 	const init = () => {
 		const container = document.querySelector('.team-slideshow');
 		if (container) {
 			const membersData = container.getAttribute('data-team-members');
 			const startIndexAttr = container.getAttribute('data-current-index');
-
 			if (membersData) {
 				const members: TeamMember[] = JSON.parse(membersData);
 				const startIndex = startIndexAttr ? parseInt(startIndexAttr, 10) : 0;
@@ -266,102 +196,35 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 		}
 	};
 
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', init);
-	} else {
-		init();
-	}
+	if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+	else init();
 </script>
 
 <style>
-	/*
-	 * Tailwind-compatible custom styles for slideshow positioning
-	 * These styles are necessary for the fixed-slot sliding carousel animation
-	 */
+	.slideshow-wrapper { touch-action: none; }
 
-	.slideshow-wrapper.is-dragging {
-		cursor: grabbing;
-	}
-
-	/* Base image slot: centered via left:50%, every slot the same size —
-	   only transform (translateX + scale), opacity, and filter animate.
-	   This keeps the center card mathematically centered at any viewport
-	   width, instead of the old left/width combination that could drift
-	   mid-transition on small screens. */
 	.image-slot {
 		position: absolute;
 		top: 50%;
-		left: 50%;
-		width: 62%;
-		height: 14rem;
+		width: 33.333%;
+		border-radius: 0.5rem;
+		overflow: hidden;
 		--tx: 0%;
 		--scale: 1;
-		transform: translate(-50%, -50%) translateX(var(--tx)) scale(var(--scale));
-		transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-			opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-			filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+		transform: translate(var(--tx), -50%) scale(var(--scale));
+		will-change: transform;
 	}
 
-	.image-slot img {
-		width: 100%;
-		height: 100%;
-		display: block;
-	}
+	.image-slot img { width: 100%; height: 100%; display: block; }
 
-	.image-slot.is-farleft {
-		--tx: -118%;
-		--scale: 0.6;
-		opacity: 0;
-		filter: grayscale(1) blur(2px);
-		z-index: 5;
-	}
+	.image-slot.is-farleft { left: 0; --tx: -100%; --scale: 0.6; opacity: 0; filter: grayscale(1) blur(2px); z-index: 5; height: 14rem; }
+	.image-slot.is-left { left: 0; --tx: 0%; --scale: 0.75; opacity: 0.5; filter: grayscale(1) blur(1px); z-index: 10; height: 14rem; }
+	.image-slot.is-center { left: 50%; width: 66.666%; height: 16rem; --tx: -50%; --scale: 1; opacity: 1; filter: none; z-index: 20; }
+	.image-slot.is-right { left: 100%; --tx: -100%; --scale: 0.75; opacity: 0.5; filter: grayscale(1) blur(1px); z-index: 10; height: 14rem; }
+	.image-slot.is-farright { left: 100%; --tx: 0%; --scale: 0.6; opacity: 0; filter: grayscale(1) blur(2px); z-index: 5; height: 14rem; }
 
-	.image-slot.is-left {
-		--tx: -60%;
-		--scale: 0.75;
-		opacity: 0.5;
-		filter: grayscale(1) blur(1px);
-		z-index: 10;
-	}
-
-	.image-slot.is-center {
-		--tx: 0%;
-		--scale: 1;
-		opacity: 1;
-		filter: none;
-		z-index: 20;
-		height: 16rem;
-	}
-
-	.image-slot.is-right {
-		--tx: 60%;
-		--scale: 0.75;
-		opacity: 0.5;
-		filter: grayscale(1) blur(1px);
-		z-index: 10;
-	}
-
-	.image-slot.is-farright {
-		--tx: 118%;
-		--scale: 0.6;
-		opacity: 0;
-		filter: grayscale(1) blur(2px);
-		z-index: 5;
-	}
-
-	/* Responsive heights for medium screens and up */
 	@media (min-width: 768px) {
-		.image-slot {
-			height: 18rem;
-		}
-		.image-slot.is-center {
-			height: 20rem;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.image-slot {
-			transition-duration: 0.01ms !important;
-		}
+		.image-slot.is-farleft, .image-slot.is-left, .image-slot.is-right, .image-slot.is-farright { height: 18rem; }
+		.image-slot.is-center { height: 20rem; }
 	}
 </style>

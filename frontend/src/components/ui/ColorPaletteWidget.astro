@@ -1,0 +1,232 @@
+---
+// Color Palette Widget - Floating draggable component showing theme colors
+interface Props {}
+
+import colorPaletteIcon from '../../assets/icons/colorPalette_icon.png';
+
+const {} = Astro.props;
+---
+
+<div 
+  id="color-palette-widget"
+  class="fixed z-[100] select-none"
+  style="top: 80px; left: 24px;"
+>
+  <!-- Expanded Panel -->
+  <div 
+    id="color-palette-panel"
+    class="hidden absolute bottom-full mb-3 left-0 p-4 rounded-lg bg-background-elevated border border-accent/20 shadow-2xl backdrop-blur-md"
+    style="width: 240px;"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="text-sm font-semibold text-foreground font-heading">Theme Colors</h3>
+      <button 
+        id="close-panel-btn"
+        class="text-muted hover:text-foreground transition-colors"
+        aria-label="Close panel"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Color Grid -->
+    <div class="grid grid-cols-2 gap-2 text-xs">
+      <!-- Background Colors -->
+      <div class="space-y-1">
+        <p class="text-muted font-medium">Backgrounds</p>
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded bg-background border border-muted"></div>
+          <span class="text-foreground/80">#0A0A0A</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded bg-background-elevated border border-muted"></div>
+          <span class="text-foreground/80">#0F0F0F</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded bg-background-card border border-muted"></div>
+          <span class="text-foreground/80">#1A1A1A</span>
+        </div>
+      </div>
+
+      <!-- Accent Colors -->
+      <div class="space-y-1">
+        <p class="text-muted font-medium">Accents</p>
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded bg-accent"></div>
+          <span class="text-foreground/80">#C9A44C</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded bg-accent-hover"></div>
+          <span class="text-foreground/80">#ffb301</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded bg-foreground"></div>
+          <span class="text-foreground/80">#F5F5F5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Muted Colors -->
+    <div class="mt-3 pt-3 border-t border-muted/20">
+      <p class="text-muted font-medium text-xs mb-2">Muted</p>
+      <div class="flex gap-2">
+        <div class="flex items-center gap-1">
+          <div class="w-5 h-5 rounded bg-muted"></div>
+          <span class="text-foreground/60 text-[10px]">10%</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <div class="w-5 h-5 rounded bg-muted-hover"></div>
+          <span class="text-foreground/60 text-[10px]">45%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Draggable Button -->
+  <div
+    id="color-palette-button"
+    class="h-16 w-16 rounded-full overflow-hidden shadow-2xl cursor-grab active:cursor-grabbing bg-background-elevated border-2 border-accent/20 hover:border-accent/40 transition-all duration-200 hover:scale-110"
+  >
+    <img 
+      src={colorPaletteIcon.src} 
+      alt="Color Palette" 
+      class="h-full w-full object-cover p-2"
+    />
+  </div>
+</div>
+
+<script>
+  (function() {
+    // Get DOM elements
+    const widgetEl = document.getElementById('color-palette-widget');
+    const buttonEl = document.getElementById('color-palette-button');
+    const panelEl = document.getElementById('color-palette-panel');
+    const closeBtnEl = document.getElementById('close-panel-btn');
+    
+    // Type-safe element references
+    const widget: HTMLElement = widgetEl!;
+    const button: HTMLElement = buttonEl!;
+    const panel: HTMLElement = panelEl!;
+    const closeBtn: HTMLElement = closeBtnEl!;
+
+    // State
+    let isExpanded = false;
+    let isDragging = false;
+    let hasMoved = false;
+    let startX = 0;
+    let startY = 0;
+    let initialLeft = 24;
+    let initialTop = 80;
+    let currentLeft = 24;
+    let currentTop = 80;
+
+    // Load saved position
+    const savedX = localStorage.getItem('colorPaletteX');
+    const savedY = localStorage.getItem('colorPaletteY');
+    
+    if (savedX && savedY) {
+      currentLeft = parseFloat(savedX);
+      currentTop = parseFloat(savedY);
+      widget.style.left = currentLeft + 'px';
+      widget.style.top = currentTop + 'px';
+    }
+
+    // Toggle panel
+    function togglePanel() {
+      if (!hasMoved) {
+        isExpanded = !isExpanded;
+        if (isExpanded) {
+          panel.classList.remove('hidden');
+        } else {
+          panel.classList.add('hidden');
+        }
+      }
+      hasMoved = false;
+    }
+
+    button.addEventListener('click', togglePanel);
+    closeBtn.addEventListener('click', () => {
+      isExpanded = false;
+      panel.classList.add('hidden');
+    });
+
+    // Start drag
+    function startDrag(e: Event) {
+      e.preventDefault();
+      
+      isDragging = true;
+      hasMoved = false;
+      
+      const clientX = (e as TouchEvent).type === 'touchstart' ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
+      const clientY = (e as TouchEvent).type === 'touchstart' ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
+      
+      startX = clientX;
+      startY = clientY;
+      initialLeft = currentLeft;
+      initialTop = currentTop;
+
+      document.addEventListener('mousemove', onDrag);
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('touchmove', onDrag, { passive: false });
+      document.addEventListener('touchend', endDrag);
+    }
+
+    // On drag
+    function onDrag(e: Event) {
+      e.preventDefault();
+      
+      const clientX = (e as MouseEvent).type === 'mousemove' ? (e as MouseEvent).clientX : (e as TouchEvent).touches[0].clientX;
+      const clientY = (e as MouseEvent).type === 'mousemove' ? (e as MouseEvent).clientY : (e as TouchEvent).touches[0].clientY;
+
+      const deltaX = clientX - startX;
+      const deltaY = clientY - startY;
+
+      // Mark as moved if dragged more than 3px
+      if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) {
+        hasMoved = true;
+      }
+
+      // Update position
+      currentLeft = initialLeft + deltaX;
+      currentTop = initialTop + deltaY;
+      widget.style.left = currentLeft + 'px';
+      widget.style.top = currentTop + 'px';
+    }
+
+    // End drag
+    function endDrag() {
+      // Save position to localStorage
+      localStorage.setItem('colorPaletteX', currentLeft.toString());
+      localStorage.setItem('colorPaletteY', currentTop.toString());
+
+      isDragging = false;
+
+      document.removeEventListener('mousemove', onDrag);
+      document.removeEventListener('mouseup', endDrag);
+      document.removeEventListener('touchmove', onDrag);
+      document.removeEventListener('touchend', endDrag);
+    }
+
+    // Add drag listeners
+    button.addEventListener('mousedown', startDrag);
+    button.addEventListener('touchstart', startDrag, { passive: false });
+
+    // Close panel when clicking away
+    document.addEventListener('click', (e) => {
+      if (isExpanded && !widget.contains(e.target as Node)) {
+        isExpanded = false;
+        panel.classList.add('hidden');
+      }
+    });
+  })();
+</script>
+
+<style>
+  /* Prevent text selection while dragging */
+  #color-palette-widget {
+    touch-action: none;
+  }
+</style>
