@@ -181,6 +181,8 @@ const theme = {
     z-index: 10000;
     overflow: hidden;
     font-family: inherit;
+    outline: 1px solid var(--color-muted-hover);
+    outline-offset: -1px;
   }
   #chat-header {
     background: var(--surface);
@@ -192,6 +194,8 @@ const theme = {
     border-bottom: 1px solid var(--border);
     font-weight: 600;
     letter-spacing: 0.02em;
+    outline: 1px solid var(--color-muted-hover);
+    outline-offset: -1px;
   }
   #chat-close {
     background: none;
@@ -212,12 +216,16 @@ const theme = {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    outline: 1px solid var(--color-muted-hover);
+    outline-offset: -1px;
   }
   #chat-input-area {
     display: flex;
     padding: 10px;
     border-top: 1px solid var(--border);
     background: var(--surface);
+    outline: 1px solid var(--color-muted-hover);
+    outline-offset: -1px;
   }
   #chat-input {
     flex: 1;
