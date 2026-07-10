@@ -23,10 +23,14 @@ const {
 			<p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
 				{subtitle}
 			</p>
-			<div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-				<slot name="cta-primary" />
-				<slot name="cta-secondary" />
-			</div>
+		<div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+			<a href="#services" class="px-8 py-3 bg-accent text-background font-semibold rounded hover:bg-accent-hover transition-colors">
+				Explore Services
+			</a>
+			<a href="#work" class="px-8 py-3 border border-accent text-accent font-semibold rounded hover:bg-accent hover:text-background transition-colors">
+				View Our Work
+			</a>
+		</div>
 		</div>
 
 		<!-- Right Column: Vertical Slideshow -->
