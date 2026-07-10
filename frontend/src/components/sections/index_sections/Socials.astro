@@ -21,7 +21,7 @@ const socialIcons = [
 ];
 ---
 
-<section class="bg-background-elevated py-12 px-4">
+<section class="bg-background-overlay py-12 px-4">
 	<div class="max-w-6xl mx-auto">
 		<!-- Header -->
 		<div class="text-center mb-10">
@@ -107,13 +107,13 @@ const socialIcons = [
 				x-transition:leave="transition transform duration-500 ease-in"
 				x-transition:leave-start="translate-x-0 opacity-100"
 				x-transition:leave-end="translate-x-full opacity-0"
-				class="absolute left-1/4 w-1/2 inset-y-0 flex bg-background-elevated border border-accent/20 rounded-lg shadow-2xl items-center justify-between px-4 "
+			class="absolute left-1/4 w-1/2 inset-y-0 flex bg-[var(--color-background-overlay)] border border-accent/20 rounded-lg shadow-2xl items-center justify-between px-4"
 				@click.away="open = false"
 			>
 				<!-- Back Button -->
 				<button 
 					@click="open = false"
-					class="flex items-center justify-center w-10 h-10 rounded-full bg-background border border-accent/20 text-accent hover:bg-accent hover:text-background transition-all duration-300 flex-shrink-0 mr-6"
+					class="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-background)] border border-accent/20 text-accent hover:bg-accent hover:text-background transition-all duration-300 flex-shrink-0 mr-6"
 					title="Back"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right rotate-180">
@@ -127,7 +127,7 @@ const socialIcons = [
 					{socialIcons.map((icon) => (
 						<a 
 							href="#" 
-							class="h-12 w-12 rounded-full flex items-center justify-center bg-background border border-accent/20 hover:scale-110 hover:bg-accent/10 transition-all duration-300 group flex-shrink-0"
+							class="h-12 w-12 rounded-full flex items-center justify-center bg-[var(--color-background)] border border-accent/20 hover:scale-110 hover:bg-accent/10 transition-all duration-300 group flex-shrink-0"
 							title={icon.name}
 						>
 							<img 
