@@ -267,62 +267,161 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	</section>
 </BaseLayout>
 
-	<!-- Section 1: Our Story -->
-	<section class="relative py-24 px-4 overflow-hidden" style="background-color: #0B0B0B;">
-		<div class="absolute inset-0 overflow-hidden pointer-events-none">
-			<div class="absolute top-20 left-10 w-72 h-72 bg-[#C9A44C] rounded-full opacity-10 blur-3xl"></div>
-			<div class="absolute bottom-20 right-10 w-80 h-80 bg-[#C9A44C] rounded-full opacity-10 blur-3xl"></div>
+	<!-- ====================================================== -->
+<!-- SECTION 1 : OUR STORY -->
+<!-- ====================================================== -->
+<section class="relative py-28 px-4 overflow-hidden bg-[#0B0B0B]">
+
+	<!-- Background Effects -->
+	<div class="absolute inset-0 pointer-events-none">
+		<div class="absolute top-0 left-1/4 w-[450px] h-[450px] bg-[#C9A44C]/10 blur-[140px] rounded-full"></div>
+		<div class="absolute bottom-0 right-1/4 w-[450px] h-[450px] bg-[#C9A44C]/10 blur-[140px] rounded-full"></div>
+	</div>
+
+	<div class="relative z-10 max-w-7xl mx-auto">
+
+		<!-- Header -->
+		<div class="text-center max-w-4xl mx-auto mb-24">
+			<p class="text-[#C9A44C] tracking-[0.3em] font-semibold mb-4">
+				OUR JOURNEY
+			</p>
+
+			<h2 class="text-4xl md:text-6xl font-bold text-white mb-6">
+				The Story Behind
+				<span class="text-[#C9A44C]">Avietho</span>
+			</h2>
+
+			<p class="text-gray-400 text-lg leading-8">
+				Since 2018, Avietho Digital Marketing has grown from a passionate
+				creative team into a trusted digital marketing partner for businesses,
+				government agencies, and political leaders across the Philippines.
+			</p>
 		</div>
 
-		<div class="relative z-10 max-w-7xl mx-auto">
-			<div class="text-center mb-16 animate-fade-up">
-				<p class="text-sm md:text-base font-semibold tracking-widest text-[#C9A44C] mb-4">OUR JOURNEY</p>
-				<h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Our Story</h2>
-				<p class="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">Since 2018, Avietho Digital Marketing has continuously evolved by combining creativity, strategy, and technology to help businesses, government agencies, and political leaders establish meaningful digital connections.</p>
+		<!-- Timeline -->
+		<div class="relative">
+
+			<!-- Gold Line -->
+			<div class="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[3px] bg-[#C9A44C]/30 -translate-x-1/2"></div>
+
+			<!-- ================= ITEM 1 ================= -->
+			<div class="relative grid lg:grid-cols-2 gap-12 items-center mb-24">
+
+				<!-- Image -->
+			<div class="order-2 lg:order-1">
+	<div class="rounded-3xl overflow-hidden border border-[#C9A44C]/20 bg-[#141414] h-[320px]">
+		<img
+			src="/innovation.jpg"
+			alt="Innovation"
+			class="w-full h-full object-cover"
+			loading="lazy"
+		/>
+	</div>
+</div>
+
+				<!-- Text -->
+				<div class="order-1 lg:order-2 relative">
+
+	<!-- Timeline Dot -->
+	
+
+	<span class="text-[#C9A44C] font-semibold tracking-wider">
+		2018
+	</span>
+
+					<h3 class="text-4xl font-bold text-white mt-3 mb-5">
+						Foundation
+					</h3>
+
+					<p class="text-gray-300 leading-8">
+						Avietho Digital Marketing was established in Muntinlupa City with
+						a vision of helping businesses build stronger digital identities
+						through creativity, strategy, and innovation. From the very
+						beginning, the company focused on delivering measurable results
+						and long-term partnerships.
+					</p>
+
+				</div>
+
 			</div>
 
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.1s;">
-					<div class="w-12 h-12 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6">
-						<svg class="w-6 h-6 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-						</svg>
-					</div>
-					<div class="inline-block px-4 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full mb-4">
-						<span class="text-sm font-semibold text-[#C9A44C]">2018</span>
-					</div>
-					<h3 class="text-2xl font-bold text-white mb-4">Foundation</h3>
-					<p class="text-gray-300 leading-relaxed">Avietho Digital Marketing was established in Muntinlupa City, Philippines with a vision of helping businesses build a stronger digital presence through creative solutions, strategic planning, and innovative technology. From humble beginnings, the company laid the foundation for long-term partnerships built on trust and measurable results.</p>
-				</div>
+			<!-- ================= ITEM 2 ================= -->
+<div class="relative grid lg:grid-cols-2 gap-12 items-center mb-24">
 
-				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.2s;">
-					<div class="w-12 h-12 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6">
-						<svg class="w-6 h-6 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-						</svg>
-					</div>
-					<div class="inline-block px-4 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full mb-4">
-						<span class="text-sm font-semibold text-[#C9A44C]">2020</span>
-					</div>
-					<h3 class="text-2xl font-bold text-white mb-4">Growth & Expansion</h3>
-					<p class="text-gray-300 leading-relaxed">As demand for digital transformation increased, Avietho expanded its expertise to include political campaigns, government agencies, multimedia production, branding, and integrated digital marketing solutions. This milestone marked the company's growth into a full-service creative digital agency.</p>
-				</div>
+	<div>
 
-				<div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A44C] hover:shadow-[0_0_30px_rgba(201,164,76,0.2)] animate-fade-up" style="animation-delay: 0.3s;">
-					<div class="w-12 h-12 bg-[#C9A44C] rounded-full flex items-center justify-center mb-6">
-						<svg class="w-6 h-6 text-[#0A0A0A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-						</svg>
-					</div>
-					<div class="inline-block px-4 py-1 bg-[#C9A44C]/10 border border-[#C9A44C]/30 rounded-full mb-4">
-						<span class="text-sm font-semibold text-[#C9A44C]">2023 - Present</span>
-					</div>
-					<h3 class="text-2xl font-bold text-white mb-4">Innovation</h3>
-					<p class="text-gray-300 leading-relaxed">Today, Avietho continues to innovate by combining modern technology with data-driven strategies. Through web development, multimedia production, branding, and digital campaigns, the company delivers impactful solutions tailored to the ever-changing Philippine digital landscape.</p>
-				</div>
-			</div>
+		<span class="text-[#C9A44C] font-semibold tracking-wider">
+			2020
+		</span>
+
+		<h3 class="text-4xl font-bold text-white mt-3 mb-5">
+			Growth & Expansion
+		</h3>
+
+		<p class="text-gray-300 leading-8">
+			As demand increased, Avietho expanded its expertise into political
+			campaigns, multimedia production, branding, government projects,
+			and integrated digital marketing solutions, becoming a full-service
+			creative agency.
+		</p>
+
+	</div>
+
+	<div>
+		<div class="rounded-3xl overflow-hidden border border-[#C9A44C]/20 bg-[#141414] h-[320px]">
+			<img
+				src="/growth-expansion.jpg"
+				alt="Growth & Expansion"
+				class="w-full h-full object-cover"
+				loading="lazy"
+			/>
 		</div>
-	</section>
+	</div>
+
+</div>
+
+			<!-- ================= ITEM 3 ================= -->
+<div class="relative grid lg:grid-cols-2 gap-12 items-center">
+
+	<!-- Image -->
+	<div class="order-2 lg:order-1">
+		<div class="rounded-3xl overflow-hidden border border-[#C9A44C]/20 bg-[#141414] h-[320px]">
+			<img
+				src="/innovation.jpg"
+				alt="Innovation"
+				class="w-full h-full object-cover"
+				loading="lazy"
+			/>
+		</div>
+	</div>
+
+	<!-- Text -->
+	<div class="order-1 lg:order-2 relative">
+
+		<span class="text-[#C9A44C] font-semibold tracking-wider">
+			2023
+		</span>
+
+		<h3 class="text-4xl font-bold text-white mt-3 mb-5">
+			Innovation
+		</h3>
+
+		<p class="text-gray-300 leading-8">
+			Today, Avietho continues to innovate through web development,
+			multimedia production, branding, digital campaigns, and
+			data-driven marketing strategies that help organizations thrive
+			in an ever-changing digital landscape.
+		</p>
+
+	</div>
+
+</div>
+
+	</div>
+
+</div>
+
+</section>
 
 	<!-- Section 2: The Name "Avietho" -->
 	<section class="relative py-24 px-4 overflow-hidden" style="background-color: #090909;">
