@@ -12,6 +12,8 @@ const {
 
 import webdev_mobileVerGif from '../../../assets/gif/webdev_mobileVers.gif';
 import webdev_desktopVersGif from '../../../assets/gif/webdev_desktopVers.gif';
+import desktop_icon from '../../../assets/icons/desktop_icon.png';
+import mobile_icon from '../../../assets/icons/mobile_icon.png';
 
 // Content data for the switcher
 const contentData = [
@@ -122,15 +124,23 @@ const contentData = [
 				<div class="flex gap-4 mt-6">
 					<button 
 						id="desktop-btn"
-						class="px-6 py-3 rounded-full border border-accent text-accent hover:bg-accent hover:text-black transition-all duration-300 text-sm font-body font-semibold"
+						class="group w-14 h-14 flex items-center justify-center p-0 rounded-full border border-accent text-accent transition-all duration-300 text-sm font-body font-semibold"
 					>
-						Desktop View
+						<img 
+							src={desktop_icon.src} 
+							alt="Desktop view" 
+							class="w-6 h-6 object-contain icon-idle group-hover:icon-hover"
+						/>
 					</button>
 					<button 
 						id="mobile-btn"
-						class="px-6 py-3 rounded-full border border-white/10 text-gray-300 hover:border-accent hover:text-accent transition-all duration-300 text-sm font-body font-semibold"
+						class="group w-14 h-14 flex items-center justify-center p-0 rounded-full border border-white/10 text-gray-300 hover:border-accent hover:text-accent transition-all duration-300 text-sm font-body font-semibold"
 					>
-						Mobile View
+						<img 
+							src={mobile_icon.src} 
+							alt="Mobile view" 
+							class="w-6 h-6 object-contain icon-idle group-hover:icon-hover"
+						/>
 					</button>
 				</div>
 			</div>
@@ -163,29 +173,63 @@ const contentData = [
 		}
 	];
 
-	// Get DOM elements for content switcher
+	// View configuration mapping
+	const viewConfig: Record<string, { container: HTMLElement | null; btn: HTMLElement | null; show: string[]; hide: string[] }> = {
+		mobile: {
+			container: document.getElementById('mobile-container'),
+			btn: document.getElementById('mobile-btn'),
+			show: ['translate-x-0', 'opacity-100', 'z-10'],
+			hide: ['translate-x-full', 'opacity-0']
+		},
+		desktop: {
+			container: document.getElementById('desktop-container'),
+			btn: document.getElementById('desktop-btn'),
+			show: ['translate-x-0', 'opacity-100', 'z-10'],
+			hide: ['translate-x-full', 'opacity-0']
+		}
+	};
+
+	// Unified setView function
+	const setView = (type: 'mobile' | 'desktop') => {
+		const { container, btn, show, hide } = viewConfig[type];
+		const otherType = type === 'mobile' ? 'desktop' : 'mobile';
+		const other = viewConfig[otherType];
+
+		// Update containers
+		if (container) {
+			container.classList.remove(...hide);
+			container.classList.add(...show);
+		}
+		if (other.container) {
+			other.container.classList.remove(...show);
+			other.container.classList.add(...hide);
+		}
+
+		// Update buttons
+		if (btn && other.btn) {
+			btn.classList.add('border-accent', 'text-accent');
+			btn.classList.remove('border-white/10', 'text-gray-300');
+			other.btn.classList.remove('border-accent', 'text-accent');
+			other.btn.classList.add('border-white/10', 'text-gray-300');
+		}
+
+		// Save preference
+		localStorage.setItem('websiteDevelopmentView', type);
+	};
+
+	// Initialize view (default to mobile on first visit)
+	const viewPreference = localStorage.getItem('websiteDevelopmentView');
+	setView((viewPreference === 'desktop' ? 'desktop' : 'mobile'));
+
+	// Content switcher logic
 	const buttons = document.querySelectorAll('[data-switcher-btn]');
 	const contentDisplay = document.getElementById('content-display');
 	const contentTitle = document.getElementById('content-title');
 	const contentParagraph = document.getElementById('content-paragraph');
 
-	// Get DOM elements for image toggle
-	const desktopBtn = document.getElementById('desktop-btn');
-	const mobileBtn = document.getElementById('mobile-btn');
-	const mobileContainer = document.getElementById('mobile-container');
-	const desktopContainer = document.getElementById('desktop-container');
-
-	// Set initial active state for content switcher
+	// Set initial active state
 	if (buttons.length > 0) {
 		buttons[0].classList.add('border-accent', 'text-accent');
-	}
-
-	// Set initial state for image toggle (show mobile by default)
-	if (mobileContainer && desktopContainer) {
-		mobileContainer.classList.remove('translate-x-full', 'opacity-0');
-		mobileContainer.classList.add('translate-x-0', 'opacity-100', 'z-10');
-		desktopContainer.classList.add('translate-x-full', 'opacity-0');
-		desktopContainer.classList.remove('translate-x-0', 'opacity-100', 'z-10');
 	}
 
 	// Add click handlers to content switcher buttons
@@ -196,15 +240,11 @@ const contentData = [
 
 			if (content && contentDisplay && contentTitle && contentParagraph) {
 				// Update button states
-				buttons.forEach(btn => {
-					btn.classList.remove('border-accent', 'text-accent');
-				});
+				buttons.forEach(btn => btn.classList.remove('border-accent', 'text-accent'));
 				button.classList.add('border-accent', 'text-accent');
 
-				// Fade out
+				// Fade out, update content, fade in
 				contentDisplay.style.opacity = '0';
-
-				// Update content and fade in
 				setTimeout(() => {
 					contentTitle.textContent = content.title;
 					contentParagraph.textContent = content.content;
@@ -215,33 +255,6 @@ const contentData = [
 	});
 
 	// Add click handlers to view toggle buttons
-	if (desktopBtn && mobileBtn && mobileContainer && desktopContainer) {
-		desktopBtn.addEventListener('click', () => {
-			// Show desktop, hide mobile
-			mobileContainer.classList.remove('translate-x-0', 'opacity-100', 'z-10');
-			mobileContainer.classList.add('translate-x-full', 'opacity-0');
-			desktopContainer.classList.remove('translate-x-full', 'opacity-0');
-			desktopContainer.classList.add('translate-x-0', 'opacity-100', 'z-10');
-
-			// Update button styles
-			desktopBtn.classList.add('border-accent', 'text-accent');
-			desktopBtn.classList.remove('border-white/10', 'text-gray-300');
-			mobileBtn.classList.remove('border-accent', 'text-accent');
-			mobileBtn.classList.add('border-white/10', 'text-gray-300');
-		});
-
-		mobileBtn.addEventListener('click', () => {
-			// Show mobile, hide desktop
-			desktopContainer.classList.remove('translate-x-0', 'opacity-100', 'z-10');
-			desktopContainer.classList.add('-translate-x-full', 'opacity-0');
-			mobileContainer.classList.remove('translate-x-full', '-translate-x-full', 'opacity-0');
-			mobileContainer.classList.add('translate-x-0', 'opacity-100', 'z-10');
-
-			// Update button styles
-			mobileBtn.classList.add('border-accent', 'text-accent');
-			mobileBtn.classList.remove('border-white/10', 'text-gray-300');
-			desktopBtn.classList.remove('border-accent', 'text-accent');
-			desktopBtn.classList.add('border-white/10', 'text-gray-300');
-		});
-	}
+	document.getElementById('desktop-btn')?.addEventListener('click', () => setView('desktop'));
+	document.getElementById('mobile-btn')?.addEventListener('click', () => setView('mobile'));
 </script>
