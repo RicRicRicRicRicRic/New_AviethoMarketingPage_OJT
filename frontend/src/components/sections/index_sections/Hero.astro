@@ -1,6 +1,7 @@
 ---
 // Hero section - main headline and value proposition
 import VerticalSlideshow from '../../ui/VerticalSlideshow.astro';
+import AviethoLogo from '../../../assets/logo/Avietho_logo.png';
 
 interface Props {
 	title?: string;
@@ -13,14 +14,37 @@ const {
 } = Astro.props;
 ---
 
-<section class="px-4 py-40 w-full h-full ">
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-7xl mx-auto items-center">
+<section class="px-4 py-40 w-full h-full relative">
+	<!-- Firefly particle effect container -->
+	<div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+		<div class="absolute top-[20%] left-[10%] w-2 h-2 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_14s_infinite_ease-in-out]" style="animation-delay: 0s; animation-duration: 14s;"></div>
+		<div class="absolute top-[60%] left-[25%] w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_16s_infinite_ease-in-out]" style="animation-delay: 1s; animation-duration: 16s;"></div>
+		<div class="absolute top-[30%] left-[50%] w-2 h-2 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_15s_infinite_ease-in-out]" style="animation-delay: 2s; animation-duration: 15s;"></div>
+		<div class="absolute top-[70%] left-[70%] w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_13s_infinite_ease-in-out]" style="animation-delay: 0.5s; animation-duration: 13s;"></div>
+		<div class="absolute top-[40%] left-[85%] w-2 h-2 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_17s_infinite_ease-in-out]" style="animation-delay: 3s; animation-duration: 17s;"></div>
+		<div class="absolute top-[80%] left-[40%] w-1 h-1 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_15s_infinite_ease-in-out]" style="animation-delay: 1.5s; animation-duration: 15s;"></div>
+		<div class="absolute top-[15%] left-[65%] w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_14s_infinite_ease-in-out]" style="animation-delay: 2.5s; animation-duration: 14s;"></div>
+		<div class="absolute top-[55%] left-[90%] w-2 h-2 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_16s_infinite_ease-in-out]" style="animation-delay: 0.8s; animation-duration: 16s;"></div>
+		<div class="absolute top-[25%] left-[15%] w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_15s_infinite_ease-in-out]" style="animation-delay: 4s; animation-duration: 15s;"></div>
+		<div class="absolute top-[75%] left-[55%] w-2 h-2 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_13s_infinite_ease-in-out]" style="animation-delay: 2.2s; animation-duration: 13s;"></div>
+		<div class="absolute top-[45%] left-[35%] w-1 h-1 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_16s_infinite_ease-in-out]" style="animation-delay: 1.8s; animation-duration: 16s;"></div>
+		<div class="absolute top-[10%] left-[80%] w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_14s_infinite_ease-in-out]" style="animation-delay: 3.5s; animation-duration: 14s;"></div>
+		<div class="absolute top-[65%] left-[5%] w-2 h-2 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_17s_infinite_ease-in-out]" style="animation-delay: 0.3s; animation-duration: 17s;"></div>
+		<div class="absolute top-[35%] left-[95%] w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_15s_infinite_ease-in-out]" style="animation-delay: 2.8s; animation-duration: 15s;"></div>
+		<div class="absolute top-[85%] left-[20%] w-1 h-1 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_13s_infinite_ease-in-out]" style="animation-delay: 1.2s; animation-duration: 13s;"></div>
+		<div class="absolute top-[50%] left-[75%] w-2 h-2 rounded-full bg-[var(--color-accent)] opacity-40 shadow-[0_0_15px_var(--color-accent)] animate-[firefly-float_16s_infinite_ease-in-out]" style="animation-delay: 4.5s; animation-duration: 16s;"></div>
+	</div>
+
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-7xl mx-auto items-center relative z-10">
 		<!-- Left Column: Main Hero Content -->
 <!-- Added 'mx-auto' to center the div. Removed 'text-center' to keep content left-aligned. -->
 		<div class="mx-auto lg:text-left order-1 lg:order-1 max-w-2xl">
-				<h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-accent mb-6 tracking-tight">
-						{title}
-				</h1>
+			<img 
+				id="hero-logo"
+				src={AviethoLogo.src} 
+				alt="Avietho Logo" 
+				class="w-72 -mb-12"
+			/>
 				<p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
 						{subtitle}
 				</p>
@@ -43,3 +67,35 @@ const {
 		</div>
 	</div>
 </section>
+
+<script>
+  (function() {
+    const logo = document.getElementById('hero-logo');
+    if (!logo) return;
+
+    function updateLogoFilter() {
+      const body = document.body;
+      const isDefaultTheme = body.classList.contains('theme-default');
+      
+      if (isDefaultTheme) {
+        logo!.classList.remove('icon-hover');
+      } else {
+        logo!.classList.add('icon-hover');
+      }
+    }
+
+    // Initial check
+    updateLogoFilter();
+
+    // Watch for theme changes using MutationObserver
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          updateLogoFilter();
+        }
+      });
+    });
+
+    observer.observe(document.body, { attributes: true });
+  })();
+</script>
