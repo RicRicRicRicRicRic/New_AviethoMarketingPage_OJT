@@ -13,24 +13,26 @@ const {
 } = Astro.props;
 ---
 
-<section class="min-h-screen flex items-center justify-center px-4 py-12">
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-7xl mx-auto w-full items-center">
+<section class="px-4 py-12 w-full">
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 w-full items-center">
 		<!-- Left Column: Main Hero Content -->
-		<div class="text-center lg:text-left order-1 lg:order-1 max-w-2xl">
-		<h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-accent mb-6 tracking-tight">
-				{title}
-			</h1>
-			<p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
-				{subtitle}
-			</p>
-		<div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-			<a href="#services" class="px-8 py-3 bg-accent text-background font-semibold rounded hover:bg-accent-hover transition-colors">
-				Explore Services
-			</a>
-			<a href="#work" class="px-8 py-3 border border-accent text-accent font-semibold rounded hover:bg-accent hover:text-background transition-colors">
-				View Our Work
-			</a>
-		</div>
+<!-- Added 'mx-auto' to center the div. Removed 'text-center' to keep content left-aligned. -->
+		<div class="mx-auto lg:text-left order-1 lg:order-1 max-w-2xl">
+				<h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-accent mb-6 tracking-tight">
+						{title}
+				</h1>
+				<p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
+						{subtitle}
+				</p>
+				<!-- Kept the buttons centered on mobile/tablet via 'justify-center', left-aligned on large via 'lg:justify-start' -->
+				<div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+						<a href="#services" class="px-8 py-3 bg-accent text-background font-semibold rounded hover:bg-accent-hover transition-colors">
+								Explore Services
+						</a>
+						<a href="#work" class="px-8 py-3 border border-accent text-accent font-semibold rounded hover:bg-accent hover:text-background transition-colors">
+								View Our Work
+						</a>
+				</div>
 		</div>
 
 		<!-- Right Column: Vertical Slideshow -->

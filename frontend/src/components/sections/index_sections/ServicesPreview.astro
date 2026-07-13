@@ -55,13 +55,13 @@ const {
 } = Astro.props;
 ---
 
-<section id="services" class="py-20 px-4 bg-background-elevated">
-	<div class="max-w-6xl mx-auto">
+<section id="services" class="py-20 px-4 bg-background-elevated w-full">
+	<div class="w-full">
 		<h2 class="text-3xl md:text-4xl font-bold text-center text-accent mb-12">
 			{title}
 		</h2>
 		
-		<div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+		<div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
 			{services.map((service) => (
 				<div 
 				class="service-card opacity-0 translate-y-8 transition-all duration-700 ease-out bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-6 hover:border-accent/50 hover:bg-white/10 group"
