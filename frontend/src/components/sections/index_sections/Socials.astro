@@ -12,6 +12,20 @@ import instagramIcon from '/src/assets/icons/instagram_icon.png';
 import tiktokIcon from '/src/assets/icons/tiktok_icon.png';
 import youtubeIcon from '/src/assets/icons/youtube_icon.png';
 
+// Import social media images for collage
+import facebookImg from '/src/assets/imgs/socials_facebook.png';
+import instaImg from '/src/assets/imgs/socials_insta.png';
+import tiktokImg from '/src/assets/imgs/socials_tiktok.png';
+import youtubeImg from '/src/assets/imgs/socials_youtube.png';
+
+// Social media images array for collage
+const socialImages = [
+	{ name: 'Instagram', src: instaImg.src, alt: 'Instagram' },
+	{ name: 'Facebook', src: facebookImg.src, alt: 'Facebook' },
+	{ name: 'TikTok', src: tiktokImg.src, alt: 'TikTok' },
+	{ name: 'YouTube', src: youtubeImg.src, alt: 'YouTube' },
+];
+
 // Social media icons array (only the 4 main platforms)
 const socialIcons = [
 	{ name: 'Facebook', src: facebookIcon.src, alt: 'Facebook' },
@@ -21,54 +35,59 @@ const socialIcons = [
 ];
 ---
 
-<section class="bg-background-overlay py-40 px-4 w-full h-full ">
-	<div class="w-full h-full">
+<section class="bg-background-overlay py-20 px-4 w-full h-full">
+	<div class="grid grid-cols-1 lg:grid-cols-2 h-full w-full">
+		<!-- Left Column (Content) -->
+		<div class="flex flex-col justify-center">
 		<!-- Header -->
-		<div class="text-center mb-10">
+		<div class="mb-8 mx-auto text-center">
 			<p class="text-xs uppercase tracking-widest text-accent mb-3 font-medium">
 				Innovate, Create and Connect
 			</p>
-			<h2 class="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4">
+			<h2 class="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-foreground mb-4">
 				{title}
 			</h2>
-			<p class="text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+			<p class="text-sm md:text-base text-gray-300 max-w-2xl leading-relaxed">
 				We craft scroll-stopping stories that turn attention into action — building community, sparking conversation, and driving measurable growth for your brand.
 			</p>
 		</div>
 
 		<!-- Stats Grid -->
-		<div class="grid grid-cols-1 sm:grid-cols-3 mb-8">
-			<div class="text-center ">
-				<p class="text-3xl md:text-4xl font-bold text-accent mb-2">46K</p>
-				<p class="text-base text-gray-300">Facebook Followers</p>
+		<div class="grid grid-cols-1 sm:grid-cols-3 mb-6 mx-auto gap-20">
+				<div class="text-center">
+					<p class="text-2xl md:text-3xl font-bold text-accent mb-2">46K</p>
+					<p class="text-sm text-gray-300">Facebook</p>
+					<p class="text-sm text-gray-300">Followers</p>
+				</div>
+				<div class="text-center">
+					<p class="text-2xl md:text-3xl font-bold text-accent mb-2">100+</p>
+					<p class="text-sm text-gray-300">Projects</p>
+					<p class="text-sm text-gray-300">Done</p>
+				</div>
+				<div class="text-center">
+					<p class="text-2xl md:text-3xl font-bold text-accent mb-2">50+</p>
+					<p class="text-sm text-gray-300">Happy</p>
+					<p class="text-sm text-gray-300">Clients</p>
+				</div>
 			</div>
-			<div class="text-center ">
-				<p class="text-3xl md:text-4xl font-bold text-accent mb-2">100+</p>
-				<p class="text-base text-gray-300">Projects Done</p>
-			</div>
-			<div class="text-center ">
-				<p class="text-3xl md:text-4xl font-bold text-accent mb-2">50+</p>
-				<p class="text-base text-gray-300">Happy Clients</p>
-			</div>
-		</div>
 
-		<!-- Divider -->
-		<hr class="border-muted mb-8" />
+			<!-- Divider -->
+			<hr class="border-muted mb-6" />
 
 		<!-- Feature List -->
-		<div class="max-w-3xl mx-auto mb-8">
-			<ul class="flex flex-col items-center gap-3">
-				<li class="flex items-center max-w-2xl">
-					<span class="text-accent text-xl mr-3 flex-shrink-0">—</span>
-					<p class="text-base text-gray-300 text-center flex-1">Consistent brand presence that stays top-of-mind</p>
+		<div class="max-w-2xl mx-auto mb-6">
+			<ul class="flex flex-col items-start gap-3">
+				<li class="flex items-center">
+					<span class="text-accent text-lg mr-3 flex-shrink-0">—</span>
+					<p class="text-sm text-gray-300 text-left flex-1">Consistent brand presence that stays top-of-mind</p>
 				</li>
-				<li class="flex items-center max-w-2xl">
-					<span class="text-accent text-xl mr-3 flex-shrink-0">—</span>
-					<p class="text-base text-gray-300 text-center flex-1">Data-driven content that converts audiences into customers</p>
+				<li class="flex items-center">
+					<span class="text-accent text-lg mr-3 flex-shrink-0">—</span>
+					<p class="text-sm text-gray-300 text-left flex-1">Data-driven content that converts audiences into customers</p>
 				</li>
-				<li class="flex items-center max-w-2xl">
-					<span class="text-accent text-xl mr-3 flex-shrink-0">—</span>
-					<p class="text-base text-gray-300 text-center flex-1">Platform-native creative built for engagement and reach</p>
+				<li class="flex items-center">
+					<span class="text-accent text-lg mr-3 flex-shrink-0">—</span>
+					<p class="text-sm text-gray-300 text-left flex-1">Platform-native creative built for engagement and reach</p>
 				</li>
 			</ul>
 		</div>
@@ -83,60 +102,98 @@ const socialIcons = [
 			</button>
 		</div>
 
-		<!-- Connect with us Section -->
-		<div class="relative mt-10 h-16" x-data="{ open: false }">
-			<!-- Connect with us Trigger Button -->
-			<div 
-				class="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
-				:class="open ? 'opacity-0 pointer-events-none' : 'opacity-100'"
-			>
-				<button 
-					@click="open = true"
-					class="text-accent underline underline-offset-4 text-lg font-medium hover:text-accent-hover transition-colors duration-300"
+			<!-- Connect with us Section -->
+			<div class="relative mt-8 h-16 flex items-center justify-center" x-data="{ open: false }">
+				<!-- Connect with us Trigger Button -->
+				<div 
+					class="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
+					:class="open ? 'opacity-0 pointer-events-none' : 'opacity-100'"
 				>
-					Connect with us
-				</button>
-			</div>
-
-		<!-- Social Tray (Horizontal Bar) -->
-		<div 
-			x-show="open"
-			x-transition:enter="transition transform duration-500 ease-out"
-			x-transition:enter-start="translate-x-full opacity-0"
-			x-transition:enter-end="translate-x-0 opacity-100"
-			x-transition:leave="transition transform duration-500 ease-in"
-			x-transition:leave-start="translate-x-0 opacity-100"
-			x-transition:leave-end="translate-x-full opacity-0"
-		class="absolute left-1/4 w-1/2 inset-y-0 flex bg-white/10 backdrop-blur-md border border-white/10 rounded-lg shadow-lg items-center justify-center px-4"
-		>
-			<!-- Back Button -->
-			<button 
-				@click="open = false"
-				class="absolute left-4 flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-background)] border border-accent/20 text-accent hover:bg-accent hover:text-background transition-all duration-300 flex-shrink-0"
-				title="Back"
-			>
-				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right rotate-180">
-					<path d="m12 19-7-7 7-7" />
-					<path d="M19 12H5" />
-				</svg>
-			</button>
-
-			<!-- Social Icons Row (Centered) -->
-			<div class="flex items-center justify-center gap-4">
-					{socialIcons.map((icon) => (
-						<a 
-							href="#" 
-							class="h-12 w-12 rounded-full flex items-center justify-center bg-[var(--color-background)] border border-accent/20 hover:scale-110 hover:bg-accent/10 transition-all duration-300 group flex-shrink-0"
-							title={icon.name}
-						>
-							<img 
-								src={icon.src} 
-								alt={icon.alt} 
-								class="w-6 h-6 object-contain icon-idle group-hover:icon-hover transition-all"
-							/>
-						</a>
-					))}
+					<button 
+						@click="open = true"
+						class="text-accent underline underline-offset-4 text-lg font-medium hover:text-accent-hover transition-colors duration-300"
+					>
+						Connect with us
+					</button>
 				</div>
+
+				<!-- Social Tray (Horizontal Bar) -->
+				<div 
+					x-show="open"
+					x-transition:enter="transition transform duration-900 ease-out"
+					x-transition:enter-start="translate-x-[100vw] opacity-0"
+					x-transition:enter-end="translate-x-0 opacity-100"
+					x-transition:leave="transition transform duration-500 ease-in"
+					x-transition:leave-start="translate-x-0 opacity-100"
+					x-transition:leave-end="translate-x-[100vw] opacity-0"
+					class="w-150 h-15 flex bg-white/10 backdrop-blur-md border border-white/10 rounded-lg shadow-lg items-center justify-center px-4"
+				>
+					<!-- Back Button -->
+					<button 
+						@click="open = false"
+						class="absolute left-4 flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-background)] border border-accent/20 text-accent hover:bg-accent hover:text-background transition-all duration-300 flex-shrink-0"
+						title="Back"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right rotate-180">
+							<path d="m12 19-7-7 7-7" />
+							<path d="M19 12H5" />
+						</svg>
+					</button>
+
+					<!-- Social Icons Row (Centered) -->
+					<div class="flex items-center justify-center gap-4 ">
+						{socialIcons.map((icon) => (
+							<a 
+								href="#" 
+								class="h-12 w-12 rounded-full flex items-center justify-center bg-[var(--color-background)] border border-accent/20 hover:scale-110 hover:bg-accent/10 transition-all duration-300 group flex-shrink-0"
+								title={icon.name}
+							>
+						<img 
+							src={icon.src} 
+							alt={icon.alt} 
+							class="w-6 h-6 object-contain icon-idle group-hover:icon-hover"
+						/>
+							</a>
+						))}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Right Column (Social Media Collage) -->
+		<div class="hidden lg:flex items-center justify-center">
+			<div class="relative w-full h-[600px]">
+			<!-- Instagram Image -->
+			<img 
+				src={socialImages[0].src} 
+				alt="Instagram"
+				class="absolute w-90 h-90 object-cover border-16 border-[var(--color-background-overlay)] rounded-full shadow-2xl transition-all duration-500 ease-in-out hover:scale-110 hover:z-50 hover:shadow-3xl hover:cursor-pointer hover:[animation-play-state:paused] animate-[float-bob_8s_ease-in-out_infinite] z-30"
+				style="top: 5%; left: 25%; animation-delay: 0s;"
+			/>
+				
+			<!-- Facebook Image -->
+			<img 
+				src={socialImages[1].src} 
+				alt="Facebook"
+				class="absolute w-70 h-70 object-cover border-16 border-[var(--color-background-overlay)] rounded-full shadow-2xl transition-all duration-500 ease-in-out hover:scale-110 hover:z-50 hover:shadow-3xl hover:cursor-pointer hover:[animation-play-state:paused] animate-[float-bob_8s_ease-in-out_infinite] z-10"
+				style="top: 45%; left: 55%; animation-delay: 2s;"
+			/>
+				
+			<!-- TikTok Image -->
+			<img 
+				src={socialImages[2].src} 
+				alt="TikTok"
+				class="absolute w-80 h-80 object-cover border-16 border-[var(--color-background-overlay)] rounded-full shadow-2xl transition-all duration-500 ease-in-out hover:scale-110 hover:z-50 hover:shadow-3xl hover:cursor-pointer hover:[animation-play-state:paused] animate-[float-bob_8s_ease-in-out_infinite] z-20"
+				style="top: 39%; left: 10%; animation-delay: 4s;"
+			/>
+				
+			<!-- YouTube Image -->
+			<img 
+				src={socialImages[3].src} 
+				alt="YouTube"
+				class="absolute w-60 h-60 object-cover border-16 border-[var(--color-background-overlay)] rounded-full shadow-2xl transition-all duration-500 ease-in-out hover:scale-110 hover:z-50 hover:shadow-3xl hover:cursor-pointer hover:[animation-play-state:paused] animate-[float-bob_8s_ease-in-out_infinite] z-40"
+				style="top: 42%; left: -10%; animation-delay: 6s;"
+			/>
 			</div>
 		</div>
 	</div>

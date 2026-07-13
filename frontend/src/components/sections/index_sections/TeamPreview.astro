@@ -40,6 +40,17 @@ const teamMembers: TeamMember[] = [
 ];
 
 let currentIndex = 0;
+
+// Helper function to format description with bold name
+function formatDescription(description: string, name: string): string {
+	const nameIndex = description.indexOf(name);
+	if (nameIndex === -1) return description;
+	
+	const beforeName = description.substring(0, nameIndex);
+	const afterName = description.substring(nameIndex + name.length);
+	
+	return `${beforeName}<span class="font-bold">${name}</span>${afterName}`;
+}
 ---
 
 <section class="py-20 px-4 py-40 bg-background-elevated w-full h-full ">
@@ -66,8 +77,7 @@ let currentIndex = 0;
 			<!-- Right Column: Description -->
 			<div class="flex flex-col justify-center items-center text-center lg:text-left lg:items-start">
 				<div id="team-description" class="transition-all duration-500 ease-in-out">
-					<p class="text-base md:text-lg text-foreground/80 leading-relaxed transition-all duration-500 ease-in-out" id="team-desc">
-						{teamMembers[currentIndex].description}
+					<p class="text-base md:text-lg text-foreground/80 leading-relaxed transition-all duration-500 ease-in-out" id="team-desc" set:html={formatDescription(teamMembers[currentIndex].description, teamMembers[currentIndex].name)}>
 					</p>
 				</div>
 			</div>
@@ -76,6 +86,17 @@ let currentIndex = 0;
 </section>
 
 <script>
+	// Helper function to format description with bold name (client-side version)
+	function formatDescription(description: string, name: string): string {
+		const nameIndex = description.indexOf(name);
+		if (nameIndex === -1) return description;
+		
+		const beforeName = description.substring(0, nameIndex);
+		const afterName = description.substring(nameIndex + name.length);
+		
+		return `${beforeName}<span class="font-bold">${name}</span>${afterName}`;
+	}
+
 	// Text update functionality for team info
 	const nameEl = document.getElementById('team-name');
 	const jobTitleEl = document.getElementById('team-job-title');
@@ -106,7 +127,8 @@ let currentIndex = 0;
 				jobTitleEl.style.opacity = '1';
 				jobTitleEl.style.transform = 'translateY(0)';
 				
-				descEl.textContent = member.description;
+				// Use innerHTML to render bold name
+				descEl.innerHTML = formatDescription(member.description, member.name);
 				descEl.style.opacity = '1';
 				descEl.style.transform = 'translateY(0)';
 			}, 200);
