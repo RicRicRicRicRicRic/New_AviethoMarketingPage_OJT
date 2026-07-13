@@ -11,33 +11,33 @@ import WorkShowcase from '../components/sections/index_sections/WorkShowcase.ast
 ---
 
 <BaseLayout >
-	<div class="mt-0">
-		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+	<div class="grid grid-cols-1 items-center">
+		<div class="section-wrapper">
 			<Hero />
 		</div>
-		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+		<div class="section-wrapper">
 			<ServicesPreview/>
 		</div>
-		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+		<div class="section-wrapper">
 			<WebsiteDevelopment />
 		</div>
-		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+		<div class="section-wrapper">
 			<TeamPreview/>
 		</div>
-		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+		<div class="section-wrapper">
 			<Socials/>
 		</div>
-		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+		<div class="section-wrapper">
 			<WorkShowcase/>
 		</div>
 	</div>
 </BaseLayout>
 
 <style>
-	/* Centralized section height and layout control */
+	/* Centralized section height control */
 	/* Single source of truth for vertical spacing across all sections */
 	.section-wrapper {
-		min-height: 75vh;
+		min-height: 95vh;
 		width: 100%;
 	}
 </style>
