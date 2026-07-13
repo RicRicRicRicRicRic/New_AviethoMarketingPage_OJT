@@ -102,7 +102,7 @@ const navLinks: NavLink[] = [
 			{navLinks.map((link, i) => (
 				<a
 					href={link.href}
-					class="py-3 text-base font-medium text-[var(--color-foreground)] no-underline border-b border-muted opacity-0 -translate-y-1.5 transition-colors duration-200 hover:text-[var(--color-accent-hover)]"
+					class="mobile-nav-link w-full py-3 text-center text-base font-medium text-[var(--color-foreground)] no-underline border-b border-muted transition-colors duration-200 hover:text-[var(--color-accent-hover)]"
 					style="--i: {i};"
 				>
 					{link.label}
@@ -110,7 +110,7 @@ const navLinks: NavLink[] = [
 			))}
 			<a
 				href="/"
-				class="py-3 text-base font-semibold text-accent no-underline border-b-0 opacity-0 -translate-y-1.5"
+				class="mobile-nav-link w-full py-3 text-center text-base font-semibold text-accent no-underline border-b-0"
 				style="--i: {navLinks.length};"
 			>
 				Get Started
@@ -118,6 +118,18 @@ const navLinks: NavLink[] = [
 		</div>
 	</div>
 </nav>
+
+<style>
+	.mobile-nav-link {
+		opacity: 0;
+		transform: translateY(6px);
+		transition: opacity 0.25s ease, transform 0.25s ease, color 0.2s ease;
+	}
+	.mobile-nav-link.animate-link-in {
+		opacity: 1;
+		transform: translateY(0);
+	}
+</style>
 
 <script>
 	// Scroll state: navbar condenses and glass opacifies on scroll
