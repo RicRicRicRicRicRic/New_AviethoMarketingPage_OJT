@@ -1,0 +1,82 @@
+---
+// Highlights section - showcasing key achievements and highlights
+interface Props {
+	title?: string;
+}
+
+const { title = 'HIGHLIGHTS' } = Astro.props;
+---
+
+<section class="bg-background-overlay py-20 px-4 w-full h-full">
+	<div class="max-w-7xl mx-auto">
+		<!-- Header -->
+		<div class="text-center mb-12">
+			<p class="text-xs uppercase tracking-widest text-accent mb-3 font-medium">
+				What Sets Us Apart
+			</p>
+			<h2 class="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-foreground mb-4">
+				{title}
+			</h2>
+			<p class="text-sm md:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed">
+				Delivering exceptional results through innovation, creativity, and strategic thinking.
+			</p>
+		</div>
+
+		<!-- Highlights Grid -->
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			<!-- Highlight 1 -->
+			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
+				<div class="text-accent text-4xl mb-4">🎯</div>
+				<h3 class="text-xl font-bold text-foreground mb-3">Strategic Approach</h3>
+				<p class="text-sm text-gray-300 leading-relaxed">
+					Data-driven strategies that align with your goals and deliver measurable results.
+				</p>
+			</div>
+
+			<!-- Highlight 2 -->
+			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
+				<div class="text-accent text-4xl mb-4">💡</div>
+				<h3 class="text-xl font-bold text-foreground mb-3">Creative Excellence</h3>
+				<p class="text-sm text-gray-300 leading-relaxed">
+					Innovative solutions that capture attention and create lasting impressions.
+				</p>
+			</div>
+
+			<!-- Highlight 3 -->
+			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
+				<div class="text-accent text-4xl mb-4">🚀</div>
+				<h3 class="text-xl font-bold text-foreground mb-3">Rapid Delivery</h3>
+				<p class="text-sm text-gray-300 leading-relaxed">
+					Efficient workflows that ensure timely delivery without compromising quality.
+				</p>
+			</div>
+
+			<!-- Highlight 4 -->
+			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
+				<div class="text-accent text-4xl mb-4">🤝</div>
+				<h3 class="text-xl font-bold text-foreground mb-3">Collaborative Partnership</h3>
+				<p class="text-sm text-gray-300 leading-relaxed">
+					Working closely with you to understand your vision and bring it to life.
+				</p>
+			</div>
+
+			<!-- Highlight 5 -->
+			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
+				<div class="text-accent text-4xl mb-4">📊</div>
+				<h3 class="text-xl font-bold text-foreground mb-3">Proven Results</h3>
+				<p class="text-sm text-gray-300 leading-relaxed">
+					Track record of success with measurable impact on brand growth and engagement.
+				</p>
+			</div>
+
+			<!-- Highlight 6 -->
+			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
+				<div class="text-accent text-4xl mb-4">⭐</div>
+				<h3 class="text-xl font-bold text-foreground mb-3">Award-Winning Quality</h3>
+				<p class="text-sm text-gray-300 leading-relaxed">
+					Industry-recognized excellence in design, content, and digital solutions.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
