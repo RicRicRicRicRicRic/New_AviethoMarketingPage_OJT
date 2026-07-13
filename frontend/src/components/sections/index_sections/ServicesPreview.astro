@@ -2,13 +2,14 @@
 // Services preview section - overview of offered services
 import Image from 'astro/components/Image.astro';
 
-type ServiceId = 'journalism' | 'storytelling' | 'data' | 'protection';
+type ServiceId = 'digital-pr' | 'social-media' | 'video-production' | 'post-production';
 
 interface Service {
 	id: ServiceId;
 	title: string;
 	description: string;
 	iconPath: string;
+	href: string;
 }
 
 interface Props {
@@ -18,38 +19,42 @@ interface Props {
 
 // Type-safe icon mapping
 const iconMap: Record<ServiceId, string> = {
-	journalism: '/src/assets/icons/publicrelations_icon.png',
-	storytelling: '/src/assets/icons/mulimediaBranding_icon.png',
-	data: '/src/assets/icons/digitalSocialMediaMarketing_icon.png',
-	protection: '/src/assets/icons/webDevelopment_icon.png'
+	'digital-pr': '/src/assets/icons/publicrelations_icon.png',
+	'social-media': '/src/assets/icons/mulimediaBranding_icon.png',
+	'video-production': '/src/assets/icons/digitalSocialMediaMarketing_icon.png',
+	'post-production': '/src/assets/icons/webDevelopment_icon.png'
 };
 
 const { 
 	title = 'Our Services',
 	services = [
 		{
-			id: 'journalism',
-			title: 'Investigative Journalism',
-			description: 'Deep-dive reporting that uncovers truth and holds power accountable.',
-			iconPath: iconMap.journalism
+			id: 'digital-pr',
+			title: 'Digital PR',
+			description: 'Earned coverage, trusted voices, and a reputation that holds up under scrutiny across the channels your audience already follows.',
+			iconPath: iconMap['digital-pr'],
+			href: '/services#digital-pr'
 		},
 		{
-			id: 'storytelling',
-			title: 'Digital Storytelling',
-			description: 'Engaging multimedia narratives that resonate with modern audiences.',
-			iconPath: iconMap.storytelling
+			id: 'social-media',
+			title: 'Social Media',
+			description: 'Strategy-led content, community management, and measurement that keep a brand active between campaigns.',
+			iconPath: iconMap['social-media'],
+			href: '/services#social-media'
 		},
 		{
-			id: 'data',
-			title: 'Data Analysis',
-			description: 'Rigorous data-driven insights to support evidence-based reporting.',
-			iconPath: iconMap.data
+			id: 'video-production',
+			title: 'Video Production',
+			description: 'Corporate, live, commercial, and documentary work produced to hold up beautifully on any screen.',
+			iconPath: iconMap['video-production'],
+			href: '/services#video-production'
 		},
 		{
-			id: 'protection',
-			title: 'Source Protection',
-			description: 'Secure communication channels to protect whistleblowers and sources.',
-			iconPath: iconMap.protection
+			id: 'post-production',
+			title: 'Post-Production',
+			description: 'Editing, grading, sound, and motion work that turn raw footage into a polished, compelling story.',
+			iconPath: iconMap['post-production'],
+			href: '/services#post-production'
 		}
 	]
 } = Astro.props;
@@ -63,8 +68,9 @@ const {
 		
 		<div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
 			{services.map((service) => (
-				<div 
-				class="service-card opacity-0 translate-y-8 transition-all duration-700 ease-out bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-6 hover:border-accent/50 hover:bg-white/10 group"
+				<a 
+					href={service.href}
+					class="service-card block opacity-0 translate-y-8 transition-all duration-700 ease-out bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-6 hover:border-accent/50 hover:bg-white/10 group"
 				>
 					<div class="flex justify-center mb-4">
 					<Image 
@@ -81,7 +87,7 @@ const {
 					<p class="text-gray-300 text-sm leading-relaxed text-center">
 						{service.description}
 					</p>
-				</div>
+				</a>
 			))}
 		</div>
 	</div>
