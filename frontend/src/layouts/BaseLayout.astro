@@ -2,6 +2,7 @@
 // Base layout component with global styles and navigation
 import '../styles/global.css';
 import Navbar from '../components/ui/Navbar.astro';
+import Footer from '../components/ui/Footer.astro';
 import ChatWidget from '../components/ui/ChatWidget.astro';
 import ColorPaletteWidget from '../components/ui/ColorPaletteWidget.astro';
 
@@ -23,12 +24,13 @@ const { title = 'Avietho' } = Astro.props;
 		<title>{title}</title>
 		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 	</head>
-	<body class="bg-background text-foreground min-h-screen">
-		<Navbar />
-		<main>
-			<slot />
-		</main>
+<body class="bg-background text-foreground min-h-screen flex flex-col">
+	<Navbar />
+	<main class="flex-grow">
+		<slot />
+	</main>
+	<Footer />
     	<ChatWidget />
     	<ColorPaletteWidget />
-	</body>
+</body>
 </html>

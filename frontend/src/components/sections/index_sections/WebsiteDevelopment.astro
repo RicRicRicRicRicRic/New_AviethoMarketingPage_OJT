@@ -10,7 +10,8 @@ const {
 	description = 'Custom web solutions built with modern technologies.' 
 } = Astro.props;
 
-import websiteDevelopmentGif from '../../../assets/gif/websiteDevelopment.gif';
+import webdev_mobileVerGif from '../../../assets/gif/webdev_mobileVers.gif';
+import webdev_desktopVersGif from '../../../assets/gif/webdev_desktopVers.gif';
 
 // Content data for the switcher
 const contentData = [
@@ -87,14 +88,50 @@ const contentData = [
 				</li>
 			</ul>
 			</div>
-			<div class="flex justify-center items-center">
-				<div class="relative rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-4 w-full max-w-[300px]">
-					<img 
-						src={websiteDevelopmentGif.src} 
-						alt="Technology stack visualization"
-						class="block w-full h-auto object-contain"
-						loading="lazy"
-					/>
+			<div class="flex flex-col items-center">
+				<!-- Animation Wrapper -->
+				<div class="relative w-full flex justify-center items-center min-h-[400px]">
+					<!-- Mobile Glass Container -->
+					<div 
+						id="mobile-container"
+						class="mobile-container absolute rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-4 w-[300px] h-[400px] overflow-hidden transition-all duration-500 translate-x-0 opacity-100 z-10"
+					>
+						<img 
+							src={webdev_mobileVerGif.src} 
+							alt="Mobile view demonstration"
+							class="block w-full h-full object-contain"
+							loading="lazy"
+						/>
+					</div>
+
+					<!-- Desktop Glass Container -->
+					<div 
+						id="desktop-container"
+						class="desktop-container absolute rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-4 w-[450px] h-[350px] overflow-hidden transition-all duration-500 translate-x-full opacity-0"
+					>
+						<img 
+							src={webdev_desktopVersGif.src} 
+							alt="Desktop view demonstration"
+							class="block w-full h-full object-contain"
+							loading="lazy"
+						/>
+					</div>
+				</div>
+
+				<!-- Toggle Buttons -->
+				<div class="flex gap-4 mt-6">
+					<button 
+						id="desktop-btn"
+						class="px-6 py-3 rounded-full border border-accent text-accent hover:bg-accent hover:text-black transition-all duration-300 text-sm font-body font-semibold"
+					>
+						Desktop View
+					</button>
+					<button 
+						id="mobile-btn"
+						class="px-6 py-3 rounded-full border border-white/10 text-gray-300 hover:border-accent hover:text-accent transition-all duration-300 text-sm font-body font-semibold"
+					>
+						Mobile View
+					</button>
 				</div>
 			</div>
 		</div>
@@ -126,18 +163,32 @@ const contentData = [
 		}
 	];
 
-	// Get DOM elements
+	// Get DOM elements for content switcher
 	const buttons = document.querySelectorAll('[data-switcher-btn]');
 	const contentDisplay = document.getElementById('content-display');
 	const contentTitle = document.getElementById('content-title');
 	const contentParagraph = document.getElementById('content-paragraph');
 
-	// Set initial active state
+	// Get DOM elements for image toggle
+	const desktopBtn = document.getElementById('desktop-btn');
+	const mobileBtn = document.getElementById('mobile-btn');
+	const mobileContainer = document.getElementById('mobile-container');
+	const desktopContainer = document.getElementById('desktop-container');
+
+	// Set initial active state for content switcher
 	if (buttons.length > 0) {
 		buttons[0].classList.add('border-accent', 'text-accent');
 	}
 
-	// Add click handlers to buttons
+	// Set initial state for image toggle (show mobile by default)
+	if (mobileContainer && desktopContainer) {
+		mobileContainer.classList.remove('translate-x-full', 'opacity-0');
+		mobileContainer.classList.add('translate-x-0', 'opacity-100', 'z-10');
+		desktopContainer.classList.add('translate-x-full', 'opacity-0');
+		desktopContainer.classList.remove('translate-x-0', 'opacity-100', 'z-10');
+	}
+
+	// Add click handlers to content switcher buttons
 	buttons.forEach(button => {
 		button.addEventListener('click', () => {
 			const targetId = button.getAttribute('data-switcher-btn');
@@ -162,4 +213,35 @@ const contentData = [
 			}
 		});
 	});
+
+	// Add click handlers to view toggle buttons
+	if (desktopBtn && mobileBtn && mobileContainer && desktopContainer) {
+		desktopBtn.addEventListener('click', () => {
+			// Show desktop, hide mobile
+			mobileContainer.classList.remove('translate-x-0', 'opacity-100', 'z-10');
+			mobileContainer.classList.add('translate-x-full', 'opacity-0');
+			desktopContainer.classList.remove('translate-x-full', 'opacity-0');
+			desktopContainer.classList.add('translate-x-0', 'opacity-100', 'z-10');
+
+			// Update button styles
+			desktopBtn.classList.add('border-accent', 'text-accent');
+			desktopBtn.classList.remove('border-white/10', 'text-gray-300');
+			mobileBtn.classList.remove('border-accent', 'text-accent');
+			mobileBtn.classList.add('border-white/10', 'text-gray-300');
+		});
+
+		mobileBtn.addEventListener('click', () => {
+			// Show mobile, hide desktop
+			desktopContainer.classList.remove('translate-x-0', 'opacity-100', 'z-10');
+			desktopContainer.classList.add('-translate-x-full', 'opacity-0');
+			mobileContainer.classList.remove('translate-x-full', '-translate-x-full', 'opacity-0');
+			mobileContainer.classList.add('translate-x-0', 'opacity-100', 'z-10');
+
+			// Update button styles
+			mobileBtn.classList.add('border-accent', 'text-accent');
+			mobileBtn.classList.remove('border-white/10', 'text-gray-300');
+			desktopBtn.classList.remove('border-accent', 'text-accent');
+			desktopBtn.classList.add('border-white/10', 'text-gray-300');
+		});
+	}
 </script>
