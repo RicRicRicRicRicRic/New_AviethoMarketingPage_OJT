@@ -11,23 +11,25 @@ import WorkShowcase from '../components/sections/index_sections/WorkShowcase.ast
 ---
 
 <BaseLayout >
-	<div class="section-wrapper min-h-[60vh] flex flex-col items-center justify-center">
-		<Hero />
-	</div>
-	<div class="section-wrapper min-h-[60vh] flex flex-col items-center justify-center">
-		<ServicesPreview/>
-	</div>
-	<div class="section-wrapper min-h-[60vh] flex flex-col items-center justify-center">
-		<WebsiteDevelopment />
-	</div>
-	<div class="section-wrapper min-h-[60vh] flex flex-col items-center justify-center">
-		<TeamPreview/>
-	</div>
-	<div class="section-wrapper min-h-[60vh] flex flex-col items-center justify-center">
-		<Socials/>
-	</div>
-	<div class="section-wrapper min-h-[60vh] flex flex-col items-center justify-center">
-		<WorkShowcase/>
+	<div class="mt-0">
+		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+			<Hero />
+		</div>
+		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+			<ServicesPreview/>
+		</div>
+		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+			<WebsiteDevelopment />
+		</div>
+		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+			<TeamPreview/>
+		</div>
+		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+			<Socials/>
+		</div>
+		<div class="section-wrapper min-h-[75vh] flex flex-col items-center justify-center">
+			<WorkShowcase/>
+		</div>
 	</div>
 </BaseLayout>
 
@@ -35,7 +37,7 @@ import WorkShowcase from '../components/sections/index_sections/WorkShowcase.ast
 	/* Centralized section height and layout control */
 	/* Single source of truth for vertical spacing across all sections */
 	.section-wrapper {
-		min-height: 60vh;
+		min-height: 75vh;
 		width: 100%;
 	}
 </style>
