@@ -1,0 +1,42 @@
+---
+// Livestreams page
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Livestreams - Avietho">
+	<div class="grid grid-cols-1 items-center">
+		<div class="section-wrapper">
+			<div class="max-w-7xl mx-auto px-6 py-20">
+				<h1 class="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
+					Livestreams
+				</h1>
+				<p class="text-lg text-foreground/80 mb-12 max-w-3xl">
+					Watch our latest livestreams and stay updated with our live content.
+				</p>
+				
+				<!-- Livestream content will be added here -->
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					<!-- Placeholder for livestream cards -->
+					<div class="bg-muted/20 border border-muted rounded-lg p-6">
+						<div class="aspect-video bg-muted/30 rounded-lg mb-4 flex items-center justify-center">
+							<span class="text-foreground/50">Stream Placeholder</span>
+						</div>
+						<h3 class="text-xl font-heading font-semibold text-foreground mb-2">
+							Coming Soon
+						</h3>
+						<p class="text-foreground/70">
+							Our livestreams will be available here soon.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.section-wrapper {
+		min-height: 95vh;
+		width: 100%;
+	}
+</style>
