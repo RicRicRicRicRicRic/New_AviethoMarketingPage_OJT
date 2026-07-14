@@ -1,42 +1,458 @@
 ---
-// Livestreams page
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+type StreamItem = {
+	title: string;
+	description: string;
+	url: string;
+	publishedAt: string;
+	// Real per-video view counts aren't in the RSS feed (see getVideoViews
+	// below) — null means "couldn't determine it," not "zero views."
+	views: number | null;
+	duration: string;
+	badge: string;
+	thumbnail?: string;
+	videoId?: string;
+};
+
+const channelUrl = 'https://www.youtube.com/@aviethodigital/streams';
+
+// Real YouTube Live Stream Videos from @aviethodigital
+const fallbackStreams: StreamItem[] = [
+	{
+		title: 'LIVE | The 8th Annual Man of the World Finals Night at Palacio de Maynila',
+		description: 'The 8th Annual Man of the World Finals Night at Palacio de Maynila Powered by Avietho Digital. #ManoftheWorld2026 #AviethoDigital.',
+		url: 'https://www.youtube.com/watch?v=AhegrxF80J4',
+		publishedAt: '2026-06-06T18:30:00Z',
+		views: 47000,
+		duration: 'Live replay',
+		badge: 'Popular',
+		videoId: 'AhegrxF80J4',
+	},
+	{
+		title: 'LIVE | The Philippine International D\' Elite Gala of Man of the World 2026',
+		description: 'The Philippine International D\' Elite Gala of Man of the World 2026 at Palacio de Maynila. #ManoftheWorld2026 #AviethoDigital.',
+		url: 'https://www.youtube.com/watch?v=Uw29e-tUW3Y',
+		publishedAt: '2026-06-01T15:00:00Z',
+		views: 10500,
+		duration: 'Live replay',
+		badge: 'Recent',
+		videoId: 'Uw29e-tUW3Y',
+	},
+	{
+		title: 'Avietho Digital POV Episode 7 (Marj De Leon)',
+		description: 'Avietho Digital\'s exclusive interview with Landco Sales Director and Licensed Real Estate Broker Ms. Marj De Leon as she talks about the gift of life—family, friends, and career. Voices that lead. Stories that inspire.',
+		url: 'https://www.youtube.com/watch?v=cFRLpDkrZWw',
+		publishedAt: '2025-09-11T12:00:00Z',
+		views: 249,
+		duration: 'Interview',
+		badge: 'POV',
+		videoId: 'cFRLpDkrZWw',
+	},
+	{
+		title: 'AVIETHO DIGITAL PROGRAM (Intro)',
+		description: 'Explore the world of news, entertainment, food, and travels at Avietho Digital. Stay informed and entertained through our digital programs such as Period Podcast, KaladKain, Istorya, Transparency Talk, Say What, and Legaltok.',
+		url: 'https://www.youtube.com/watch?v=up-QvShfPrw',
+		publishedAt: '2025-03-25T08:00:00Z',
+		views: 1210,
+		duration: 'Program',
+		badge: 'Intro',
+		videoId: 'up-QvShfPrw',
+	}
+];
+
+// The RSS feed below doesn't reliably include real view counts, so each
+// video's watch page is fetched individually to read the actual figure
+// straight out of YouTube's page data. Returns null (not a made-up number)
+// if that also fails, so the UI can show "unavailable" instead of a lie.
+const getVideoViews = async (videoId: string): Promise<number | null> => {
+	try {
+		const res = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
+			headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
+		});
+		if (!res.ok) throw new Error(`Watch page fetch failed with status ${res.status}`);
+
+		const html = await res.text();
+		const viewMatch = html.match(/"viewCount":"(\d+)"/);
+		if (!viewMatch?.[1]) throw new Error('Could not find viewCount in watch page HTML');
+
+		return parseInt(viewMatch[1], 10);
+	} catch (err) {
+		console.error(`[streams] Failed to fetch real view count for video ${videoId}:`, err);
+		return null;
+	}
+};
+
+const getStreams = async (): Promise<StreamItem[]> => {
+	try {
+		const res = await fetch(channelUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } });
+		if (!res.ok) throw new Error(`Channel page fetch failed with status ${res.status}`);
+
+		const html = await res.text();
+		const channelIdMatch = html.match(/"channelId":"([^"]+)"/) || html.match(/"browseId":"([^"]+)"/);
+		if (!channelIdMatch?.[1]) throw new Error('Could not find channelId/browseId in channel page HTML (YouTube may have changed its markup)');
+
+		const feedRes = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelIdMatch[1]}`, {
+			headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
+		});
+		if (!feedRes.ok) throw new Error(`RSS feed fetch failed with status ${feedRes.status}`);
+
+		const feed = await feedRes.text();
+		const entries = Array.from(feed.matchAll(/<entry>([\s\S]*?)<\/entry>/g));
+		if (entries.length === 0) throw new Error('RSS feed returned zero entries');
+
+		const parsedEntries = entries.slice(0, 6).map((entry) => {
+			const c = entry[1];
+			const videoId = c.match(/<yt:videoId>([\s\S]*?)<\/yt:videoId>/)?.[1]?.trim() ?? undefined;
+			const title = c.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? 'Untitled';
+			const published = c.match(/<published>([\s\S]*?)<\/published>/)?.[1] ?? new Date().toISOString();
+			const link = videoId ? `https://www.youtube.com/watch?v=${videoId}` : channelUrl;
+			const desc = c.match(/<media:description>([\s\S]*?)<\/media:description>/)?.[1] ?? 'Recent broadcast';
+
+			return {
+				title: title.replace(/<!\[CDATA\[|\]\]>/g, '').trim(),
+				description: desc.replace(/<!\[CDATA\[|\]\]>/g, '').replace(/\s+/g, ' ').trim(),
+				url: link,
+				publishedAt: published,
+				duration: 'Live replay',
+				badge: 'Recent',
+				thumbnail: videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : undefined,
+				videoId,
+			};
+		});
+
+		// Fetched in parallel — one failed lookup only nulls out that
+		// video's view count, it doesn't fall back to fallbackStreams.
+		return await Promise.all(
+			parsedEntries.map(async (item) => ({
+				...item,
+				views: item.videoId ? await getVideoViews(item.videoId) : null,
+			}))
+		);
+	} catch (err) {
+		console.error('[streams] Falling back to static stream list:', err);
+		return fallbackStreams;
+	}
+};
+
+const streams = await getStreams();
 ---
 
 <BaseLayout title="Livestreams - Avietho">
-	<div class="grid grid-cols-1 items-center">
-		<div class="section-wrapper">
-			<div class="max-w-7xl mx-auto px-6 py-20">
-				<h1 class="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
-					Livestreams
-				</h1>
-				<p class="text-lg text-foreground/80 mb-12 max-w-3xl">
-					Watch our latest livestreams and stay updated with our live content.
-				</p>
-				
-				<!-- Livestream content will be added here -->
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-					<!-- Placeholder for livestream cards -->
-					<div class="bg-muted/20 border border-muted rounded-lg p-6">
-						<div class="aspect-video bg-muted/30 rounded-lg mb-4 flex items-center justify-center">
-							<span class="text-foreground/50">Stream Placeholder</span>
-						</div>
-						<h3 class="text-xl font-heading font-semibold text-foreground mb-2">
-							Coming Soon
-						</h3>
-						<p class="text-foreground/70">
-							Our livestreams will be available here soon.
-						</p>
-					</div>
+	<div class="section-wrapper">
+		<div class="mx-auto max-w-7xl px-6 py-20 md:px-8 lg:px-10">
+
+			<!-- Header -->
+			<header class="reveal-on-load flex flex-col items-center mx-auto max-w-2xl text-center" style="animation-delay:0ms">
+				<div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-accent">
+					<span class="h-2 w-2 rounded-full bg-accent animate-pulse"></span>
+					Live Showcase
 				</div>
+				<h1 class="mt-5 text-4xl md:text-5xl font-bold text-white tracking-tight">Livestreams</h1>
+				<p class="mt-4 text-lg text-zinc-400">
+					Broadcasts and replays from <a href="https://www.youtube.com/@aviethodigital" target="_blank" rel="noopener noreferrer" class="text-accent underline underline-offset-4 decoration-accent/40 transition-colors hover:decoration-accent">Avietho Digital</a>.
+				</p>
+			</header>
+
+			<hr class="reveal-on-load mt-12 border-white/10" style="animation-delay:80ms" />
+
+			<!-- Sort controls -->
+			<div class="reveal-on-load mt-12 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6" style="animation-delay:160ms">
+				<span class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500">Sort by</span>
+				<button id="sort-latest" class="sort-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer">
+					Latest
+				</button>
+				<button id="sort-popular" class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+					Popular
+				</button>
+				<button id="sort-oldest" class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+					Oldest
+				</button>
+			</div>
+
+			<!-- Grid -->
+			<div class="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3" id="stream-grid">
+				{streams.map((stream, idx) => (
+					<article
+						class="stream-item reveal-on-load group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-black/40"
+						data-video-id={stream.videoId || ""}
+						data-publish-date={stream.publishedAt}
+						data-views={stream.views}
+						style={`animation-delay:${220 + idx * 70}ms`}
+					>
+						<div class="relative aspect-video overflow-hidden">
+							{stream.thumbnail && (
+								<img
+									src={stream.thumbnail}
+									alt={stream.title}
+									class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+									loading="lazy"
+								/>
+							)}
+							<div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+								<div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-zinc-950">
+									<span class="ml-0.5 text-xl">▶</span>
+								</div>
+							</div>
+							<span class="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-white">
+								{stream.badge}
+							</span>
+						</div>
+						<div class="p-6">
+							<h3 class="text-lg font-semibold leading-snug text-white transition-colors group-hover:text-accent line-clamp-2">{stream.title}</h3>
+							<p class="mt-2 text-sm text-zinc-400 line-clamp-2">{stream.description}</p>
+							<div class="mt-4 flex items-center justify-between text-xs text-zinc-500">
+								<span>{new Date(stream.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+								<span>{stream.views !== null ? `${stream.views.toLocaleString()} views` : 'Views unavailable'}</span>
+							</div>
+						</div>
+					</article>
+				))}
+			</div>
+		</div>
+	</div>
+
+	<!-- Video pop-up (was an inline section at the top of the page; now a
+	     centered modal overlay that floats above the content instead) -->
+	<div id="video-player" class="hidden">
+		<div id="player-backdrop"></div>
+		<div class="video-modal-frame">
+			<div class="video-modal-inner">
+				<div id="player-container"></div>
+				<button id="close-player" aria-label="Close video">✕</button>
 			</div>
 		</div>
 	</div>
 </BaseLayout>
 
 <style>
-	.section-wrapper {
-		min-height: 95vh;
+	#video-player {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+	}
+	#video-player:not(.hidden) {
+		display: flex;
+	}
+	#player-backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.92);
+		backdrop-filter: blur(6px);
+	}
+	.video-modal-frame {
+		position: relative;
 		width: 100%;
+		max-width: 1100px;
+	}
+	.video-modal-inner {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		border-radius: 16px;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: #000;
+		box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+	}
+	#player-container {
+		width: 100%;
+		height: 100%;
+	}
+	#close-player {
+		position: absolute;
+		top: 14px;
+		right: 14px;
+		z-index: 10;
+		width: 40px;
+		height: 40px;
+		border-radius: 999px;
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		background: rgba(0, 0, 0, 0.6);
+		color: #fff;
+		font-size: 18px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+	}
+	#close-player:hover {
+		background: var(--color-accent, #c9a44c);
+		border-color: var(--color-accent, #c9a44c);
+		color: #0a0a0a;
+	}
+
+	/* Sort pills: hover styling only applies to whichever isn't the
+	   currently-active one (JS toggles the .active class, not this). */
+	.sort-btn:hover:not(.active) {
+		border-color: rgba(255, 255, 255, 0.3);
+		color: #fff;
+	}
+
+	/* Page-load entrance motion */
+	.reveal-on-load {
+		animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+	}
+	@keyframes reveal-up {
+		from {
+			opacity: 0;
+			transform: translateY(18px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.reveal-on-load {
+			animation: none;
+			opacity: 1;
+			transform: none;
+		}
+		.stream-item:hover {
+			transform: none;
+		}
 	}
 </style>
+
+<script>
+	// Declaring YT globally on Window for TypeScript compiler safety
+	declare global {
+		interface Window {
+			YT?: any;
+			onYouTubeIframeAPIReady?: () => void;
+		}
+	}
+
+	let player: any = null;
+	let currentVideoId = '';
+
+	function loadYouTubeAPI() {
+		if (window.YT && window.YT.Player) return Promise.resolve();
+		
+		return new Promise<void>((resolve) => {
+			const tag = document.createElement('script');
+			tag.src = "https://www.youtube.com/iframe_api";
+			const firstScript = document.getElementsByTagName('script')[0];
+			firstScript.parentNode?.insertBefore(tag, firstScript);
+			
+			window.onYouTubeIframeAPIReady = () => {
+				resolve();
+			};
+		});
+	}
+
+	async function playVideo(videoId: string | null | undefined) {
+		if (!videoId) {
+			alert("Video unavailable.");
+			return;
+		}
+
+		currentVideoId = videoId;
+		const playerEl = document.getElementById('video-player') as HTMLElement;
+		playerEl.classList.remove('hidden');
+		document.body.style.overflow = 'hidden';
+
+		await loadYouTubeAPI();
+
+		if (player) {
+			player.loadVideoById(videoId);
+		} else {
+			player = new window.YT.Player('player-container', {
+				height: '100%',
+				width: '100%',
+				videoId: videoId,
+				playerVars: {
+					autoplay: 1,
+					modestbranding: 1,
+					rel: 0,
+				},
+				events: {
+					onReady: (event: any) => event.target.playVideo(),
+				}
+			});
+		}
+	}
+
+	function closePlayer() {
+		const playerEl = document.getElementById('video-player') as HTMLElement;
+		playerEl.classList.add('hidden');
+		document.body.style.overflow = '';
+		if (player && typeof player.pauseVideo === 'function') {
+			player.pauseVideo();
+		}
+	}
+
+	// Attach Event Listeners
+	document.addEventListener('DOMContentLoaded', () => {
+		const grid = document.getElementById('stream-grid');
+		const sortButtons = document.querySelectorAll('.sort-btn');
+		const streamItems = Array.from(document.querySelectorAll('.stream-item'));
+
+		// 1. Client-Side Sorting Logic
+		function sortStreams(criteria: 'latest' | 'popular' | 'oldest') {
+			if (!grid) return;
+
+			const sorted = [...streamItems].sort((a, b) => {
+				const dateA = new Date(a.getAttribute('data-publish-date') || '').getTime();
+				const dateB = new Date(b.getAttribute('data-publish-date') || '').getTime();
+				const viewsA = parseInt(a.getAttribute('data-views') || '0', 10);
+				const viewsB = parseInt(b.getAttribute('data-views') || '0', 10);
+
+				if (criteria === 'latest') return dateB - dateA;
+				if (criteria === 'oldest') return dateA - dateB;
+				if (criteria === 'popular') return viewsB - viewsA;
+				return 0;
+			});
+
+			// Reorders directly inside the DOM so attached event listeners are kept intact
+			sorted.forEach(item => grid.appendChild(item));
+		}
+
+		sortButtons.forEach(btn => {
+			btn.addEventListener('click', () => {
+				// Style manipulation
+				sortButtons.forEach(b => {
+					b.classList.remove('active', 'bg-accent', 'text-zinc-950', 'border-accent');
+					b.classList.add('bg-zinc-900/50', 'text-zinc-400', 'border-white/10');
+				});
+
+				btn.classList.add('active', 'bg-accent', 'text-zinc-950', 'border-accent');
+				btn.classList.remove('bg-zinc-900/50', 'text-zinc-400', 'border-white/10');
+
+				// Call Sort
+				const sortId = btn.id;
+				if (sortId === 'sort-latest') sortStreams('latest');
+				if (sortId === 'sort-popular') sortStreams('popular');
+				if (sortId === 'sort-oldest') sortStreams('oldest');
+			});
+		});
+
+		// 2. Grid Streams Listeners
+		streamItems.forEach(item => {
+			item.addEventListener('click', () => {
+				const videoId = item.getAttribute('data-video-id');
+				playVideo(videoId);
+			});
+		});
+
+		// 3. Close Player Listeners (button + backdrop click)
+		document.getElementById('close-player')?.addEventListener('click', closePlayer);
+		document.getElementById('player-backdrop')?.addEventListener('click', closePlayer);
+	});
+
+	// Keyboard escape
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') {
+			const playerEl = document.getElementById('video-player') as HTMLElement;
+			if (playerEl && !playerEl.classList.contains('hidden')) {
+				closePlayer();
+			}
+		}
+	});
+</script>
