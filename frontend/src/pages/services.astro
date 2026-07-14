@@ -288,6 +288,13 @@ const categories: Category[] = [
     ],
   },
 ];
+
+// Every image belonging to a category (hero shot + each sub-service's
+// photo, de-duplicated) — used to fill the panel's sliding image frame.
+const getCategoryImages = (cat: Category): string[] => {
+  const all = [cat.heroImage, ...cat.services.map((s) => s.image)];
+  return Array.from(new Set(all));
+};
 ---
 
 <BaseLayout title="Avietho - Our Services">
@@ -311,29 +318,46 @@ const categories: Category[] = [
     </section>
 
     <!-- Category panels -->
-    {categories.map((cat, i) => (
-      <section id={cat.slug} class={`panel reveal ${i % 2 === 1 ? 'panel-reverse' : ''}`}>
-        <div class="panel-media">
-          <img src={cat.heroImage} alt={cat.title} loading="lazy" />
-        </div>
-        <div class="panel-scrim"></div>
-        <div class="panel-body">
-          <span class="panel-number">{cat.number}</span>
-          <h2 class="panel-title">{cat.title}</h2>
-          <p class="panel-intro">{cat.intro}</p>
+    {categories.map((cat, i) => {
+      const images = getCategoryImages(cat);
+      // Doubled so the track can loop seamlessly (translate by -50%, then
+      // reset with no visible seam).
+      const loopImages = [...images, ...images];
+      const slideDuration = `${images.length * 6}s`;
 
-          <div class="service-grid">
-            {cat.services.map((s) => (
-              <div class="service-item">
-                <h3 class="service-title">{s.title}</h3>
-                <p class="service-subtitle">{s.subtitle}</p>
-                <p class="service-desc">{s.description}</p>
-              </div>
-            ))}
+      return (
+        <section id={cat.slug} class={`panel reveal ${i % 2 === 1 ? 'panel-reverse' : ''}`}>
+          <a
+            href={`/projects?category=${encodeURIComponent(cat.title)}#gallery`}
+            class="panel-media panel-media-link"
+            aria-label={`View ${cat.title} projects in our portfolio`}
+          >
+            <div class="panel-media-track" style={`--slide-duration:${slideDuration};`}>
+              {loopImages.map((src, idx) => (
+                <img src={src} alt="" loading="lazy" aria-hidden={idx >= images.length ? 'true' : 'false'} />
+              ))}
+            </div>
+            <span class="panel-media-cta">View {cat.title} Projects →</span>
+          </a>
+          <div class="panel-scrim"></div>
+          <div class="panel-body">
+            <span class="panel-number">{cat.number}</span>
+            <h2 class="panel-title">{cat.title}</h2>
+            <p class="panel-intro">{cat.intro}</p>
+
+            <div class="service-grid">
+              {cat.services.map((s) => (
+                <div class="service-item">
+                  <h3 class="service-title">{s.title}</h3>
+                  <p class="service-subtitle">{s.subtitle}</p>
+                  <p class="service-desc">{s.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-    ))}
+        </section>
+      );
+    })}
 
     <!-- Closing CTA -->
     <section class="cta reveal">
@@ -472,6 +496,12 @@ const categories: Category[] = [
       max-height: none;
       height: 100%;
     }
+    .panel-media-track img {
+      height: 100%;
+    }
+    .panel-media-cta {
+      display: none;
+    }
     .panel-scrim {
       display: block;
       position: absolute;
@@ -520,6 +550,12 @@ const categories: Category[] = [
     border: 1px solid var(--border);
     background: var(--surface);
   }
+  .panel-media-link {
+    display: block;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
   .panel-media img {
     width: 100%;
     height: 100%;
@@ -531,6 +567,58 @@ const categories: Category[] = [
   }
   .panel-media:hover img {
     transform: scale(1.03);
+  }
+
+  /* Infinite sliding track: the frame (.panel-media) clips via
+     overflow:hidden above, this track scrolls its doubled image set
+     leftward forever, pausing on hover/focus so it reads as clickable. */
+  .panel-media-track {
+    display: flex;
+    height: 100%;
+    width: max-content;
+    animation: panel-media-slide var(--slide-duration, 20s) linear infinite;
+  }
+  .panel-media-track img {
+    width: auto;
+    height: 420px;
+    max-height: none;
+    flex: 0 0 auto;
+    object-fit: cover;
+    filter: saturate(0.92);
+    transition: none;
+  }
+  .panel-media:hover .panel-media-track,
+  .panel-media:focus-visible .panel-media-track {
+    animation-play-state: paused;
+  }
+  @keyframes panel-media-slide {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .panel-media-cta {
+    position: absolute;
+    inset: auto 16px 16px auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(10, 10, 10, 0.65);
+    backdrop-filter: blur(4px);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .panel-media:hover .panel-media-cta,
+  .panel-media:focus-visible .panel-media-cta {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .panel-number {
@@ -664,6 +752,10 @@ const categories: Category[] = [
     }
     .panel-media img {
       transition: none;
+    }
+    .panel-media-track {
+      animation: none;
+      transform: none;
     }
   }
 </style>
