@@ -4,6 +4,9 @@
 import logo from '../../assets/logo/Avietho_logo.png';
 import mapImg from '../../assets/imgs/avietho_map.png';
 import landmarkImg from '../../assets/imgs/landmark.png';
+import phoneIcon from '../../assets/icons/telephone_icon.png';
+import emailIcon from '../../assets/icons/email_icon.png';
+import facebookIcon from '../../assets/icons/facebook_icon.png';
 ---
 
 
@@ -127,49 +130,49 @@ import landmarkImg from '../../assets/imgs/landmark.png';
 				CONTACT US
 			</h3>
 				<div class="flex flex-col gap-4">
-					<!-- Phone -->
-					<a
-						href="tel:+6397831987"
-						class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
-					>
-						<span class="text-lg" aria-hidden="true">📞</span>
-						<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
-							+639 783 1987
-						</span>
-					</a>
+				<!-- Phone -->
+				<a
+					href="tel:+6397831987"
+					class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
+				>
+					<img src={phoneIcon.src} alt="Phone" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+					<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
+						+639 783 1987
+					</span>
+				</a>
 
-					<!-- Email -->
-					<a
-						href="mailto:marketing.avietho@gmail.com"
-						class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
-					>
-						<span class="text-lg" aria-hidden="true">📧</span>
-						<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
-							marketing.avietho@gmail.com
-						</span>
-					</a>
+				<!-- Email -->
+				<a
+					href="mailto:marketing.avietho@gmail.com"
+					class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
+				>
+					<img src={emailIcon.src} alt="Email" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+					<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
+						marketing.avietho@gmail.com
+					</span>
+				</a>
 
-					<!-- Social Media -->
-					<a
-						href="https://www.facebook.com/avietho"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
-					>
-						<span class="text-lg" aria-hidden="true">📱</span>
-						<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
-							Facebook
-						</span>
-					</a>
+				<!-- Social Media -->
+				<a
+					href="https://www.facebook.com/avietho"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
+				>
+					<img src={facebookIcon.src} alt="Facebook" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+					<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
+						Facebook
+					</span>
+				</a>
 				</div>
 				
 				<div class="mt-8 flex justify-end relative group">
-					<img src={mapImg.src} alt="Avietho Location Map" class="w-100 h-100 rounded-full object-cover shadow-lg border-2 border-muted" />
+					<img src={mapImg.src} alt="Avietho Location Map" class="w-90 h-90 rounded-full object-cover shadow-lg border-2 border-muted" />
 					<a 
 						href="https://maps.app.goo.gl/KyDMwmYMADs5c5LC7" 
 						target="_blank" 
 						rel="noopener noreferrer"
-						class="absolute bottom-4 right-40 top-34 w-20 h-20 z-10"
+						class="absolute bottom-4 right-35 top-29 w-20 h-20 z-10"
 					>
 						<img 
 							src={landmarkImg.src} 
