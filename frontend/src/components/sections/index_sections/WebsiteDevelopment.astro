@@ -92,7 +92,7 @@ const contentData = [
 			</div>
 			<div class="flex flex-col items-center">
 				<!-- Animation Wrapper -->
-				<div class="relative w-full flex justify-center items-center min-h-[400px]">
+				<div class="relative w-full flex justify-center items-center min-h-[400px] overflow-hidden">
 					<!-- Mobile Glass Container -->
 					<div 
 						id="mobile-container"
@@ -205,12 +205,26 @@ const contentData = [
 			other.container.classList.add(...hide);
 		}
 
-		// Update buttons
+		// Update buttons and icon states
 		if (btn && other.btn) {
+			// Update button border and text colors
 			btn.classList.add('border-accent', 'text-accent');
 			btn.classList.remove('border-white/10', 'text-gray-300');
 			other.btn.classList.remove('border-accent', 'text-accent');
 			other.btn.classList.add('border-white/10', 'text-gray-300');
+
+			// Update icon states
+			const activeIcon = btn.querySelector('img');
+			const inactiveIcon = other.btn.querySelector('img');
+			
+			if (activeIcon) {
+				activeIcon.classList.remove('icon-idle');
+				activeIcon.classList.add('icon-hover');
+			}
+			if (inactiveIcon) {
+				inactiveIcon.classList.remove('icon-hover');
+				inactiveIcon.classList.add('icon-idle');
+			}
 		}
 
 		// Save preference
