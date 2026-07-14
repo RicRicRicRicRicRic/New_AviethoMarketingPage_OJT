@@ -323,7 +323,7 @@ const getCategoryImages = (cat: Category): string[] => {
       // Doubled so the track can loop seamlessly (translate by -50%, then
       // reset with no visible seam).
       const loopImages = [...images, ...images];
-      const slideDuration = `${images.length * 4}s`;
+      const slideDuration = `${images.length * 6}s`;
 
       return (
         <section id={cat.slug} class={`panel reveal ${i % 2 === 1 ? 'panel-reverse' : ''}`}>
