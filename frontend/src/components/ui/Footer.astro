@@ -165,11 +165,18 @@ import landmarkImg from '../../assets/imgs/landmark.png';
 				
 				<div class="mt-8 flex justify-end relative group">
 					<img src={mapImg.src} alt="Avietho Location Map" class="w-100 h-100 rounded-full object-cover shadow-lg border-2 border-muted" />
-					<img 
-						src={landmarkImg.src} 
-						alt="Avietho Landmark" 
-						class="absolute bottom-4 right-40 top-34 w-20 h-20 object-contain z-10 drop-shadow-xl transition-all duration-300 animate-idle-float hover:scale-110 cursor-pointer" 
-					/>
+					<a 
+						href="https://maps.app.goo.gl/KyDMwmYMADs5c5LC7" 
+						target="_blank" 
+						rel="noopener noreferrer"
+						class="absolute bottom-4 right-40 top-34 w-20 h-20 z-10"
+					>
+						<img 
+							src={landmarkImg.src} 
+							alt="Avietho Landmark" 
+							class="w-full h-full object-contain drop-shadow-xl transition-all duration-500 animate-idle-float hover:scale-110 icon-hover cursor-pointer" 
+						/>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -180,49 +187,40 @@ import landmarkImg from '../../assets/imgs/landmark.png';
 				// Get all accordion buttons
 				const accordionButtons = document.querySelectorAll('.accordion-header');
 				
-				// Add click event listener to each button
+				// Add hover event listeners to each button
 				accordionButtons.forEach(function(button) {
-					button.addEventListener('click', function(event: Event) {
-						// Find the button element (in case click originated from child element)
-						const buttonElement = (event.target as HTMLElement).closest('.accordion-header') as HTMLElement;
-						// Find the sibling div containing the content
-						const content = buttonElement.nextElementSibling as HTMLElement;
-						const icon = buttonElement.querySelector('.accordion-icon') as SVGElement;
-						
+					const content = button.nextElementSibling as HTMLElement;
+					const icon = button.querySelector('.accordion-icon') as SVGElement;
+
+					// Show on hover
+					button.parentElement!.addEventListener('mouseenter', () => {
 						// Close all other dropdowns first
 						accordionButtons.forEach(function(otherButton) {
 							if (otherButton !== button) {
 								const otherContent = otherButton.nextElementSibling as HTMLElement;
 								const otherIcon = otherButton.querySelector('.accordion-icon') as SVGElement;
 								if (otherContent && otherIcon) {
-									otherContent.classList.add('opacity-0', 'invisible', 'transform', '-translate-y-2');
-									otherContent.classList.remove('opacity-100', 'visible', 'translate-y-0');
-									otherContent.classList.add('pointer-events-none');
-									otherContent.classList.remove('pointer-events-auto');
+									otherContent.classList.add('opacity-0', 'invisible', 'transform', '-translate-y-2', 'pointer-events-none');
+									otherContent.classList.remove('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
 									otherIcon.classList.remove('rotate-180');
 								}
 							}
 						});
 						
-						// Toggle the clicked dropdown
+						// Open this dropdown
 						if (content && icon) {
-							if (content.classList.contains('opacity-0')) {
-								// Open animation
-								content.classList.remove('opacity-0', 'invisible', 'transform', '-translate-y-2');
-								content.classList.add('opacity-100', 'visible', 'translate-y-0');
-								content.classList.remove('pointer-events-none');
-								content.classList.add('pointer-events-auto');
-								// Add rotate-180 class to icon
-								icon.classList.add('rotate-180');
-							} else {
-								// Close animation
-								content.classList.add('opacity-0', 'invisible', 'transform', '-translate-y-2');
-								content.classList.remove('opacity-100', 'visible', 'translate-y-0');
-								content.classList.add('pointer-events-none');
-								content.classList.remove('pointer-events-auto');
-								// Remove rotate-180 class from icon
-								icon.classList.remove('rotate-180');
-							}
+							content.classList.remove('opacity-0', 'invisible', 'transform', '-translate-y-2');
+							content.classList.add('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
+							icon.classList.add('rotate-180');
+						}
+					});
+
+					// Hide on mouse leave
+					button.parentElement!.addEventListener('mouseleave', () => {
+						if (content && icon) {
+							content.classList.add('opacity-0', 'invisible', 'transform', '-translate-y-2', 'pointer-events-none');
+							content.classList.remove('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
+							icon.classList.remove('rotate-180');
 						}
 					});
 				});
@@ -235,7 +233,7 @@ import landmarkImg from '../../assets/imgs/landmark.png';
 				50% { transform: translateY(-10px); }
 			}
 			.animate-idle-float {
-				animation: idle-float 3s ease-in-out infinite;
+				animation: idle-float 6s ease-in-out infinite;
 			}
 		</style>
 
