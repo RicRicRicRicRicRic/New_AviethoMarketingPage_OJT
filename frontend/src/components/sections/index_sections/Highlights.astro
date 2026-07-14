@@ -15,7 +15,7 @@ const videoClips = [
 ];
 ---
 
-<section class="bg-background-overlay py-20 px-4 w-full h-full overflow-hidden">
+<section class="bg-background-overlay py-40 px-4 w-full h-full overflow-hidden">
 	<div class="max-w-7xl mx-auto relative h-[600px]">
 		<!-- Header with Vertical Bar -->
 		<div class="flex items-center justify-center mb-8">
@@ -58,7 +58,7 @@ const videoClips = [
 				</div>
 
 				<!-- Video Title Overlay -->
-				<div id="videoTitleOverlay" class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 opacity-0 group-hover:opacity-100">
+				<div id="videoTitleOverlay" class="absolute top-0 left-0 right-0 p-6 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-300 opacity-0 group-hover:opacity-100">
 					<h3 id="videoTitle" class="text-xl md:text-2xl font-heading font-bold text-foreground">
 						{videoClips[0].title}
 					</h3>
@@ -142,6 +142,7 @@ const videoClips = [
 		let startTop = 0;
 		let currentVideoIndex = 0;
 		let isMuted = true;
+		let hasInteracted = false;
 
 		if (!pointer || !activeVideoViewport || !videoGalleryList) return;
 
@@ -182,30 +183,31 @@ const videoClips = [
 	};
 
 	// Initialize gallery items
-	const updateActiveVideo = (index: number) => {
-		currentVideoIndex = index;
-		const clip = videoClips[index];
-		if (activeVideo && videoTitle) {
-			// Remove old timeupdate listener to prevent conflicts
-			activeVideo.removeEventListener('timeupdate', updateProgressBar);
-			
-			// Reset progress bar
-			if (progressBar) {
-				progressBar.style.width = '0%';
+		const updateActiveVideo = (index: number) => {
+			currentVideoIndex = index;
+			const clip = videoClips[index];
+			if (activeVideo && videoTitle) {
+				// Remove old timeupdate listener to prevent conflicts
+				activeVideo.removeEventListener('timeupdate', updateProgressBar);
+				
+				// Reset progress bar
+				if (progressBar) {
+					progressBar.style.width = '0%';
+				}
+				
+				// Update video source and title
+				activeVideo.src = clip.src;
+				playPauseOverlay.style.opacity = '0';
+				videoTitle.textContent = clip.title;
+				
+				// Add timeupdate listener for progress bar
+				activeVideo.addEventListener('timeupdate', updateProgressBar);
+				
+				activeVideo.play().catch(() => {
+					// Autoplay was prevented
+				});
 			}
-			
-			// Update video source and title
-			activeVideo.src = clip.src;
-			videoTitle.textContent = clip.title;
-			
-			// Add timeupdate listener for progress bar
-			activeVideo.addEventListener('timeupdate', updateProgressBar);
-			
-			activeVideo.play().catch(() => {
-				// Autoplay was prevented
-			});
-		}
-	};
+		};
 
 		// Add click handlers to gallery items
 		galleryItems.forEach((item, index) => {
@@ -244,6 +246,7 @@ const videoClips = [
 	// Play/Pause toggle on video click
 	if (activeVideo && playPauseOverlay) {
 		activeVideo.addEventListener('click', () => {
+			hasInteracted = true;
 			if (activeVideo.paused) {
 				activeVideo.play();
 				playPauseOverlay.style.opacity = '0';
@@ -265,16 +268,15 @@ const videoClips = [
 		entries.forEach(entry => {
 			if (activeVideo && playPauseOverlay) {
 				if (entry.isIntersecting) {
-					// Video came into view - only auto-play if it wasn't manually paused
-					if (!activeVideo.paused) {
+					// Video came into view - auto-play only if user hasn't interacted OR video wasn't manually paused
+					if (!hasInteracted || !activeVideo.paused) {
 						activeVideo.play().catch(() => {});
 						playPauseOverlay.style.opacity = '0';
 					}
-					// If manually paused (activeVideo.paused === true), keep overlay visible
 				} else {
-					// Video went out of view - pause it
+					// Video went out of view - pause it and show overlay
 					activeVideo.pause();
-					// Don't change overlay state - preserve user's manual pause state
+					playPauseOverlay.style.opacity = '1';
 				}
 			}
 		});
@@ -454,11 +456,5 @@ const videoClips = [
 			}
 		});
 
-		// Auto-play active video
-		if (activeVideo) {
-			activeVideo.play().catch(() => {
-				// Autoplay was prevented, user interaction required
-			});
-		}
 	})();
 </script>
