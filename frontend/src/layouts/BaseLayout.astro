@@ -5,6 +5,7 @@ import Navbar from '../components/ui/Navbar.astro';
 import Footer from '../components/ui/Footer.astro';
 import ChatWidget from '../components/ui/ChatWidget.astro';
 import ColorPaletteWidget from '../components/ui/ColorPaletteWidget.astro';
+import FollowUsPopup from '../components/ui/FollowUsPopup.astro';
 
 interface Props {
 	title?: string;
@@ -30,6 +31,7 @@ const { title = 'Avietho' } = Astro.props;
 		<slot />
 	</main>
 	<Footer />
+		<FollowUsPopup />
     	<ChatWidget />
     	<ColorPaletteWidget />
 </body>
