@@ -6,7 +6,9 @@ type StreamItem = {
 	description: string;
 	url: string;
 	publishedAt: string;
-	views: number;
+	// Real per-video view counts aren't in the RSS feed (see getVideoViews
+	// below) — null means "couldn't determine it," not "zero views."
+	views: number | null;
 	duration: string;
 	badge: string;
 	thumbnail?: string;
@@ -59,48 +61,76 @@ const fallbackStreams: StreamItem[] = [
 	}
 ];
 
+// The RSS feed below doesn't reliably include real view counts, so each
+// video's watch page is fetched individually to read the actual figure
+// straight out of YouTube's page data. Returns null (not a made-up number)
+// if that also fails, so the UI can show "unavailable" instead of a lie.
+const getVideoViews = async (videoId: string): Promise<number | null> => {
+	try {
+		const res = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
+			headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
+		});
+		if (!res.ok) throw new Error(`Watch page fetch failed with status ${res.status}`);
+
+		const html = await res.text();
+		const viewMatch = html.match(/"viewCount":"(\d+)"/);
+		if (!viewMatch?.[1]) throw new Error('Could not find viewCount in watch page HTML');
+
+		return parseInt(viewMatch[1], 10);
+	} catch (err) {
+		console.error(`[streams] Failed to fetch real view count for video ${videoId}:`, err);
+		return null;
+	}
+};
+
 const getStreams = async (): Promise<StreamItem[]> => {
 	try {
 		const res = await fetch(channelUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } });
-		if (!res.ok) throw new Error();
+		if (!res.ok) throw new Error(`Channel page fetch failed with status ${res.status}`);
 
 		const html = await res.text();
 		const channelIdMatch = html.match(/"channelId":"([^"]+)"/) || html.match(/"browseId":"([^"]+)"/);
-		if (!channelIdMatch?.[1]) throw new Error();
+		if (!channelIdMatch?.[1]) throw new Error('Could not find channelId/browseId in channel page HTML (YouTube may have changed its markup)');
 
 		const feedRes = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelIdMatch[1]}`, {
 			headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
 		});
-		if (!feedRes.ok) throw new Error();
+		if (!feedRes.ok) throw new Error(`RSS feed fetch failed with status ${feedRes.status}`);
 
 		const feed = await feedRes.text();
 		const entries = Array.from(feed.matchAll(/<entry>([\s\S]*?)<\/entry>/g));
+		if (entries.length === 0) throw new Error('RSS feed returned zero entries');
 
-		return entries.slice(0, 6).map((entry) => {
+		const parsedEntries = entries.slice(0, 6).map((entry) => {
 			const c = entry[1];
 			const videoId = c.match(/<yt:videoId>([\s\S]*?)<\/yt:videoId>/)?.[1]?.trim() ?? undefined;
 			const title = c.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? 'Untitled';
 			const published = c.match(/<published>([\s\S]*?)<\/published>/)?.[1] ?? new Date().toISOString();
 			const link = videoId ? `https://www.youtube.com/watch?v=${videoId}` : channelUrl;
 			const desc = c.match(/<media:description>([\s\S]*?)<\/media:description>/)?.[1] ?? 'Recent broadcast';
-			
-			// Dynamic View extraction from YouTube RSS metadata
-			const viewsMatch = c.match(/<media:statistics[^>]+views="(\d+)"/);
-			const views = viewsMatch ? parseInt(viewsMatch[1], 10) : 1500 + Math.floor(Math.random() * 2000);
 
 			return {
 				title: title.replace(/<!\[CDATA\[|\]\]>/g, '').trim(),
 				description: desc.replace(/<!\[CDATA\[|\]\]>/g, '').replace(/\s+/g, ' ').trim(),
 				url: link,
 				publishedAt: published,
-				views: views,
 				duration: 'Live replay',
 				badge: 'Recent',
 				thumbnail: videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : undefined,
 				videoId,
 			};
 		});
-	} catch {
+
+		// Fetched in parallel — one failed lookup only nulls out that
+		// video's view count, it doesn't fall back to fallbackStreams.
+		return await Promise.all(
+			parsedEntries.map(async (item) => ({
+				...item,
+				views: item.videoId ? await getVideoViews(item.videoId) : null,
+			}))
+		);
+	} catch (err) {
+		console.error('[streams] Falling back to static stream list:', err);
 		return fallbackStreams;
 	}
 };
@@ -173,7 +203,7 @@ const streams = await getStreams();
 							<p class="mt-2 text-sm text-zinc-400 line-clamp-2">{stream.description}</p>
 							<div class="mt-4 flex items-center justify-between text-xs text-zinc-500">
 								<span>{new Date(stream.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-								<span>{stream.views.toLocaleString()} views</span>
+								<span>{stream.views !== null ? `${stream.views.toLocaleString()} views` : 'Views unavailable'}</span>
 							</div>
 						</div>
 					</article>
