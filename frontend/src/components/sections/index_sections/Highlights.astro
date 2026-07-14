@@ -1,82 +1,413 @@
 ---
-// Highlights section - showcasing key achievements and highlights
+// Interactive video gallery section
 interface Props {
 	title?: string;
 }
 
 const { title = 'HIGHLIGHTS' } = Astro.props;
+
+// Video clips data
+const videoClips = [
+	{ id: 1, src: '/src/assets/placeholder_clips/placeholder_Clip1.mp4', title: 'Project Alpha - Innovation in Action' },
+	{ id: 2, src: '/src/assets/placeholder_clips/placeholder_Clip2.mp4', title: 'Team Collaboration Success' },
+	{ id: 3, src: '/src/assets/placeholder_clips/placeholder_Clip3.mp4', title: 'Client Partnership Showcase' },
+	{ id: 4, src: '/src/assets/placeholder_clips/placeholder_Clip4.mp4', title: 'Award-Winning Development' },
+];
 ---
 
-<section class="bg-background-overlay py-20 px-4 w-full h-full">
-	<div class="max-w-7xl mx-auto">
-		<!-- Header -->
-		<div class="text-center mb-12">
-			<p class="text-xs uppercase tracking-widest text-accent mb-3 font-medium">
-				What Sets Us Apart
-			</p>
-			<h2 class="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-foreground mb-4">
-				{title}
-			</h2>
-			<p class="text-sm md:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed">
-				Delivering exceptional results through innovation, creativity, and strategic thinking.
-			</p>
+<section class="bg-background-overlay py-20 px-4 w-full h-full overflow-hidden">
+	<div class="max-w-7xl mx-auto relative h-[600px]">
+		<!-- Header with Vertical Bar -->
+		<div class="flex items-center justify-center mb-8">
+			<!-- Header Content (centered) -->
+			<div class="text-center">
+				<p class="text-xs uppercase tracking-widest text-accent mb-3 font-medium">
+					What Sets Us Apart
+				</p>
+				<h2 class="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-foreground mb-4">
+					{title}
+				</h2>
+			</div>
 		</div>
 
-		<!-- Highlights Grid -->
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-			<!-- Highlight 1 -->
-			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
-				<div class="text-accent text-4xl mb-4">🎯</div>
-				<h3 class="text-xl font-bold text-foreground mb-3">Strategic Approach</h3>
-				<p class="text-sm text-gray-300 leading-relaxed">
-					Data-driven strategies that align with your goals and deliver measurable results.
-				</p>
+		<!-- Video Gallery Container -->
+		<div class="relative w-full h-[500px] flex items-center justify-center">
+			
+		<!-- Active Video Viewport (Centered) -->
+		<div id="activeVideoViewport" class="absolute inset-0 flex items-center justify-center z-10 transition-all duration-500 ease-out group">
+			<div class="relative w-full max-w-4xl aspect-video bg-background-card rounded-lg overflow-hidden shadow-2xl">
+				<video 
+					id="activeVideo"
+					src={videoClips[0].src}
+					class="w-full h-full object-cover"
+					loop
+					muted
+					playsinline
+				></video>
+				
+				<!-- Video Progress Bar -->
+				<div id="progressBarContainer" class="absolute bottom-12 left-0 right-0 h-1 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+					<div id="progressBar" class="h-full bg-accent w-0 transition-all duration-100"></div>
+				</div>
+
+				<!-- Video Title Overlay -->
+				<div id="videoTitleOverlay" class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 opacity-0 group-hover:opacity-100">
+					<h3 id="videoTitle" class="text-xl md:text-2xl font-heading font-bold text-foreground">
+						{videoClips[0].title}
+					</h3>
+				</div>
+
+				<!-- Mute/Unmute Button (visible on hover) -->
+				<button 
+					id="muteToggle"
+					class="absolute top-4 right-4 p-3 bg-background/50 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+					aria-label="Toggle mute"
+				>
+					<!-- Mute Icon (shown when muted) -->
+					<svg id="muteIcon" class="w-6 h-6 icon-idle-svg group-hover:icon-hover-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+					</svg>
+					<!-- Unmute Icon (hidden when muted) -->
+					<svg id="unmuteIcon" class="w-6 h-6 icon-idle-svg group-hover:icon-hover-svg hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+					</svg>
+				</button>
+			</div>
+		</div>
+
+		<!-- Video Gallery List (Centered, visible during navigation) -->
+			<div id="videoGalleryList" class="absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 scale-90">
+			<div class="flex flex-col gap-4 px-4">
+				{videoClips.map((clip, index) => (
+					<div class="video-gallery-item flex-shrink-0 w-64 aspect-video bg-background-card rounded-lg overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-105" data-index={index}>
+						<video 
+							src={clip.src}
+							class="w-full h-full object-cover"
+							loop
+							muted
+							playsinline
+						></video>
+					</div>
+				))}
+			</div>
 			</div>
 
-			<!-- Highlight 2 -->
-			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
-				<div class="text-accent text-4xl mb-4">💡</div>
-				<h3 class="text-xl font-bold text-foreground mb-3">Creative Excellence</h3>
-				<p class="text-sm text-gray-300 leading-relaxed">
-					Innovative solutions that capture attention and create lasting impressions.
-				</p>
-			</div>
-
-			<!-- Highlight 3 -->
-			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
-				<div class="text-accent text-4xl mb-4">🚀</div>
-				<h3 class="text-xl font-bold text-foreground mb-3">Rapid Delivery</h3>
-				<p class="text-sm text-gray-300 leading-relaxed">
-					Efficient workflows that ensure timely delivery without compromising quality.
-				</p>
-			</div>
-
-			<!-- Highlight 4 -->
-			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
-				<div class="text-accent text-4xl mb-4">🤝</div>
-				<h3 class="text-xl font-bold text-foreground mb-3">Collaborative Partnership</h3>
-				<p class="text-sm text-gray-300 leading-relaxed">
-					Working closely with you to understand your vision and bring it to life.
-				</p>
-			</div>
-
-			<!-- Highlight 5 -->
-			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
-				<div class="text-accent text-4xl mb-4">📊</div>
-				<h3 class="text-xl font-bold text-foreground mb-3">Proven Results</h3>
-				<p class="text-sm text-gray-300 leading-relaxed">
-					Track record of success with measurable impact on brand growth and engagement.
-				</p>
-			</div>
-
-			<!-- Highlight 6 -->
-			<div class="bg-background-elevated p-6 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-300">
-				<div class="text-accent text-4xl mb-4">⭐</div>
-				<h3 class="text-xl font-bold text-foreground mb-3">Award-Winning Quality</h3>
-				<p class="text-sm text-gray-300 leading-relaxed">
-					Industry-recognized excellence in design, content, and digital solutions.
-				</p>
+		<!-- Vertical Bar with Draggable Pointer (on the right) -->
+			<div class="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-64 flex-shrink-0 z-20">
+				<div class="w-1 h-64 bg-white/10 rounded-full absolute left-1/4 -translate-x-1/2 top-0"></div>
+			<img 
+				src="/src/assets/icons/pointer_icon.png" 
+				alt="Draggable pointer"
+				class="absolute left-1/2 -translate-x-[calc(50%-1px)] cursor-grab active:cursor-grabbing w-6 h-6 icon-idle hover:icon-hover"
+				id="dragPointer"
+			/>
 			</div>
 		</div>
 	</div>
 </section>
+
+<script>
+	// Interactive video gallery with drag-to-scroll
+	(() => {
+		// Video clips data (duplicated for client-side access)
+		const videoClips = [
+			{ id: 1, src: '/src/assets/placeholder_clips/placeholder_Clip1.mp4', title: 'Project Alpha - Innovation in Action' },
+			{ id: 2, src: '/src/assets/placeholder_clips/placeholder_Clip2.mp4', title: 'Team Collaboration Success' },
+			{ id: 3, src: '/src/assets/placeholder_clips/placeholder_Clip3.mp4', title: 'Client Partnership Showcase' },
+			{ id: 4, src: '/src/assets/placeholder_clips/placeholder_Clip4.mp4', title: 'Award-Winning Development' },
+		];
+
+		const pointer = document.getElementById('dragPointer') as HTMLImageElement | null;
+		const activeVideoViewport = document.getElementById('activeVideoViewport') as HTMLDivElement | null;
+		const videoGalleryList = document.getElementById('videoGalleryList') as HTMLDivElement | null;
+		const activeVideo = document.getElementById('activeVideo') as HTMLVideoElement | null;
+		const videoTitle = document.getElementById('videoTitle') as HTMLHeadingElement | null;
+	const muteToggle = document.getElementById('muteToggle') as HTMLButtonElement | null;
+	const muteIcon = document.getElementById('muteIcon') as SVGSVGElement | null;
+	const unmuteIcon = document.getElementById('unmuteIcon') as SVGSVGElement | null;
+	const progressBar = document.getElementById('progressBar') as HTMLDivElement | null;
+	const galleryItems = document.querySelectorAll('.video-gallery-item');
+	
+	let isDragging = false;
+		let startY = 0;
+		let startTop = 0;
+		let currentVideoIndex = 0;
+		let isMuted = true;
+
+		if (!pointer || !activeVideoViewport || !videoGalleryList) return;
+
+		// Get the parent bar element
+		const bar = pointer.parentElement;
+		if (!bar) return;
+		
+		const barHeight = bar.clientHeight;
+		const centerPosition = barHeight / 2;
+		
+		// Initialize pointer position to center
+		pointer.style.top = `${centerPosition}px`;
+		pointer.style.transform = 'translate(-50%, -50%)';
+		pointer.style.position = 'absolute';
+		
+	// Initialize first gallery item as active
+	galleryItems.forEach((item, idx) => {
+		if (idx === 0) {
+			item.classList.add('ring-2', 'ring-accent');
+			item.classList.remove('opacity-50');
+		} else {
+			item.classList.remove('ring-2', 'ring-accent');
+			item.classList.add('opacity-50');
+		}
+	});
+
+	// Progress bar update function
+	const updateProgressBar = () => {
+		if (!activeVideo || !progressBar) return;
+		
+		const duration = activeVideo.duration;
+		const currentTime = activeVideo.currentTime;
+		
+		if (duration > 0) {
+			const progress = (currentTime / duration) * 100;
+			progressBar.style.width = `${progress}%`;
+		}
+	};
+
+	// Initialize gallery items
+	const updateActiveVideo = (index: number) => {
+		currentVideoIndex = index;
+		const clip = videoClips[index];
+		if (activeVideo && videoTitle) {
+			// Remove old timeupdate listener to prevent conflicts
+			activeVideo.removeEventListener('timeupdate', updateProgressBar);
+			
+			// Reset progress bar
+			if (progressBar) {
+				progressBar.style.width = '0%';
+			}
+			
+			// Update video source and title
+			activeVideo.src = clip.src;
+			videoTitle.textContent = clip.title;
+			
+			// Add timeupdate listener for progress bar
+			activeVideo.addEventListener('timeupdate', updateProgressBar);
+			
+			activeVideo.play().catch(() => {
+				// Autoplay was prevented
+			});
+		}
+	};
+
+		// Add click handlers to gallery items
+		galleryItems.forEach((item, index) => {
+			item.addEventListener('click', () => {
+				updateActiveVideo(index);
+				// Return pointer to center
+				pointer.style.transition = 'top 0.5s ease-out';
+				pointer.style.top = `${centerPosition}px`;
+				setTimeout(() => {
+					pointer.style.transition = 'none';
+				}, 500);
+			});
+		});
+
+	// Mute/Unmute toggle
+	if (muteToggle && muteIcon && unmuteIcon && activeVideo) {
+		muteToggle.addEventListener('click', () => {
+			isMuted = !isMuted;
+			activeVideo.muted = isMuted;
+			
+			if (isMuted) {
+				muteIcon.classList.remove('hidden');
+				unmuteIcon.classList.add('hidden');
+			} else {
+				muteIcon.classList.add('hidden');
+				unmuteIcon.classList.remove('hidden');
+			}
+		});
+	}
+
+	// Add initial timeupdate listener for progress bar
+	if (activeVideo && progressBar) {
+		activeVideo.addEventListener('timeupdate', updateProgressBar);
+	}
+
+	// Mouse down - start dragging
+		pointer.addEventListener('mousedown', (e) => {
+			isDragging = true;
+			startY = e.clientY;
+			startTop = parseInt(pointer.style.top) || centerPosition;
+			pointer.style.cursor = 'grabbing';
+			pointer.style.transition = 'none';
+			pointer.style.transform = 'translate(-50%, -50%)';
+			e.preventDefault();
+		});
+
+		// Mouse move - update position and navigate videos
+		window.addEventListener('mousemove', (e) => {
+			if (!isDragging) return;
+
+			const deltaY = e.clientY - startY;
+			let newTop = startTop + deltaY;
+
+			// Constrain movement within the bar
+			const maxTop = barHeight;
+			newTop = Math.max(1, Math.min(maxTop, newTop));
+
+			pointer.style.top = `${newTop}px`;
+
+			// Calculate distance from center (0 to 1, where 1 is at the edge)
+			const distanceFromCenter = Math.abs(newTop - centerPosition) / (barHeight / 2);
+			const clampedDistance = Math.min(distanceFromCenter, 1);
+
+			// Hide center video and show gallery list during drag
+			if (clampedDistance > 0.1) {
+				activeVideoViewport.style.opacity = '0';
+				activeVideoViewport.style.pointerEvents = 'none';
+				videoGalleryList.style.opacity = '1';
+				videoGalleryList.style.pointerEvents = 'auto';
+				videoGalleryList.style.transform = 'scale(1)';
+			}
+
+			// Map pointer position to video index for navigation
+			// Pointer at top = first video, pointer at bottom = last video
+			const videoCount = videoClips.length;
+			const normalizedPosition = (newTop - 1) / (barHeight - 2); // 0 to 1
+			const targetIndex = Math.floor(normalizedPosition * (videoCount - 1));
+			const clampedIndex = Math.max(0, Math.min(videoCount - 1, targetIndex));
+
+			// Update active video if index changed
+			if (clampedIndex !== currentVideoIndex) {
+				updateActiveVideo(clampedIndex);
+				
+				// Highlight current gallery item
+				galleryItems.forEach((item, idx) => {
+					if (idx === clampedIndex) {
+						item.classList.add('ring-2', 'ring-accent', 'scale-105');
+						item.classList.remove('opacity-50');
+					} else {
+						item.classList.remove('ring-2', 'ring-accent', 'scale-105');
+						item.classList.add('opacity-50');
+					}
+				});
+			}
+		});
+
+		// Mouse up - stop dragging and animate selected video to center
+		window.addEventListener('mouseup', () => {
+			if (isDragging) {
+				isDragging = false;
+				pointer.style.cursor = 'grab';
+				
+				const currentTop = parseInt(pointer.style.top) || centerPosition;
+				
+				// Enable transition for smooth animations
+				pointer.style.transition = 'top 0.5s ease-out';
+				
+				// Get the selected gallery item
+				const selectedItem = galleryItems[currentVideoIndex] as HTMLElement | undefined;
+				
+				if (selectedItem) {
+					// Get the parent container for relative coordinate calculation
+					const parentContainer = videoGalleryList.parentElement;
+					const viewportContainer = activeVideoViewport;
+					
+					if (parentContainer && viewportContainer) {
+						// Calculate relative positions from common parent
+						const parentRect = parentContainer.getBoundingClientRect();
+						const itemRect = selectedItem.getBoundingClientRect();
+						const viewportRect = viewportContainer.getBoundingClientRect();
+						
+						// Calculate centers relative to parent container
+						const parentCenterX = parentRect.left + parentRect.width / 2;
+						const parentCenterY = parentRect.top + parentRect.height / 2;
+						const itemCenterX = itemRect.left + itemRect.width / 2;
+						const itemCenterY = itemRect.top + itemRect.height / 2;
+						
+						// Calculate relative offset from parent center
+						const relativeOffsetX = itemCenterX - parentCenterX;
+						const relativeOffsetY = itemCenterY - parentCenterY;
+						
+						// Calculate scale factor based on viewport size
+						const scaleX = viewportRect.width / itemRect.width;
+						const scaleY = viewportRect.height / itemRect.height;
+						const targetScale = Math.min(scaleX, scaleY);
+						
+						// Hide gallery list and show viewport with initial scale
+						videoGalleryList.style.opacity = '0';
+						videoGalleryList.style.pointerEvents = 'none';
+						activeVideoViewport.style.opacity = '1';
+						activeVideoViewport.style.pointerEvents = 'auto';
+						activeVideoViewport.style.transform = `translate(${relativeOffsetX}px, ${relativeOffsetY}px) scale(0.1)`;
+						activeVideoViewport.style.transition = 'none';
+						
+						// Force reflow
+						activeVideoViewport.offsetHeight;
+						
+						// Animate to center (translate 0,0 because flexbox handles centering)
+						activeVideoViewport.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+						activeVideoViewport.style.transform = 'translate(0, 0) scale(1)';
+						
+						// Hide other gallery items
+						galleryItems.forEach((item, idx) => {
+							if (idx !== currentVideoIndex) {
+								(item as HTMLElement).style.opacity = '0';
+							}
+						});
+						
+						// After animation completes, clean up and play video
+						setTimeout(() => {
+							// Reset viewport transform
+							activeVideoViewport.style.transition = 'none';
+							activeVideoViewport.style.transform = '';
+							
+							// Reset all gallery items
+							galleryItems.forEach((item, idx) => {
+								const htmlItem = item as HTMLElement;
+								htmlItem.style.transition = 'none';
+								htmlItem.style.opacity = '';
+								htmlItem.style.transform = '';
+								
+								if (idx === currentVideoIndex) {
+									item.classList.add('ring-2', 'ring-accent');
+									item.classList.remove('opacity-50');
+								} else {
+									item.classList.remove('ring-2', 'ring-accent');
+									item.classList.add('opacity-50');
+								}
+							});
+							
+							// Play the video
+							if (activeVideo) {
+								activeVideo.play().catch(() => {
+									// Autoplay was prevented
+								});
+							}
+						}, 500);
+					}
+				}
+				
+				// Return pointer to center
+				requestAnimationFrame(() => {
+					pointer.style.top = `${centerPosition}px`;
+					pointer.style.transform = 'translate(-50%, -50%)';
+					
+					// Remove transition after animation completes
+					const handleTransitionEnd = () => {
+						pointer.style.transition = 'none';
+						pointer.removeEventListener('transitionend', handleTransitionEnd);
+					};
+					pointer.addEventListener('transitionend', handleTransitionEnd);
+				});
+			}
+		});
+
+		// Auto-play active video
+		if (activeVideo) {
+			activeVideo.play().catch(() => {
+				// Autoplay was prevented, user interaction required
+			});
+		}
+	})();
+</script>
