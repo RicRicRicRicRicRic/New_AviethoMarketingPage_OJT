@@ -199,31 +199,12 @@
 
 					<!-- Navigation Arrows -->
 					<button
-						id="prev-slide"
-						class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-background/80 backdrop-blur-sm border border-border rounded-full flex items-center justify-center text-foreground hover:bg-accent hover:text-background hover:border-accent transition-all duration-300 opacity-0 group-hover:opacity-100"
-						aria-label="Previous slide"
-					>
-						<svg
-							class="w-6 h-6"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M15 19l-7-7 7-7"></path>
-						</svg>
-					</button>
-
-					<button
 						id="next-slide"
 						class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-background/80 backdrop-blur-sm border border-border rounded-full flex items-center justify-center text-foreground hover:bg-accent hover:text-background hover:border-accent transition-all duration-300 opacity-0 group-hover:opacity-100"
 						aria-label="Next slide"
 					>
 						<svg
-							class="w-6 h-6"
+							class="w-6 h-6 transition-transform duration-500 ease-in-out"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -590,6 +571,18 @@
 						dot.classList.add("bg-foreground/30");
 					}
 				});
+
+				// Update arrow direction based on current slide
+				if (nextBtn) {
+					const svg = nextBtn.querySelector("svg");
+					if (svg) {
+						if (currentSlide === 1) {
+							svg.classList.add("rotate-180");
+						} else {
+							svg.classList.remove("rotate-180");
+						}
+					}
+				}
 			}
 
 			// Navigate to next/previous slide
@@ -606,7 +599,12 @@
 				stopAutoplay();
 				autoplayInterval = window.setInterval(() => {
 					if (!isPaused) {
-						nextSlide();
+						// Single button toggle auto-navigates back and forth
+						if (currentSlide === 1) {
+							prevSlide();
+						} else {
+							nextSlide();
+						}
 					}
 				}, autoplayDelay);
 			}
@@ -629,7 +627,11 @@
 
 			if (nextBtn) {
 				nextBtn.addEventListener("click", () => {
-					nextSlide();
+					if (currentSlide === 1) {
+						prevSlide();
+					} else {
+						nextSlide();
+					}
 					startAutoplay(); // Reset timer
 				});
 			}
