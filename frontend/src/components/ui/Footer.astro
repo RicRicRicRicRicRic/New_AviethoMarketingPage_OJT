@@ -15,7 +15,7 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 		<!-- Main content grid -->
 		<div class="flex flex-col lg:flex-row gap-6">
 			<!-- Left Column: Services Accordion -->
-			<div class="w-full lg:w-4.15/10 ">
+			<div class="w-full lg:w-6/10 ">
 				<img src={logo.src} alt="Avietho Logo" class="h-10 w-auto mb-4" />
 				<p class="text-text-subtle text-base mb-8 ">
 					Professional digital marketing solutions for businesses of all sizes. From website development to social media management, we help you grow your online presence.
@@ -24,108 +24,60 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 					OUR SERVICES
 				</h3>
 
-				<!-- Accordion -->
-				<div class="flex flex-row gap-4">
+				<!-- Services Grid -->
+				<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 					<!-- Digital PR -->
-					<div class="flex-1 rounded-lg relative">
-					<button 
-						class="accordion-header flex flex-col items-center justify-center p-2 text-center hover:bg-muted/50 transition-colors duration-200 w-full"
-					>
-							<div class="flex flex-col items-center text-text w-full">
-								<span class="text-xs font-medium w-full text-center">Digital</span>
-								<span class="text-xs font-medium w-full text-center">PR</span>
-							</div>
-							<svg class="accordion-icon w-4 h-4 text-text-subtle transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-							</svg>
-						</button>
-					<div class="accordion-content absolute z-50 mt-2 left-0 w-full bg-background border border-muted shadow-xl rounded-lg p-4 opacity-0 invisible transform -translate-y-2 transition-all duration-300 pointer-events-none">
+					<div class="flex flex-col w-full">
+						<h4 class="font-semibold text-accent text-sm mb-2">Digital PR</h4>
 						<ul class="flex flex-col space-y-1 text-text-subtle text-sm">
-							<li class="pl-4 -indent-2">• Online Media Relations</li>
-							<li class="pl-4 -indent-2">• Influencer Marketing</li>
-							<li class="pl-4 -indent-2">• Online Reputation Management</li>
-							<li class="pl-4 -indent-2">• Digital Content Creation</li>
-							<li class="pl-4 -indent-2">• Social Media PR</li>
+							<li class="pl-2 -indent-2">• Online Media Relations</li>
+							<li class="pl-2 -indent-2">• Influencer Marketing</li>
+							<li class="pl-2 -indent-2">• Online Reputation Management</li>
+							<li class="pl-2 -indent-2">• Digital Content Creation</li>
+							<li class="pl-2 -indent-2">• Social Media PR</li>
 						</ul>
-					</div>
 					</div>
 
 					<!-- Social Media -->
-					<div class="flex-1 rounded-lg relative">
-					<button 
-						class="accordion-header flex flex-col items-center justify-center p-2 text-center hover:bg-muted/50 transition-colors duration-200 w-full"
-					>
-							<div class="flex flex-col items-center text-text w-full">
-								<span class="text-xs font-medium w-full text-center">Social</span>
-								<span class="text-xs font-medium w-full text-center">Media</span>
-							</div>
-							<svg class="accordion-icon w-4 h-4 text-text-subtle transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-							</svg>
-						</button>
-					<div class="accordion-content absolute z-50 mt-2 left-0 w-full bg-background border border-muted shadow-xl rounded-lg p-4 opacity-0 invisible transform -translate-y-2 transition-all duration-300 pointer-events-none">
+					<div class="flex flex-col w-full">
+						<h4 class="font-semibold text-accent text-sm mb-2">Social Media</h4>
 						<ul class="flex flex-col space-y-1 text-text-subtle text-sm">
-							<li class="pl-4 -indent-2">• Social Media Strategy</li>
-							<li class="pl-4 -indent-2">• Content Creation</li>
-							<li class="pl-4 -indent-2">• Community Management</li>
-							<li class="pl-4 -indent-2">• Analytics & Reporting</li>
-							<li class="pl-4 -indent-2">• Brand Management</li>
+							<li class="pl-2 -indent-2">• Social Media Strategy</li>
+							<li class="pl-2 -indent-2">• Content Creation</li>
+							<li class="pl-2 -indent-2">• Community Management</li>
+							<li class="pl-2 -indent-2">• Analytics & Reporting</li>
+							<li class="pl-2 -indent-2">• Brand Management</li>
 						</ul>
-					</div>
 					</div>
 
 					<!-- Video Production -->
-					<div class="flex-1 rounded-lg relative">
-					<button 
-						class="accordion-header flex flex-col items-center justify-center p-2 text-center hover:bg-muted/50 transition-colors duration-200 w-full"
-					>
-							<div class="flex flex-col items-center text-text w-full">
-								<span class="text-xs font-medium w-full text-center">Video</span>
-								<span class="text-xs font-medium w-full text-center">Production</span>
-							</div>
-							<svg class="accordion-icon w-4 h-4 text-text-subtle transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-							</svg>
-						</button>
-					<div class="accordion-content absolute z-50 mt-2 left-0 w-full bg-background border border-muted shadow-xl rounded-lg p-4 opacity-0 invisible transform -translate-y-2 transition-all duration-300 pointer-events-none">
+					<div class="flex flex-col w-full">
+						<h4 class="font-semibold text-accent text-sm mb-2">Video Production</h4>
 						<ul class="flex flex-col space-y-1 text-text-subtle text-sm">
-							<li class="pl-4 -indent-2">• Corporate Videos</li>
-							<li class="pl-4 -indent-2">• Event Videography</li>
-							<li class="pl-4 -indent-2">• Live Streaming</li>
-							<li class="pl-4 -indent-2">• Commercial Production</li>
-							<li class="pl-4 -indent-2">• Post-Production</li>
+							<li class="pl-2 -indent-2">• Corporate Videos</li>
+							<li class="pl-2 -indent-2">• Event Videography</li>
+							<li class="pl-2 -indent-2">• Live Streaming</li>
+							<li class="pl-2 -indent-2">• Commercial Production</li>
+							<li class="pl-2 -indent-2">• Post-Production</li>
 						</ul>
-					</div>
 					</div>
 
 					<!-- Web Development -->
-					<div class="flex-1 rounded-lg relative">
-						<button 
-							class="accordion-header flex flex-col items-center justify-center p-2 text-center hover:bg-muted/50 transition-colors duration-200 w-full"
-						>
-							<div class="flex flex-col items-center text-text w-full">
-								<span class="text-xs font-medium w-full text-center">Web</span>
-								<span class="text-xs font-medium w-full text-center">Development</span>
-							</div>
-							<svg class="accordion-icon w-4 h-4 text-text-subtle transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-							</svg>
-						</button>
-					<div class="accordion-content absolute z-50 mt-2 left-0 w-full bg-background border border-muted shadow-xl rounded-lg p-4 opacity-0 invisible transform -translate-y-2 transition-all duration-300 pointer-events-none">
+					<div class="flex flex-col w-full">
+						<h4 class="font-semibold text-accent text-sm mb-2">Web Development</h4>
 						<ul class="flex flex-col space-y-1 text-text-subtle text-sm">
-							<li class="pl-4 -indent-2">• Website Design</li>
-							<li class="pl-4 -indent-2">• Frontend Development</li>
-							<li class="pl-4 -indent-2">• Backend Development</li>
-							<li class="pl-4 -indent-2">• E-commerce Solutions</li>
-							<li class="pl-4 -indent-2">• SEO & Analytics</li>
+							<li class="pl-2 -indent-2">• Website Design</li>
+							<li class="pl-2 -indent-2">• Frontend Development</li>
+							<li class="pl-2 -indent-2">• Backend Development</li>
+							<li class="pl-2 -indent-2">• E-commerce Solutions</li>
+							<li class="pl-2 -indent-2">• SEO & Analytics</li>
 						</ul>
-					</div>
 					</div>
 				</div>
 			</div>
 
 			<!-- Right Column: Contact Information -->
-			<div class="w-full lg:w-5.85/10">
+			<div class="w-full lg:w-4/10">
 			<h3 class="font-heading text-accent text-xl font-semibold mb-6 ">
 				CONTACT US
 			</h3>
@@ -174,69 +126,26 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 						rel="noopener noreferrer"
 						class="absolute bottom-4 right-35 top-29 w-20 h-20 z-10"
 					>
-						<img 
-							src={landmarkImg.src} 
-							alt="Avietho Landmark" 
-							class="w-full h-full object-contain drop-shadow-xl transition-all duration-500 animate-idle-float hover:scale-110 icon-hover cursor-pointer" 
-						/>
+					<img 
+						src={landmarkImg.src} 
+						alt="Avietho Landmark" 
+						class="w-full h-full object-contain drop-shadow-xl transition-all duration-500 animate-bob hover:scale-110 icon-hover cursor-pointer" 
+					/>
 					</a>
 				</div>
 			</div>
 		</div>
 
-		<script>
-			// Wait for DOM to be ready
-			document.addEventListener('DOMContentLoaded', function() {
-				// Get all accordion buttons
-				const accordionButtons = document.querySelectorAll('.accordion-header');
-				
-				// Add hover event listeners to each button
-				accordionButtons.forEach(function(button) {
-					const content = button.nextElementSibling as HTMLElement;
-					const icon = button.querySelector('.accordion-icon') as SVGElement;
 
-					// Show on hover
-					button.parentElement!.addEventListener('mouseenter', () => {
-						// Close all other dropdowns first
-						accordionButtons.forEach(function(otherButton) {
-							if (otherButton !== button) {
-								const otherContent = otherButton.nextElementSibling as HTMLElement;
-								const otherIcon = otherButton.querySelector('.accordion-icon') as SVGElement;
-								if (otherContent && otherIcon) {
-									otherContent.classList.add('opacity-0', 'invisible', 'transform', '-translate-y-2', 'pointer-events-none');
-									otherContent.classList.remove('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
-									otherIcon.classList.remove('rotate-180');
-								}
-							}
-						});
-						
-						// Open this dropdown
-						if (content && icon) {
-							content.classList.remove('opacity-0', 'invisible', 'transform', '-translate-y-2');
-							content.classList.add('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
-							icon.classList.add('rotate-180');
-						}
-					});
 
-					// Hide on mouse leave
-					button.parentElement!.addEventListener('mouseleave', () => {
-						if (content && icon) {
-							content.classList.add('opacity-0', 'invisible', 'transform', '-translate-y-2', 'pointer-events-none');
-							content.classList.remove('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
-							icon.classList.remove('rotate-180');
-						}
-					});
-				});
-			});
-		</script>
 
 		<style>
-			@keyframes idle-float {
+			@keyframes bob {
 				0%, 100% { transform: translateY(0); }
-				50% { transform: translateY(-10px); }
+				50% { transform: translateY(-12px); }
 			}
-			.animate-idle-float {
-				animation: idle-float 6s ease-in-out infinite;
+			.animate-bob {
+				animation: bob 5s ease-in-out infinite;
 			}
 		</style>
 
