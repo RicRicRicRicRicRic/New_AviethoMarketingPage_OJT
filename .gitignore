@@ -51,3 +51,4 @@ logs/
 secrets.yaml
 credentials.json
 service-account-key.json
+/avietho-flask/avietho_chroma
