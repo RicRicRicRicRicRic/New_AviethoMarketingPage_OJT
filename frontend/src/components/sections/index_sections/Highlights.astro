@@ -79,9 +79,6 @@ const videoClips = [
 				<!-- YouTube player mounts here -->
 				<div id="activeVideoPlayer" class="w-full h-full"></div>
 
-				<!-- Google Drive clips mount here instead (kept as a separate node so the
-				     YouTube player's DOM node is never destroyed when switching sources).
-				     Drive embeds ship their own native controls, so pointer-events stay on. -->
 				<div id="driveVideoPlayer" class="hidden absolute inset-0 w-full h-full"></div>
 
 				<!-- Edge Fade Overlay (purely decorative, non-interactive) -->
@@ -123,8 +120,6 @@ const videoClips = [
 					</svg>
 				</button>
 
-				<!-- Watch on YouTube link (Drive clips with a corresponding YouTube link only —
-				     shown/hidden and pointed to the right URL by the client script) -->
 				<a
 					id="driveYoutubeLink"
 					href="#"
@@ -176,9 +171,6 @@ const videoClips = [
 </section>
 
 <style>
-	/* The YouTube IFrame API replaces #activeVideoPlayer with an <iframe>.
-	   Force that iframe to fill the box exactly like the old <video> did,
-	   and let clicks pass through to our own custom controls layer. */
 	#activeVideoPlayer {
 		position: relative;
 		width: 100%;
@@ -194,10 +186,6 @@ const videoClips = [
 	#progressBar {
 		transition: width 100ms linear;
 	}
-	/* Soft fade on all four edges of the active video, sitting above the
-	   iframe/player but below the title, mute button, and progress bar.
-	   Uses the theme's background color so the video edges blend into
-	   the page instead of just darkening. */
 	.video-edge-fade {
 		z-index: 5;
 		background:
@@ -249,9 +237,6 @@ const videoClips = [
 		const playIcon = document.getElementById('playIcon') as SVGSVGElement | null;
 		const galleryItems = document.querySelectorAll('.video-gallery-item');
 
-		// If a thumbnail fails to load (Drive's thumbnail endpoint can be flaky for some
-		// files), hide the broken image instead of showing the browser's broken-image icon —
-		// the card's own background color shows through as a clean fallback.
 		document.querySelectorAll('.video-gallery-thumb').forEach((img) => {
 			img.addEventListener('error', () => {
 				(img as HTMLImageElement).style.display = 'none';
@@ -297,8 +282,6 @@ const videoClips = [
 			}
 		});
 
-		// Measure the gallery track so we know how far apart each thumbnail sits.
-		// Re-run on drag start too, in case of resizes/layout shifts.
 		const measureTrack = () => {
 			if (!galleryTrack || galleryItems.length === 0) return;
 			const first = galleryItems[0] as HTMLElement;
@@ -312,9 +295,6 @@ const videoClips = [
 		};
 		measureTrack();
 
-		// Slide the track so the item at `floatIndex` (can be fractional while dragging)
-		// sits centered in the visible window — this is what makes every thumbnail
-		// reachable instead of the later ones overflowing off the page.
 		const positionTrack = (floatIndex: number, animate = false) => {
 			if (!galleryTrack || itemPitch === 0) return;
 			const clamped = Math.max(0, Math.min(videoClips.length - 1, floatIndex));
@@ -334,8 +314,6 @@ const videoClips = [
 			playPauseOverlay.style.opacity = isPlaying ? '0' : '1';
 		};
 
-		// Pull the video ID out of any common YouTube URL shape (watch?v=, live/, youtu.be/,
-		// embed/, shorts/) — used to fetch a Drive clip's title from its paired YouTube video.
 		const extractYouTubeId = (url: string): string => {
 			try {
 				const u = new URL(url);
@@ -348,14 +326,9 @@ const videoClips = [
 			}
 		};
 
-		// The YouTube video ID used to look up/cache a clip's real title: its own videoId
-		// for YouTube clips, or the ID pulled from youtubeLink for Drive clips that have one.
 		const titleLookupId = (clip: VideoClip): string =>
 			clip.source === 'drive' ? extractYouTubeId(clip.youtubeLink || '') : clip.videoId || '';
 
-		// Fetch a video's real title via YouTube's oEmbed endpoint (CORS-friendly, no API key needed).
-		// Drive clips without a youtubeLink skip this — there's no equivalent public endpoint for
-		// Drive files, so they just keep the title supplied in videoClips.
 		const fetchTitle = async (clip: VideoClip, index: number) => {
 			const lookupId = titleLookupId(clip);
 			if (!lookupId) return;
@@ -385,10 +358,6 @@ const videoClips = [
 			}
 		};
 
-		// Google Drive's embed exposes no JS API to play/pause it from the parent page.
-		// The only reliable way to start/stop it programmatically is to mount/unmount the
-		// iframe itself — loading it (with the autoplay param) starts playback, clearing
-		// it out stops playback dead. This is what makes "pause on scroll out" possible.
 		const loadDriveIframe = (clip: VideoClip) => {
 			if (!driveMount || clip.source !== 'drive' || !clip.driveId) return;
 			driveMount.innerHTML = `<iframe src="https://drive.google.com/file/d/${clip.driveId}/preview?autoplay=1" title="${clip.title}" frameborder="0" allow="autoplay" allowfullscreen style="width:100%;height:100%;"></iframe>`;
@@ -435,8 +404,6 @@ const videoClips = [
 			}
 
 			if (clip.source === 'drive') {
-				// Pause the YouTube player (it stays mounted, just hidden) and switch
-				// to the Drive iframe, which brings its own native controls.
 				if (player && playerReady && typeof player.pauseVideo === 'function') {
 					player.pauseVideo();
 				}
@@ -445,15 +412,12 @@ const videoClips = [
 					driveMount.classList.remove('hidden');
 					loadDriveIframe(clip);
 				}
-				// Drive embeds don't expose a JS API, so the custom progress bar,
-				// mute button, and play/pause overlay don't apply — hide them.
 				progressBarContainer?.classList.add('hidden');
 				muteToggle?.classList.add('hidden');
 				playPauseOverlay?.classList.add('hidden');
 				return;
 			}
 
-			// YouTube clip: restore the controls Drive clips hide, and show the YT mount again
 			progressBarContainer?.classList.remove('hidden');
 			muteToggle?.classList.remove('hidden');
 			playPauseOverlay?.classList.remove('hidden');
@@ -469,7 +433,6 @@ const videoClips = [
 				isMuted ? player.mute() : player.unMute();
 				setTimeout(() => playerMount?.classList.remove('is-switching'), 200);
 			} else if (playerMount && clip.videoId) {
-				// API failed to load — graceful fallback to a plain embed with native controls
 				playerMount.innerHTML = `<iframe src="https://www.youtube.com/embed/${clip.videoId}?autoplay=1&mute=1&playsinline=1" title="${clip.title}" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="pointer-events:auto;"></iframe>`;
 			}
 		};
@@ -515,10 +478,6 @@ const videoClips = [
 			});
 		}
 
-		// Play/Pause toggle on click anywhere in the video box (iframe has pointer-events:none,
-		// so this click reliably fires — the old code relied on a <video> click listener that
-		// doesn't work once the source is a cross-origin YouTube iframe).
-		// Drive clips use their own native controls, so this is skipped for those.
 		if (activeVideoBox) {
 			activeVideoBox.addEventListener('click', () => {
 				hasInteracted = true;
@@ -533,9 +492,6 @@ const videoClips = [
 			});
 		}
 
-		// Intersection Observer for auto-play/pause. YouTube clips use the JS API directly;
-		// Drive clips have no JS API, so "pause" means unmounting the iframe and "play"
-		// means remounting it with autoplay — see loadDriveIframe/pauseDriveIframe above.
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
@@ -543,11 +499,6 @@ const videoClips = [
 
 					if (activeClip?.source === 'drive') {
 						clearTimeout(driveVisibilityTimer);
-						// Wait a beat before actually acting — a normal scroll gesture can
-						// cross the 50% visibility threshold back and forth a few times in
-						// quick succession, and reacting to every one of those was tearing
-						// the iframe down and rebuilding it repeatedly (looked like the video
-						// kept restarting/changing). This settles on the final state instead.
 						driveVisibilityTimer = window.setTimeout(() => {
 							if (entry.isIntersecting) {
 								if (driveMount && driveMount.innerHTML === '') {
@@ -604,13 +555,7 @@ const videoClips = [
 						progressRafId = requestAnimationFrame(tickProgress);
 						fetchTitle(videoClips[0], 0);
 
-						// Most browsers block autoplay-with-sound unless the visitor already
-						// interacted with the site. Detect that and fall back to a muted
-						// autoplay (which browsers always allow) so the video still plays,
-						// updating the mute button to match reality.
 						setTimeout(() => {
-							// Skip entirely if a Drive clip is already what's on screen — this
-							// only concerns the (possibly now-hidden) YouTube player's own state.
 							if (videoClips[currentVideoIndex]?.source === 'drive') return;
 							if (player.getPlayerState() !== 1 /* PLAYING */) {
 								isMuted = true;
@@ -622,36 +567,19 @@ const videoClips = [
 						}, 1200);
 					},
 					onStateChange: (event: any) => {
-						// The YouTube player is never actually destroyed when switching to a
-						// Drive clip — it's just paused and hidden, so it can still fire events
-						// on its own. Ignore all of them while it isn't the thing on screen,
-						// otherwise a background "video ended" loop-restart, etc. can leak
-						// through and disturb whatever Drive clip is actually showing.
 						if (videoClips[currentVideoIndex]?.source === 'drive') return;
 						if (event.data === 1) setPlayIcon(true); // playing
 						if (event.data === 2) setPlayIcon(false); // paused
 						if (event.data === 0) {
-							// Video ended — loop it manually (single-video loop without the
-							// old 'playlist' trick, so looping keeps working after loadVideoById)
 							player.seekTo(0, true);
 							player.playVideo();
 						}
 					},
 					onError: (event: any) => {
-						// Same reasoning as onStateChange above: a hidden, backgrounded
-						// YouTube player can still throw errors of its own. Never let those
-						// change what's on screen while a Drive clip is the active one.
 						if (videoClips[currentVideoIndex]?.source === 'drive') return;
-
-						// Only these codes mean "this exact video will never play here" —
-						// deleted/invalid (2, 100), private (101/150 also cover embedding
-						// disabled), or an HTML5 player fault (5). Anything else, leave it alone.
 						const permanentCodes = [2, 5, 100, 101, 150];
-						if (!permanentCodes.includes(event.data)) return;
 
-						// Mark this one as broken and look for the next clip that hasn't
-						// already failed — but only ever step forward through the list once,
-						// so a run of broken videos can't cascade endlessly or bounce around.
+						if (!permanentCodes.includes(event.data)) return;
 						failedVideoIndices.add(currentVideoIndex);
 						for (let step = 1; step <= videoClips.length; step++) {
 							const candidate = (currentVideoIndex + step) % videoClips.length;
@@ -698,7 +626,6 @@ const videoClips = [
 
 		// ---- Drag-to-scroll pointer (mouse + touch) ----
 		const beginDrag = (clientY: number) => {
-			// Recompute bar and track geometry fresh each drag, so resizes/layout shifts don't desync anything
 			barHeight = bar.clientHeight;
 			centerPosition = barHeight / 2;
 			measureTrack();
@@ -740,9 +667,6 @@ const videoClips = [
 			const normalizedPosition = Math.max(0, Math.min(1, (newTop - 1) / (barHeight - 2))); // 0 to 1
 			const floatIndex = normalizedPosition * (videoCount - 1);
 
-			// Slide the thumbnail track to follow the pointer 1:1 — this is what keeps
-			// every item reachable and visible instead of the later ones overflowing
-			// off the bottom of the page.
 			positionTrack(floatIndex);
 
 			const targetIndex = Math.round(floatIndex);
