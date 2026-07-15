@@ -42,6 +42,13 @@ const videoClips = [
 		title: 'Highlight Reel 12',
 		youtubeLink: 'https://www.youtube.com/live/07QdJJ3XXFs',
 	},
+	{
+		id: 13,
+		source: 'drive',
+		driveId: '1LqmU9YkyZJTSnW4vJblm9JG_0tcLJwPq',
+		title: 'Highlight Reel 13',
+		youtubeLink: 'https://www.youtube.com/live/AhegrxF80J4',
+	},
 ];
 ---
 
@@ -265,6 +272,8 @@ const videoClips = [
 		let itemPitch = 0; // vertical distance between gallery item centers
 		let trackHeight = 0; // total stacked height of the gallery track
 		const titleCache = new Map<string, string>();
+		const failedVideoIndices = new Set<number>();
+		let driveVisibilityTimer = 0;
 
 		const bar = pointer.parentElement;
 		if (!bar) return;
@@ -376,6 +385,19 @@ const videoClips = [
 			}
 		};
 
+		// Google Drive's embed exposes no JS API to play/pause it from the parent page.
+		// The only reliable way to start/stop it programmatically is to mount/unmount the
+		// iframe itself — loading it (with the autoplay param) starts playback, clearing
+		// it out stops playback dead. This is what makes "pause on scroll out" possible.
+		const loadDriveIframe = (clip: VideoClip) => {
+			if (!driveMount || clip.source !== 'drive' || !clip.driveId) return;
+			driveMount.innerHTML = `<iframe src="https://drive.google.com/file/d/${clip.driveId}/preview?autoplay=1" title="${clip.title}" frameborder="0" allow="autoplay" allowfullscreen style="width:100%;height:100%;"></iframe>`;
+		};
+		const pauseDriveIframe = () => {
+			if (!driveMount) return;
+			driveMount.innerHTML = '';
+		};
+
 		// Smooth, frame-synced progress bar (replaces the old 'timeupdate' polling)
 		const tickProgress = () => {
 			if (player && playerReady && progressBar && typeof player.getDuration === 'function') {
@@ -421,7 +443,7 @@ const videoClips = [
 				if (playerMount) playerMount.classList.add('hidden');
 				if (driveMount) {
 					driveMount.classList.remove('hidden');
-					driveMount.innerHTML = `<iframe src="https://drive.google.com/file/d/${clip.driveId}/preview" title="${clip.title}" frameborder="0" allow="autoplay" allowfullscreen style="width:100%;height:100%;"></iframe>`;
+					loadDriveIframe(clip);
 				}
 				// Drive embeds don't expose a JS API, so the custom progress bar,
 				// mute button, and play/pause overlay don't apply — hide them.
@@ -511,12 +533,33 @@ const videoClips = [
 			});
 		}
 
-		// Intersection Observer for auto-play/pause (YouTube clips only — Drive
-		// embeds handle their own playback via native controls)
+		// Intersection Observer for auto-play/pause. YouTube clips use the JS API directly;
+		// Drive clips have no JS API, so "pause" means unmounting the iframe and "play"
+		// means remounting it with autoplay — see loadDriveIframe/pauseDriveIframe above.
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
-					if (videoClips[currentVideoIndex]?.source === 'drive') return;
+					const activeClip = videoClips[currentVideoIndex];
+
+					if (activeClip?.source === 'drive') {
+						clearTimeout(driveVisibilityTimer);
+						// Wait a beat before actually acting — a normal scroll gesture can
+						// cross the 50% visibility threshold back and forth a few times in
+						// quick succession, and reacting to every one of those was tearing
+						// the iframe down and rebuilding it repeatedly (looked like the video
+						// kept restarting/changing). This settles on the final state instead.
+						driveVisibilityTimer = window.setTimeout(() => {
+							if (entry.isIntersecting) {
+								if (driveMount && driveMount.innerHTML === '') {
+									loadDriveIframe(activeClip);
+								}
+							} else {
+								pauseDriveIframe();
+							}
+						}, 200);
+						return;
+					}
+
 					if (!player || !playerReady) return;
 					const state = player.getPlayerState();
 					if (entry.isIntersecting) {
@@ -566,6 +609,9 @@ const videoClips = [
 						// autoplay (which browsers always allow) so the video still plays,
 						// updating the mute button to match reality.
 						setTimeout(() => {
+							// Skip entirely if a Drive clip is already what's on screen — this
+							// only concerns the (possibly now-hidden) YouTube player's own state.
+							if (videoClips[currentVideoIndex]?.source === 'drive') return;
 							if (player.getPlayerState() !== 1 /* PLAYING */) {
 								isMuted = true;
 								player.mute();
@@ -576,6 +622,12 @@ const videoClips = [
 						}, 1200);
 					},
 					onStateChange: (event: any) => {
+						// The YouTube player is never actually destroyed when switching to a
+						// Drive clip — it's just paused and hidden, so it can still fire events
+						// on its own. Ignore all of them while it isn't the thing on screen,
+						// otherwise a background "video ended" loop-restart, etc. can leak
+						// through and disturb whatever Drive clip is actually showing.
+						if (videoClips[currentVideoIndex]?.source === 'drive') return;
 						if (event.data === 1) setPlayIcon(true); // playing
 						if (event.data === 2) setPlayIcon(false); // paused
 						if (event.data === 0) {
@@ -585,11 +637,31 @@ const videoClips = [
 							player.playVideo();
 						}
 					},
-					onError: () => {
-						// Skip a broken video automatically rather than freezing the UI
-						const nextIndex = (currentVideoIndex + 1) % videoClips.length;
-						updateActiveVideo(nextIndex);
-						highlightGalleryItem(nextIndex);
+					onError: (event: any) => {
+						// Same reasoning as onStateChange above: a hidden, backgrounded
+						// YouTube player can still throw errors of its own. Never let those
+						// change what's on screen while a Drive clip is the active one.
+						if (videoClips[currentVideoIndex]?.source === 'drive') return;
+
+						// Only these codes mean "this exact video will never play here" —
+						// deleted/invalid (2, 100), private (101/150 also cover embedding
+						// disabled), or an HTML5 player fault (5). Anything else, leave it alone.
+						const permanentCodes = [2, 5, 100, 101, 150];
+						if (!permanentCodes.includes(event.data)) return;
+
+						// Mark this one as broken and look for the next clip that hasn't
+						// already failed — but only ever step forward through the list once,
+						// so a run of broken videos can't cascade endlessly or bounce around.
+						failedVideoIndices.add(currentVideoIndex);
+						for (let step = 1; step <= videoClips.length; step++) {
+							const candidate = (currentVideoIndex + step) % videoClips.length;
+							if (!failedVideoIndices.has(candidate)) {
+								updateActiveVideo(candidate);
+								highlightGalleryItem(candidate);
+								return;
+							}
+						}
+						// Every clip has already failed once — stop here rather than loop forever.
 					},
 				},
 			});
@@ -752,7 +824,7 @@ const videoClips = [
 						}
 					});
 
-					if (player && playerReady) {
+					if (player && playerReady && videoClips[currentVideoIndex]?.source !== 'drive') {
 						player.playVideo();
 					}
 				}, 500);
