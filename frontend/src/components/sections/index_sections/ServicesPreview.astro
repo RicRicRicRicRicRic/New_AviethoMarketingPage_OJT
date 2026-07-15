@@ -2,7 +2,7 @@
 // Services preview section - overview of offered services
 import Image from 'astro/components/Image.astro';
 
-type ServiceId = 'digital-pr' | 'social-media' | 'video-production' | 'post-production';
+type ServiceId = 'digital-pr' | 'social-media' | 'video-production' | 'post-production' | 'live-streaming' | 'specialized';
 
 interface Service {
 	id: ServiceId;
@@ -22,7 +22,9 @@ const iconMap: Record<ServiceId, string> = {
 	'digital-pr': '/src/assets/icons/publicrelations_icon.png',
 	'social-media': '/src/assets/icons/mulimediaBranding_icon.png',
 	'video-production': '/src/assets/icons/digitalSocialMediaMarketing_icon.png',
-	'post-production': '/src/assets/icons/webDevelopment_icon.png'
+	'post-production': '/src/assets/icons/webDevelopment_icon.png',
+	'live-streaming': '/src/assets/icons/liveStream_icon.png',
+	'specialized': '/src/assets/icons/Specialized_icon.png'
 };
 
 const { 
@@ -55,6 +57,20 @@ const {
 			description: 'Editing, grading, sound, and motion work that turn raw footage into a polished, compelling story.',
 			iconPath: iconMap['post-production'],
 			href: '/services#post-production'
+		},
+		{
+			id: 'live-streaming',
+			title: 'Live Streaming',
+			description: 'Comprehensive, high-quality live broadcasting solutions tailored for everything from personal social media and gaming to professional business events and large-scale enterprise conferences.',
+			iconPath: iconMap['live-streaming'],
+			href: '/services#live-streaming'
+		},
+		{
+			id: 'specialized',
+			title: 'Specialized',
+			description: 'Specialized finishing services, including drone videography, accessibility compliance, video SEO, and visual infographics, to perfectly optimize and round out your media campaigns.',
+			iconPath: iconMap['specialized'],
+			href: '/services#specialized'
 		}
 	]
 } = Astro.props;
@@ -66,7 +82,7 @@ const {
 			{title}
 		</h2>
 		
-		<div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
+		<div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
 			{services.map((service) => (
 				<a 
 					href={service.href}
