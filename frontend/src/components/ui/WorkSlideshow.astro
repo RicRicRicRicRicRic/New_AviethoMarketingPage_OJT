@@ -81,12 +81,6 @@ const bottomTrackData = JSON.stringify(bottomTrackSlides);
 		`).join('');
 		
 		track.innerHTML = html;
-
-		// Calculate duration based on width (e.g., 50px per second)
-		const trackWidth = track.scrollWidth / 2; // Width of one set of slides
-		const speed = 50; // pixels per second
-		const duration = trackWidth / speed;
-		track.style.setProperty('--duration', `${duration}s`);
 	};
 
 	// Initialize both tracks
@@ -107,12 +101,12 @@ const bottomTrackData = JSON.stringify(bottomTrackSlides);
 <style>
 	/* Top Track Animation: Right-to-Left */
 	#top-track {
-		animation: scroll-rtl var(--duration) linear infinite;
+		animation: scroll-rtl 30s linear infinite;
 	}
 
 	/* Bottom Track Animation: Left-to-Right */
 	#bottom-track {
-		animation: scroll-ltr var(--duration) linear infinite;
+		animation: scroll-ltr 30s linear infinite;
 	}
 
 	/* Pause animation on hover */
