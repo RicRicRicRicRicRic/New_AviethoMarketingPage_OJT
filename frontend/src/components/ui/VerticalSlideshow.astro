@@ -23,28 +23,39 @@ const {
 		<div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background-overlay to-transparent pointer-events-none z-10"></div>
 		<div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background-overlay to-transparent pointer-events-none z-10"></div>
 		
-		<div class="slides-wrapper flex flex-col gap-4 h-full overflow-hidden transition-transform duration-700 ease-in-out scrollbar-hide" style="padding: 1100px 16px;">
-			{slides.map((slide, index) => (
-<div
-					class="slide-bar flex items-center gap-4 p-4 rounded-lg bg-white/5 backdrop-blur-md border-2 border-white/30 transition-all duration-700 ease-in-out pointer-events-none opacity-40"
-					data-slide-index={index}
-				>
+		<div class="slides-wrapper flex flex-col gap-4 scrollbar-hide" style="padding: 1100px 16px; transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);">
+			<!-- Rendered 5x (2 buffer blocks before + the canonical middle
+			     block + 2 buffer blocks after) so drag/wheel navigation can
+			     scroll seamlessly past an "edge" into a duplicate block
+			     instead of hitting a hard stop — the script silently
+			     re-centers back into the middle block once you're a safe
+			     distance from view, which is invisible since the duplicate
+			     card looks identical. BLOCK_COUNT here must match the one
+			     in the script below. -->
+			{Array.from({ length: 5 }).flatMap((_, blockIndex) =>
+				slides.map((slide, index) => (
+					<div
+						class="slide-bar flex items-center gap-4 p-4 rounded-lg bg-white/5 backdrop-blur-md border-2 border-white/30 transition-all duration-[900ms] ease-out pointer-events-none opacity-40"
+						data-slide-index={index}
+						data-block-index={blockIndex}
+					>
 						<div class="slide-image flex-shrink-0 w-16 h-16 rounded-md overflow-hidden bg-transparent">
-						<img
-							src={slide.image}
-							alt={slide.clientName}
-							class="w-full h-full object-contain p-2"
-							loading="lazy"
-						/>
+							<img
+								src={slide.image}
+								alt={slide.clientName}
+								class="w-full h-full object-contain p-2"
+								loading="lazy"
+							/>
+						</div>
+
+						<div class="slide-text flex-1 min-w-0 overflow-hidden">
+							<h3 class="text-lg font-semibold text-foreground whitespace-nowrap" data-text={slide.clientName}>
+								{slide.clientName}
+							</h3>
+						</div>
 					</div>
-					
-				<div class="slide-text flex-1 min-w-0 overflow-hidden">
-					<h3 class="text-lg font-semibold text-foreground whitespace-nowrap" data-text={slide.clientName}>
-						{slide.clientName}
-					</h3>
-				</div>
-				</div>
-			))}
+				))
+			)}
 		</div>
 	</div>
 </div>
@@ -55,63 +66,176 @@ const {
 		image: string;
 		clientName: string;
 	}
- 
+
 	class VerticalSlideshow {
+		// Must match the block count rendered in the template above.
+		private static readonly BLOCK_COUNT = 5;
+		// Must match the transition duration set on .slides-wrapper above.
+		private static readonly TRANSITION_MS = 900;
+
 		private slides: SlideData[];
 		private currentIndex: number = 0;
 		private autoplayDelay: number;
 		private autoplayInterval: number | null = null;
 		private slideBars: NodeListOf<Element>;
 		private slidesWrapper: HTMLElement | null;
+		private slidesContainer: HTMLElement | null;
 		private currentSlideEl: Element | null;
 		private totalSlidesEl: Element | null;
- 
+
+		// Spin-in-on-load + drag-to-scroll state. Interaction is locked out
+		// until the initial spin settles, matching a spinning-wheel feel.
+		private isSpinning: boolean = true;
+		private isTransitioning: boolean = false;
+		private isDragging: boolean = false;
+		private dragStartY: number = 0;
+		private dragStartTranslateY: number = 0;
+
 		constructor(slides: SlideData[], autoplayDelay: number) {
 			this.slides = slides;
 			this.autoplayDelay = autoplayDelay;
 			this.slideBars = document.querySelectorAll('.slide-bar');
 			this.slidesWrapper = document.querySelector('.slides-wrapper');
+			this.slidesContainer = document.querySelector('.slides-container');
 			this.currentSlideEl = document.getElementById('current-slide');
 			this.totalSlidesEl = document.getElementById('total-slides');
+			// Start in the canonical "middle" block (see the template
+			// comment above) so there's equal buffer to wrap into on
+			// either side right from the start.
+			this.currentIndex = this.slides.length * Math.floor(VerticalSlideshow.BLOCK_COUNT / 2);
 			this.init();
 		}
- 
+
 		private init(): void {
 			if (this.totalSlidesEl) {
 				this.totalSlidesEl.textContent = String(this.slides.length);
 			}
- 
+
 			// Wait for layout + images
 			const raf = () => {
-				this.updateActiveSlide();
-				this.startAutoplay();
 				this.attachNavigation();
+				this.spinIn();
 			};
- 
+
 			if (document.readyState === 'complete') {
 				requestAnimationFrame(raf);
 			} else {
 				window.addEventListener('load', () => requestAnimationFrame(raf), { once: true });
 			}
 		}
- 
-		private centerActiveSlide(): void {
-			if (!this.slidesWrapper) return;
- 
-			const activeBar = this.slideBars[this.currentIndex] as HTMLElement | null;
-			if (!activeBar) return;
- 
+
+		// Decelerating "spin the wheel" load-in: ticks slowly (relatively)
+		// through the slides at first, easing outward tick by tick — longer
+		// transitions and longer pauses between each — until it settles
+		// back where it started, with the normal 700ms transition already
+		// defined on .slides-wrapper. Only once this finishes does
+		// autoplay/dragging switch on.
+		private spinIn(): void {
+			if (!this.slidesWrapper || this.slides.length === 0) {
+				this.finishSpin();
+				return;
+			}
+
+			const totalTicks = this.slides.length * 2; // two full loops
+			let ticksRemaining = totalTicks;
+
+			const tick = () => {
+				if (ticksRemaining <= 0 || !this.slidesWrapper) {
+					this.finishSpin();
+					return;
+				}
+
+				const progress = 1 - ticksRemaining / totalTicks; // 0 -> 1
+				// Gentler curve (quadratic, not cubic) and a slower/longer
+				// range on both ends for a smoother, more graceful spin.
+				const eased = 1 - Math.pow(1 - progress, 2);
+				const transitionMs = Math.round(160 + eased * 590); // 160ms -> 750ms
+				const delayMs = Math.round(110 + eased * 590); // 110ms -> 700ms
+
+				this.slidesWrapper.style.transitionDuration = `${transitionMs}ms`;
+				this.currentIndex += 1;
+				this.updateActiveSlide();
+
+				ticksRemaining -= 1;
+				window.setTimeout(tick, delayMs);
+			};
+
+			tick();
+		}
+
+		private finishSpin(): void {
+			this.isSpinning = false;
+			if (this.slidesWrapper) {
+				// Hand control back to the CSS class's own transition duration.
+				this.slidesWrapper.style.transitionDuration = '';
+			}
+			this.updateActiveSlide();
+			window.setTimeout(() => {
+				this.keepIndexInMiddleBand();
+			}, VerticalSlideshow.TRANSITION_MS);
+			this.startAutoplay();
+			this.attachDragging();
+
+			// Text-overflow depends only on layout/content, not on which
+			// slide is active, so it only needs checking once here (plus
+			// on resize) rather than on every animation tick.
+			this.checkTextOverflow();
+			let resizeTimeout: number | null = null;
+			window.addEventListener('resize', () => {
+				if (resizeTimeout) window.clearTimeout(resizeTimeout);
+				resizeTimeout = window.setTimeout(() => this.checkTextOverflow(), 200);
+			});
+		}
+
+		private computeTranslateFor(index: number): number {
+			const activeBar = this.slideBars[index] as HTMLElement | undefined;
+			if (!activeBar) return 0;
+
 			const containerH = 400;
 			const activeTop = activeBar.offsetTop;
 			const activeH = activeBar.offsetHeight;
- 
+
 			const targetY = (containerH / 2) - (activeH / 2);
-			const translateY = targetY - activeTop;
- 
-			this.slidesWrapper.style.transform = `translateY(${translateY}px)`;
+			return targetY - activeTop;
 		}
- 
-		private updateActiveSlide(): void {
+
+		private getCurrentTranslateY(): number {
+			if (!this.slidesWrapper) return 0;
+			const match = /translateY\((-?\d+(?:\.\d+)?)px\)/.exec(this.slidesWrapper.style.transform);
+			return match ? parseFloat(match[1]) : 0;
+		}
+
+		// Physical slideBars index -> logical 0..N-1 slide number (there
+		// are BLOCK_COUNT physical copies of each logical slide).
+		private toLogicalIndex(index: number): number {
+			const total = this.slides.length;
+			if (total === 0) return 0;
+			return ((index % total) + total) % total;
+		}
+
+		private centerActiveSlide(instant: boolean = false): void {
+			if (!this.slidesWrapper) return;
+			const translateY = this.computeTranslateFor(this.currentIndex);
+
+			if (!instant) {
+				this.slidesWrapper.style.transform = `translateY(${translateY}px)`;
+				return;
+			}
+
+			const prevDuration = this.slidesWrapper.style.transitionDuration;
+			this.slidesWrapper.style.transitionDuration = '0ms';
+			this.slidesWrapper.style.transform = `translateY(${translateY}px)`;
+			void this.slidesWrapper.offsetHeight; // force reflow so the 0ms jump applies immediately
+			this.slidesWrapper.style.transitionDuration = prevDuration;
+		}
+
+		private updateActiveSlide(instant: boolean = false): void {
+			if (instant) {
+				this.slideBars.forEach((bar) => {
+					(bar as HTMLElement).style.transitionDuration = '0ms';
+				});
+			}
+
 			this.slideBars.forEach((bar, i) => {
 				const el = bar as HTMLElement;
 				if (i === this.currentIndex) {
@@ -124,16 +248,42 @@ const {
 					el.classList.add('border-white/10');
 				}
 			});
- 
-			this.centerActiveSlide();
- 
+
+			this.centerActiveSlide(instant);
+
 			if (this.currentSlideEl) {
-				this.currentSlideEl.textContent = String(this.currentIndex + 1);
+				this.currentSlideEl.textContent = String(this.toLogicalIndex(this.currentIndex) + 1);
 			}
- 
-			this.checkTextOverflow();
+
+			if (instant) {
+				void (this.slidesWrapper as HTMLElement | null)?.offsetHeight; // force reflow
+				this.slideBars.forEach((bar) => {
+					(bar as HTMLElement).style.transitionDuration = '';
+				});
+			}
 		}
- 
+
+		// If the current (physical) index has drifted out of the canonical
+		// middle block — e.g. after a long drag or wheel-navigating past an
+		// edge — silently jump to the equivalent slide in the middle block,
+		// with transitions disabled for that single jump. Since every block
+		// is an identical copy, the visible card doesn't change at all;
+		// this just restores buffer room on both sides for the next
+		// navigation, creating the infinite-loop illusion.
+		private keepIndexInMiddleBand(): void {
+			const total = this.slides.length;
+			if (total === 0 || !this.slidesWrapper) return;
+
+			const middleBlock = Math.floor(VerticalSlideshow.BLOCK_COUNT / 2);
+			const middleStart = total * middleBlock;
+			const middleEnd = middleStart + total - 1;
+
+			if (this.currentIndex >= middleStart && this.currentIndex <= middleEnd) return;
+
+			this.currentIndex = middleStart + this.toLogicalIndex(this.currentIndex);
+			this.updateActiveSlide(true);
+		}
+
 		private checkTextOverflow(): void {
 			this.slideBars.forEach((bar) => {
 				const heading = bar.querySelector('h3');
@@ -147,43 +297,54 @@ const {
 				}
 			});
 		}
- 
+
 		private goToSlide(index: number): void {
-			this.currentIndex = ((index % this.slides.length) + this.slides.length) % this.slides.length;
+			this.currentIndex = index;
+			this.isTransitioning = true;
 			this.updateActiveSlide();
 			this.resetAutoplay();
+
+			// Let the animated move actually paint before silently
+			// re-centering back into the middle block (if needed) — doing
+			// that recenter synchronously would overwrite the animated
+			// transform before the browser ever rendered a frame of it.
+			window.setTimeout(() => {
+				this.keepIndexInMiddleBand();
+				this.isTransitioning = false;
+			}, VerticalSlideshow.TRANSITION_MS);
 		}
- 
+
 		private nextSlide(): void {
 			this.goToSlide(this.currentIndex + 1);
 		}
- 
+
 		private prevSlide(): void {
 			this.goToSlide(this.currentIndex - 1);
 		}
- 
+
 		private startAutoplay(): void {
 			this.stopAutoplay();
 			this.autoplayInterval = window.setInterval(() => this.nextSlide(), this.autoplayDelay);
 		}
- 
+
 		private stopAutoplay(): void {
 			if (this.autoplayInterval) {
 				clearInterval(this.autoplayInterval);
 				this.autoplayInterval = null;
 			}
 		}
- 
+
 		private resetAutoplay(): void {
 			this.stopAutoplay();
 			this.startAutoplay();
 		}
- 
+
 		private attachNavigation(): void {
 			const container = document.querySelector('.slides-container') as HTMLElement | null;
 			if (container) {
 				container.addEventListener('wheel', (e) => {
 					e.preventDefault();
+					if (this.isSpinning || this.isTransitioning) return;
 					const wheelEvent = e as WheelEvent;
 					if (wheelEvent.deltaY > 0) {
 						this.nextSlide();
@@ -193,8 +354,64 @@ const {
 				}, { passive: false });
 			}
 		}
+
+		// Drag-to-scroll — only wired up once the initial spin settles.
+		// Follows the pointer 1:1 while dragging (transition briefly
+		// disabled for that), then snaps to whichever slide's centered
+		// position is closest once released.
+		private attachDragging(): void {
+			const container = this.slidesContainer;
+			const wrapper = this.slidesWrapper;
+			if (!container || !wrapper) return;
+
+			container.style.touchAction = 'none';
+
+			const onPointerDown = (e: PointerEvent) => {
+				if (this.isSpinning) return;
+				this.isDragging = true;
+				this.dragStartY = e.clientY;
+				this.dragStartTranslateY = this.getCurrentTranslateY();
+				wrapper.style.transitionDuration = '0ms';
+				container.style.cursor = 'grabbing';
+				this.stopAutoplay();
+				container.setPointerCapture?.(e.pointerId);
+			};
+
+			const onPointerMove = (e: PointerEvent) => {
+				if (!this.isDragging) return;
+				const deltaY = e.clientY - this.dragStartY;
+				wrapper.style.transform = `translateY(${this.dragStartTranslateY + deltaY}px)`;
+			};
+
+			const onPointerUp = () => {
+				if (!this.isDragging) return;
+				this.isDragging = false;
+				wrapper.style.transitionDuration = '';
+				container.style.cursor = '';
+
+				// Snap to whichever slide's own centered position is
+				// closest to where the drag was released.
+				const draggedTranslateY = this.getCurrentTranslateY();
+				let closestIndex = this.currentIndex;
+				let closestDistance = Infinity;
+
+				this.slideBars.forEach((_, i) => {
+					const distance = Math.abs(this.computeTranslateFor(i) - draggedTranslateY);
+					if (distance < closestDistance) {
+						closestDistance = distance;
+						closestIndex = i;
+					}
+				});
+
+				this.goToSlide(closestIndex);
+			};
+
+			container.addEventListener('pointerdown', onPointerDown);
+			window.addEventListener('pointermove', onPointerMove);
+			window.addEventListener('pointerup', onPointerUp);
+		}
 	}
- 
+
 	// Init
 	const init = () => {
 		const container = document.querySelector('.vertical-slideshow') as HTMLElement | null;
@@ -204,7 +421,7 @@ const {
 			new VerticalSlideshow(data, delay);
 		}
 	};
- 
+
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', init);
 	} else {
@@ -243,4 +460,3 @@ const {
 		padding-right: 40px;
 	}
 </style>
- 
