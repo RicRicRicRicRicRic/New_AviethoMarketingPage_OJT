@@ -175,7 +175,7 @@ const videos = await getVideos();
 		<div class="mx-auto max-w-7xl px-6 py-20 md:px-8 lg:px-10">
 
 			<!-- Header -->
-			<header class="reveal-on-load flex flex-col items-center mx-auto max-w-2xl text-center" style="animation-delay:0ms">
+<header class="animate-reveal-up flex flex-col items-center mx-auto max-w-2xl text-center" style="animation-delay:0ms">
 				<div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-accent">
 					<span class="h-2 w-2 rounded-full bg-accent animate-pulse"></span>
 					Video Gallery
@@ -186,10 +186,10 @@ const videos = await getVideos();
 				</p>
 			</header>
 
-			<hr class="reveal-on-load mt-12 border-white/10" style="animation-delay:80ms" />
+<hr class="animate-reveal-up mt-12 border-white/10" style="animation-delay:80ms" />
 
 			<!-- Sort controls -->
-			<div class="reveal-on-load mt-8 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6" style="animation-delay:200ms">
+<div class="animate-reveal-up mt-8 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6" style="animation-delay:200ms">
 				<span class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500">Sort by</span>
 				<button id="sort-latest" class="sort-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer">
 					Latest
@@ -203,7 +203,7 @@ const videos = await getVideos();
 			</div>
 
 			<!-- Filter controls -->
-			<div class="reveal-on-load mt-8 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6" style="animation-delay:200ms">
+<div class="animate-reveal-up mt-8 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6" style="animation-delay:200ms">
 				<span class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500">Show only:</span>
 				<button id="filter-all" class="filter-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer">
 					All
@@ -214,12 +214,15 @@ const videos = await getVideos();
 				<button id="filter-avietho" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
 					Avietho
 				</button>
-				<button id="filter-saywhat" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
-					Say what?
-				</button>
-				<button id="filter-others" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
-					Others
-				</button>
+			<button id="filter-saywhat" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+				Say what?
+			</button>
+			<button id="filter-fashion" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+				Fashion
+			</button>
+			<button id="filter-others" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+				Others
+			</button>
 			</div>
 
 			<!-- Grid -->
@@ -227,7 +230,7 @@ const videos = await getVideos();
 				<div class="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3" id="video-grid">
 					{videos.map((video, idx) => (
 						<article
-							class="video-item reveal-on-load group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-black/40"
+class="video-item animate-reveal-up group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-black/40"
 							data-video-id={video.videoId || ""}
 							data-title={video.title}
 							data-publish-date={video.publishedAt}
@@ -275,115 +278,24 @@ const videos = await getVideos();
 			)}
 
 			<!-- Note about Popular sorting -->
-			<div class="reveal-on-load mt-8 text-center text-sm text-zinc-500" style="animation-delay:300ms">
+<div class="animate-reveal-up mt-8 text-center text-sm text-zinc-500" style="animation-delay:300ms">
 				<p>Videos are sorted by actual view counts from YouTube.</p>
 			</div>
 		</div>
 	</div>
 
 	<!-- Video pop-up modal -->
-	<div id="video-player" class="hidden">
-		<div id="player-backdrop"></div>
-		<div class="video-modal-frame">
-			<div class="video-modal-inner">
-				<div id="player-container"></div>
-				<button id="close-player" aria-label="Close video">✕</button>
+	<div id="video-player" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+		<div id="player-backdrop" class="absolute inset-0 bg-black/92 backdrop-blur-[6px]"></div>
+		<div class="relative w-full max-w-[1100px]">
+			<div class="relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
+				<div id="player-container" class="h-full w-full"></div>
+				<button id="close-player" aria-label="Close video" class="absolute top-[14px] right-[14px] z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/60 text-lg text-white transition-all duration-200 hover:border-accent hover:bg-accent hover:text-zinc-950">✕</button>
 			</div>
 		</div>
 	</div>
 </BaseLayout>
 
-<style>
-	#video-player {
-		position: fixed;
-		inset: 0;
-		z-index: 100;
-		display: none;
-		align-items: center;
-		justify-content: center;
-		padding: 16px;
-	}
-	#video-player:not(.hidden) {
-		display: flex;
-	}
-	#player-backdrop {
-		position: absolute;
-		inset: 0;
-		background: rgba(0, 0, 0, 0.92);
-		backdrop-filter: blur(6px);
-	}
-	.video-modal-frame {
-		position: relative;
-		width: 100%;
-		max-width: 1100px;
-	}
-	.video-modal-inner {
-		position: relative;
-		aspect-ratio: 16 / 9;
-		border-radius: 16px;
-		overflow: hidden;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		background: #000;
-		box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
-	}
-	#player-container {
-		width: 100%;
-		height: 100%;
-	}
-	#close-player {
-		position: absolute;
-		top: 14px;
-		right: 14px;
-		z-index: 10;
-		width: 40px;
-		height: 40px;
-		border-radius: 999px;
-		border: 1px solid rgba(255, 255, 255, 0.15);
-		background: rgba(0, 0, 0, 0.6);
-		color: #fff;
-		font-size: 18px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-	}
-	#close-player:hover {
-		background: var(--color-accent, #c9a44c);
-		border-color: var(--color-accent, #c9a44c);
-		color: #0a0a0a;
-	}
-
-	.sort-btn:hover:not(.active) {
-		border-color: rgba(255, 255, 255, 0.3);
-		color: #fff;
-	}
-
-	.reveal-on-load {
-		animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-	}
-	@keyframes reveal-up {
-		from {
-			opacity: 0;
-			transform: translateY(18px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.reveal-on-load {
-			animation: none;
-			opacity: 1;
-			transform: none;
-		}
-		.video-item:hover {
-			transform: none;
-		}
-	}
-</style>
 
 <script>
 	declare global {
@@ -496,11 +408,15 @@ const videos = await getVideos();
 					case 'saywhat':
 						shouldShow = title.includes('SAY WHAT');
 						break;
+					case 'fashion':
+						shouldShow = title.includes('FASHION');
+						break;
 					case 'others':
 						shouldShow = !title.includes('MOTW') && 
 									 !title.includes('MAN OF THE WORLD') && 
 									 !title.includes('AVIETHO') && 
-									 !title.includes('SAY WHAT');
+									 !title.includes('SAY WHAT') &&
+									 !title.includes('FASHION');
 						break;
 					default:
 						shouldShow = true;
@@ -546,6 +462,7 @@ const videos = await getVideos();
 				if (filterId === 'filter-motw') filterVideos('motw');
 				if (filterId === 'filter-avietho') filterVideos('avietho');
 				if (filterId === 'filter-saywhat') filterVideos('saywhat');
+				if (filterId === 'filter-fashion') filterVideos('fashion');
 				if (filterId === 'filter-others') filterVideos('others');
 			});
 		});

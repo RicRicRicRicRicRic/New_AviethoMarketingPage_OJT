@@ -18,32 +18,43 @@ module.exports = {
 				sans: ['var(--font-body)'],
 				heading: ['var(--font-heading)'],
 			},
-			animation: {
-				'nav-enter': 'nav-enter 0.5s ease both',
-				'link-in': 'link-in 0.35s ease forwards',
-			},
-			keyframes: {
-				'nav-enter': {
-					from: {
-						opacity: '0',
-						transform: 'translateY(-10px)',
-					},
-					to: {
-						opacity: '1',
-						transform: 'translateY(0)',
-					},
+		animation: {
+			'nav-enter': 'nav-enter 0.5s ease both',
+			'link-in': 'link-in 0.35s ease forwards',
+			'reveal-up': 'reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both',
+		},
+		keyframes: {
+			'nav-enter': {
+				from: {
+					opacity: '0',
+					transform: 'translateY(-10px)',
 				},
-				'link-in': {
-					from: {
-						opacity: '0',
-						transform: 'translateY(-6px)',
-					},
-					to: {
-						opacity: '1',
-						transform: 'translateY(0)',
-					},
+				to: {
+					opacity: '1',
+					transform: 'translateY(0)',
 				},
 			},
+			'link-in': {
+				from: {
+					opacity: '0',
+					transform: 'translateY(-6px)',
+				},
+				to: {
+					opacity: '1',
+					transform: 'translateY(0)',
+				},
+			},
+			'reveal-up': {
+				from: {
+					opacity: '0',
+					transform: 'translateY(18px)',
+				},
+				to: {
+					opacity: '1',
+					transform: 'translateY(0)',
+				},
+			},
+		},
 		},
 	},
 	plugins: [
