@@ -15,6 +15,7 @@ interface Video {
 
 const youtubeApiKey = import.meta.env.YOUTUBE_API_KEY;
 const playlistId = 'UUEQxQm4eB6lsMuKK2WFyUAA';
+const hiddenVideoIds = ['NhLiCOl-gqI'];
 
 // Debug: Check if API key is loaded (safe)
 console.log('[production] YouTube API Key loaded:', youtubeApiKey ? `${youtubeApiKey.slice(0, 8)}...` : 'NOT FOUND');
@@ -87,6 +88,22 @@ const getVideos = async (): Promise<Video[]> => {
 			nextPageToken = playlistData.nextPageToken || null;
 			hasMore = !!nextPageToken;
 		}
+
+		// Filter out hidden videos
+		const itemsBeforeFilter = allItems.length;
+		const filteredItems = allItems.filter((item: any) => {
+			const videoId = item.snippet?.resourceId?.videoId;
+			return !hiddenVideoIds.includes(videoId);
+		});
+		const hiddenCount = itemsBeforeFilter - filteredItems.length;
+		
+		if (hiddenCount > 0) {
+			console.log(`[production] Filtered out ${hiddenCount} hidden video(s)`);
+		}
+		
+		// Replace allItems with filtered items
+		allItems.length = 0;
+		allItems.push(...filteredItems);
 
 		if (allItems.length === 0) {
 			throw new Error('No videos found');
@@ -211,14 +228,23 @@ const videos = await getVideos();
 				<button id="filter-motw" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
 					MOTW
 				</button>
-				<button id="filter-avietho" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
-					Avietho
-				</button>
+			<button id="filter-pov" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+				POV
+			</button>
+			<button id="filter-narrative" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+				Narrative
+			</button>
 			<button id="filter-saywhat" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
-				Say what?
+				SAY WHAT?
 			</button>
 			<button id="filter-fashion" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
 				Fashion
+			</button>
+			<button id="filter-anong-bago" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+				Ano'ng Bago?
+			</button>
+			<button id="filter-highlights" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+				Highlights
 			</button>
 			<button id="filter-others" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
 				Others
@@ -402,21 +428,56 @@ class="video-item animate-reveal-up group cursor-pointer overflow-hidden rounded
 					case 'motw':
 						shouldShow = title.includes('MOTW') || title.includes('MAN OF THE WORLD');
 						break;
-					case 'avietho':
-						shouldShow = title.includes('AVIETHO');
+					case 'pov':
+						shouldShow = title.includes('POV');
 						break;
+				case 'narrative':
+					shouldShow = (title.includes('ANO') || 
+								 title.includes('ANG') || 
+								 title.includes('BAKIT') || 
+								 title.includes('SOHOTON') || 
+								 title.includes('SAND DUNES') || 
+								 title.includes('PREVENTION') || 
+								 title.includes('PAANO') || 
+								 title.includes('NEW YEAR') || 
+								 title.includes('DYNASTY')) && 
+								!title.includes('MIGZ') &&
+								!title.includes('PERIOD') && 
+								!title.includes('SAY WHAT');
+					break;
 					case 'saywhat':
 						shouldShow = title.includes('SAY WHAT');
 						break;
 					case 'fashion':
 						shouldShow = title.includes('FASHION');
 						break;
+					case 'anong-bago':
+						shouldShow = title.includes('BAGO') && title.includes('MIGZ');
+						break;
+					case 'highlights':
+						shouldShow = title.includes('MONARCH HIGHLIGHTS') || 
+									 title.includes('DRAGON BOAT') || 
+									 title.includes('SALTY COCONUT');
+						break;
 					case 'others':
 						shouldShow = !title.includes('MOTW') && 
 									 !title.includes('MAN OF THE WORLD') && 
-									 !title.includes('AVIETHO') && 
+									 !title.includes('POV') && 
 									 !title.includes('SAY WHAT') &&
-									 !title.includes('FASHION');
+									 !title.includes('FASHION') &&
+									 !(title.includes('BAGO') && title.includes('MIGZ')) &&
+									 !title.includes('MONARCH HIGHLIGHTS') &&
+									 !title.includes('DRAGON BOAT') &&
+									 !title.includes('SALTY COCONUT') &&
+									 !title.includes('ANO') &&
+									 !title.includes('ANG') &&
+									 !title.includes('BAKIT') &&
+									 !title.includes('SOHOTON') &&
+									 !title.includes('SAND DUNES') &&
+									 !title.includes('PREVENTION') &&
+									 !title.includes('PAANO') &&
+									 !title.includes('NEW YEAR') &&
+									 !title.includes('DYNASTY');
 						break;
 					default:
 						shouldShow = true;
@@ -460,9 +521,12 @@ class="video-item animate-reveal-up group cursor-pointer overflow-hidden rounded
 				const filterId = btn.id;
 				if (filterId === 'filter-all') filterVideos('all');
 				if (filterId === 'filter-motw') filterVideos('motw');
-				if (filterId === 'filter-avietho') filterVideos('avietho');
+				if (filterId === 'filter-pov') filterVideos('pov');
+				if (filterId === 'filter-narrative') filterVideos('narrative');
 				if (filterId === 'filter-saywhat') filterVideos('saywhat');
 				if (filterId === 'filter-fashion') filterVideos('fashion');
+				if (filterId === 'filter-anong-bago') filterVideos('anong-bago');
+				if (filterId === 'filter-highlights') filterVideos('highlights');
 				if (filterId === 'filter-others') filterVideos('others');
 			});
 		});
