@@ -1,11 +1,570 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface Video {
+	title: string;
+	description: string;
+	url: string;
+	publishedAt: string;
+	thumbnail?: string;
+	videoId?: string;
+	views?: number | null;
+}
+
+const youtubeApiKey = import.meta.env.YOUTUBE_API_KEY;
+const channelId = 'UCEQxQm4eB6lsMuKK2WFyUAA';
+
+// Debug: Check if API key is loaded (safe)
+console.log('[production] YouTube API Key loaded:', youtubeApiKey ? `${youtubeApiKey.slice(0, 8)}...` : 'NOT FOUND');
+console.log('[production] Channel ID:', channelId);
+
+const getVideos = async (): Promise<Video[]> => {
+	try {
+		if (!youtubeApiKey) {
+			throw new Error('YouTube API key is missing. Please set YOUTUBE_API_KEY in your .env file.');
+		}
+
+		// Validate channel ID to prevent corruption issues
+		if (!channelId || channelId.length !== 24 || !channelId.startsWith('UC')) {
+			throw new Error(`Invalid channel ID: ${channelId}`);
+		}
+
+		// Step 1: Fetch all videos with pagination (max 50 per request)
+		const allItems: any[] = [];
+		let nextPageToken: string | null = null;
+		let hasMore = true;
+		let pageCount = 0;
+		const maxPages = 10; // Safety limit to prevent infinite loops
+
+		while (hasMore && pageCount < maxPages) {
+			pageCount++;
+			let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=50&order=date&type=video&key=${youtubeApiKey}`;
+			
+			if (nextPageToken) {
+				searchUrl += `&pageToken=${nextPageToken}`;
+			}
+			
+			const maskedKey = youtubeApiKey ? `${youtubeApiKey.slice(0, 8)}...` : 'MISSING';
+			console.log(`[production] Fetching page ${pageCount}:`, searchUrl.replace(youtubeApiKey, maskedKey));
+			
+			const searchRes = await fetch(searchUrl, {
+				headers: {
+					'Accept': 'application/json',
+				},
+			});
+			
+			if (!searchRes.ok) {
+				const errorText = await searchRes.text();
+				console.error('[production] API Error Response:', errorText);
+				throw new Error(`YouTube API search failed with status ${searchRes.status}: ${errorText}`);
+			}
+
+			const searchData = await searchRes.json();
+			
+			if (!searchData.items || searchData.items.length === 0) {
+				if (pageCount === 1) {
+					throw new Error('No videos found in API response');
+				}
+				break;
+			}
+
+			// Filter out LIVE videos (case-insensitive)
+			const filteredItems = searchData.items.filter((item: any) => 
+				!item.snippet?.title?.toUpperCase().includes('LIVE')
+			);
+			
+			const liveCount = searchData.items.length - filteredItems.length;
+			if (liveCount > 0) {
+				console.log(`[production] Filtered out ${liveCount} LIVE video(s) from page ${pageCount}`);
+			}
+			
+			allItems.push(...filteredItems);
+			console.log(`[production] Page ${pageCount}: Fetched ${filteredItems.length} videos (Total: ${allItems.length})`);
+
+			// Check if there are more pages
+			nextPageToken = searchData.nextPageToken || null;
+			hasMore = !!nextPageToken;
+		}
+
+		if (allItems.length === 0) {
+			throw new Error('No videos found');
+		}
+
+		console.log(`[production] Successfully fetched ${allItems.length} total videos from ${pageCount} page(s)`);
+
+		// Step 2: Extract video IDs and fetch statistics (in batches of 50)
+		const allVideoIds = allItems
+			.map((item: any) => item.id?.videoId)
+			.filter((id: string | undefined) => id);
+
+		if (allVideoIds.length === 0) {
+			throw new Error('No valid video IDs found');
+		}
+
+		// YouTube API allows max 50 IDs per request, so batch them
+		const batchSize = 50;
+		const statsMap = new Map<string, number>();
+		
+		for (let i = 0; i < allVideoIds.length; i += batchSize) {
+			const batch = allVideoIds.slice(i, i + batchSize);
+			const batchIds = batch.join(',');
+			const batchNum = Math.floor(i / batchSize) + 1;
+			const totalBatches = Math.ceil(allVideoIds.length / batchSize);
+			
+			console.log(`[production] Fetching statistics batch ${batchNum}/${totalBatches} (${batch.length} videos)`);
+			
+			const statsUrl = `https://www.googleapis.com/youtube/v3/videos?key=${youtubeApiKey}&id=${batchIds}&part=statistics`;
+			const statsRes = await fetch(statsUrl, {
+				headers: {
+					'Accept': 'application/json',
+				},
+			});
+			
+			if (!statsRes.ok) {
+				const errorText = await statsRes.text();
+				console.error(`[production] Statistics API Error Response (batch ${batchNum}):`, errorText);
+				throw new Error(`YouTube API statistics fetch failed with status ${statsRes.status}: ${errorText}`);
+			}
+
+			const statsData = await statsRes.json();
+			const batchStats = new Map<string, number>(
+				statsData.items?.map((item: any) => [item.id as string, parseInt(String(item.statistics?.viewCount || '0'))]) || []
+			);
+			
+			for (const [key, value] of batchStats) {
+				statsMap.set(key, value);
+			}
+			console.log(`[production] Batch ${batchNum}: Fetched statistics for ${batchStats.size} videos`);
+		}
+
+		console.log('[production] Successfully fetched statistics for', statsMap.size, 'videos total');
+
+		// Step 3: Map to Video interface (NO SLICE - include all videos)
+		const videos: Video[] = allItems.map((item: any) => {
+			const snippet = item.snippet;
+			const videoId = item.id?.videoId;
+			const views = statsMap.get((videoId || '') as string) || null;
+
+			return {
+				title: snippet?.title || 'Untitled Video',
+				description: snippet?.description || 'No description available',
+				url: `https://www.youtube.com/watch?v=${videoId}`,
+				publishedAt: snippet?.publishedAt || new Date().toISOString(),
+				thumbnail: snippet?.thumbnails?.high?.url || snippet?.thumbnails?.medium?.url || snippet?.thumbnails?.default?.url,
+				videoId,
+				views: views || undefined,
+			};
+		});
+
+		console.log(`[production] Returning ${videos.length} videos`);
+		return videos;
+	} catch (err) {
+		console.error('[production] Full error details:', err);
+		console.error('[production] Error message:', err instanceof Error ? err.message : 'Unknown error');
+		throw err;
+	}
+};
+
+const videos = await getVideos();
 ---
 
-<BaseLayout title="Avietho - Production">
-	<main>
-    <div>
-      Production
-    </div>
-	</main>
+<BaseLayout title="Production - Avietho">
+	<div class="section-wrapper">
+		<div class="mx-auto max-w-7xl px-6 py-20 md:px-8 lg:px-10">
+
+			<!-- Header -->
+			<header class="reveal-on-load flex flex-col items-center mx-auto max-w-2xl text-center" style="animation-delay:0ms">
+				<div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-accent">
+					<span class="h-2 w-2 rounded-full bg-accent animate-pulse"></span>
+					Video Gallery
+				</div>
+				<h1 class="mt-5 text-4xl md:text-5xl font-bold text-white tracking-tight">Production</h1>
+				<p class="mt-4 text-lg text-zinc-400">
+					Latest videos from <a href="https://www.youtube.com/@aviethodigital" target="_blank" rel="noopener noreferrer" class="text-accent underline underline-offset-4 decoration-accent/40 transition-colors hover:decoration-accent">Avietho Digital</a>.
+				</p>
+			</header>
+
+			<hr class="reveal-on-load mt-12 border-white/10" style="animation-delay:80ms" />
+
+			<!-- Sort controls -->
+			<div class="reveal-on-load mt-8 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6" style="animation-delay:200ms">
+				<span class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500">Sort by</span>
+				<button id="sort-latest" class="sort-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer">
+					Latest
+				</button>
+				<button id="sort-popular" class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+					Popular
+				</button>
+				<button id="sort-oldest" class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+					Oldest
+				</button>
+			</div>
+
+			<!-- Filter controls -->
+			<div class="reveal-on-load mt-8 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6" style="animation-delay:200ms">
+				<span class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500">Show only:</span>
+				<button id="filter-all" class="filter-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer">
+					All
+				</button>
+				<button id="filter-motw" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+					MOTW
+				</button>
+				<button id="filter-avietho" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+					Avietho
+				</button>
+				<button id="filter-saywhat" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+					Say what?
+				</button>
+				<button id="filter-others" class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+					Others
+				</button>
+			</div>
+
+			<!-- Grid -->
+			{videos && videos.length > 0 ? (
+				<div class="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3" id="video-grid">
+					{videos.map((video, idx) => (
+						<article
+							class="video-item reveal-on-load group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-black/40"
+							data-video-id={video.videoId || ""}
+							data-title={video.title}
+							data-publish-date={video.publishedAt}
+							data-views={video.views || 0}
+							style={`animation-delay:${220 + idx * 70}ms`}
+						>
+							<div class="relative aspect-video overflow-hidden bg-zinc-900">
+								{video.thumbnail ? (
+									<img
+										src={video.thumbnail}
+										alt={video.title}
+										class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+										loading="lazy"
+										onerror="this.onerror=null; this.src='/VideoProduction.png'; this.classList.add('object-contain', 'p-4');"
+									/>
+								) : (
+									<div class="flex h-full w-full items-center justify-center bg-zinc-900">
+										<svg class="h-16 w-16 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+										</svg>
+									</div>
+								)}
+								<div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+									<div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-zinc-950">
+										<span class="ml-0.5 text-xl">▶</span>
+									</div>
+								</div>
+							</div>
+							<div class="p-6">
+								<h3 class="text-lg font-semibold leading-snug text-white transition-colors group-hover:text-accent line-clamp-2">{video.title}</h3>
+								<p class="mt-2 text-sm text-zinc-400 line-clamp-2">{video.description}</p>
+								<div class="mt-4 flex items-center justify-between text-xs text-zinc-500">
+									<span>{new Date(video.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+									<span>{video.views !== null && video.views !== undefined ? `${video.views.toLocaleString()} views` : ''}</span>
+								</div>
+							</div>
+						</article>
+					))}
+				</div>
+			) : (
+				<div class="mt-10 text-center text-zinc-400">
+					<p>No videos found. Please check the YouTube API configuration.</p>
+				</div>
+			)}
+
+			<!-- Note about Popular sorting -->
+			<div class="reveal-on-load mt-8 text-center text-sm text-zinc-500" style="animation-delay:300ms">
+				<p>Videos are sorted by actual view counts from YouTube.</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- Video pop-up modal -->
+	<div id="video-player" class="hidden">
+		<div id="player-backdrop"></div>
+		<div class="video-modal-frame">
+			<div class="video-modal-inner">
+				<div id="player-container"></div>
+				<button id="close-player" aria-label="Close video">✕</button>
+			</div>
+		</div>
+	</div>
 </BaseLayout>
+
+<style>
+	#video-player {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+	}
+	#video-player:not(.hidden) {
+		display: flex;
+	}
+	#player-backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.92);
+		backdrop-filter: blur(6px);
+	}
+	.video-modal-frame {
+		position: relative;
+		width: 100%;
+		max-width: 1100px;
+	}
+	.video-modal-inner {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		border-radius: 16px;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: #000;
+		box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+	}
+	#player-container {
+		width: 100%;
+		height: 100%;
+	}
+	#close-player {
+		position: absolute;
+		top: 14px;
+		right: 14px;
+		z-index: 10;
+		width: 40px;
+		height: 40px;
+		border-radius: 999px;
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		background: rgba(0, 0, 0, 0.6);
+		color: #fff;
+		font-size: 18px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+	}
+	#close-player:hover {
+		background: var(--color-accent, #c9a44c);
+		border-color: var(--color-accent, #c9a44c);
+		color: #0a0a0a;
+	}
+
+	.sort-btn:hover:not(.active) {
+		border-color: rgba(255, 255, 255, 0.3);
+		color: #fff;
+	}
+
+	.reveal-on-load {
+		animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+	}
+	@keyframes reveal-up {
+		from {
+			opacity: 0;
+			transform: translateY(18px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.reveal-on-load {
+			animation: none;
+			opacity: 1;
+			transform: none;
+		}
+		.video-item:hover {
+			transform: none;
+		}
+	}
+</style>
+
+<script>
+	declare global {
+		interface Window {
+			YT?: any;
+			onYouTubeIframeAPIReady?: () => void;
+		}
+	}
+
+	let player: any = null;
+	let currentVideoId = '';
+
+	function loadYouTubeAPI() {
+		if (window.YT && window.YT.Player) return Promise.resolve();
+		
+		return new Promise<void>((resolve) => {
+			const tag = document.createElement('script');
+			tag.src = "https://www.youtube.com/iframe_api";
+			const firstScript = document.getElementsByTagName('script')[0];
+			firstScript.parentNode?.insertBefore(tag, firstScript);
+			
+			window.onYouTubeIframeAPIReady = () => {
+				resolve();
+			};
+		});
+	}
+
+	async function playVideo(videoId: string | null | undefined) {
+		if (!videoId) {
+			alert("Video unavailable.");
+			return;
+		}
+
+		currentVideoId = videoId;
+		const playerEl = document.getElementById('video-player') as HTMLElement;
+		playerEl.classList.remove('hidden');
+		document.body.style.overflow = 'hidden';
+
+		await loadYouTubeAPI();
+
+		if (player) {
+			player.loadVideoById(videoId);
+		} else {
+			player = new window.YT.Player('player-container', {
+				height: '100%',
+				width: '100%',
+				videoId: videoId,
+				playerVars: {
+					autoplay: 1,
+					modestbranding: 1,
+					rel: 0,
+				},
+				events: {
+					onReady: (event: any) => event.target.playVideo(),
+				}
+			});
+		}
+	}
+
+	function closePlayer() {
+		const playerEl = document.getElementById('video-player') as HTMLElement;
+		playerEl.classList.add('hidden');
+		document.body.style.overflow = '';
+		if (player && typeof player.pauseVideo === 'function') {
+			player.pauseVideo();
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const grid = document.getElementById('video-grid');
+		const sortButtons = document.querySelectorAll('.sort-btn');
+		const filterButtons = document.querySelectorAll('.filter-btn');
+		const videoItems = Array.from(document.querySelectorAll('.video-item'));
+
+		function sortVideos(criteria: 'latest' | 'popular' | 'oldest') {
+			if (!grid) return;
+
+			const sorted = [...videoItems].sort((a, b) => {
+				const dateA = new Date(a.getAttribute('data-publish-date') || '').getTime();
+				const dateB = new Date(b.getAttribute('data-publish-date') || '').getTime();
+				const viewsA = parseInt(a.getAttribute('data-views') || '0', 10);
+				const viewsB = parseInt(b.getAttribute('data-views') || '0', 10);
+
+				if (criteria === 'latest') return dateB - dateA;
+				if (criteria === 'oldest') return dateA - dateB;
+				if (criteria === 'popular') return viewsB - viewsA;
+				return 0;
+			});
+
+			sorted.forEach(item => grid.appendChild(item));
+		}
+
+		function filterVideos(category: string) {
+			if (!grid) return;
+
+			videoItems.forEach(item => {
+				const title = (item.getAttribute('data-title') || '').toUpperCase();
+				let shouldShow = false;
+
+				switch (category) {
+					case 'all':
+						shouldShow = true;
+						break;
+					case 'motw':
+						shouldShow = title.includes('MOTW') || title.includes('MAN OF THE WORLD');
+						break;
+					case 'avietho':
+						shouldShow = title.includes('AVIETHO');
+						break;
+					case 'saywhat':
+						shouldShow = title.includes('SAY WHAT');
+						break;
+					case 'others':
+						shouldShow = !title.includes('MOTW') && 
+									 !title.includes('MAN OF THE WORLD') && 
+									 !title.includes('AVIETHO') && 
+									 !title.includes('SAY WHAT');
+						break;
+					default:
+						shouldShow = true;
+				}
+
+				if (shouldShow) {
+					item.classList.remove('hidden');
+				} else {
+					item.classList.add('hidden');
+				}
+			});
+		}
+
+		sortButtons.forEach(btn => {
+			btn.addEventListener('click', () => {
+				sortButtons.forEach(b => {
+					b.classList.remove('active', 'bg-accent', 'text-zinc-950', 'border-accent');
+					b.classList.add('bg-zinc-900/50', 'text-zinc-400', 'border-white/10');
+				});
+
+				btn.classList.add('active', 'bg-accent', 'text-zinc-950', 'border-accent');
+				btn.classList.remove('bg-zinc-900/50', 'text-zinc-400', 'border-white/10');
+
+				const sortId = btn.id;
+				if (sortId === 'sort-latest') sortVideos('latest');
+				if (sortId === 'sort-popular') sortVideos('popular');
+				if (sortId === 'sort-oldest') sortVideos('oldest');
+			});
+		});
+
+		filterButtons.forEach(btn => {
+			btn.addEventListener('click', () => {
+				filterButtons.forEach(b => {
+					b.classList.remove('active', 'bg-accent', 'text-zinc-950', 'border-accent');
+					b.classList.add('bg-zinc-900/50', 'text-zinc-400', 'border-white/10');
+				});
+
+				btn.classList.add('active', 'bg-accent', 'text-zinc-950', 'border-accent');
+				btn.classList.remove('bg-zinc-900/50', 'text-zinc-400', 'border-white/10');
+
+				const filterId = btn.id;
+				if (filterId === 'filter-all') filterVideos('all');
+				if (filterId === 'filter-motw') filterVideos('motw');
+				if (filterId === 'filter-avietho') filterVideos('avietho');
+				if (filterId === 'filter-saywhat') filterVideos('saywhat');
+				if (filterId === 'filter-others') filterVideos('others');
+			});
+		});
+
+		videoItems.forEach(item => {
+			item.addEventListener('click', () => {
+				const videoId = item.getAttribute('data-video-id');
+				playVideo(videoId);
+			});
+		});
+
+		document.getElementById('close-player')?.addEventListener('click', closePlayer);
+		document.getElementById('player-backdrop')?.addEventListener('click', closePlayer);
+	});
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') {
+			const playerEl = document.getElementById('video-player') as HTMLElement;
+			if (playerEl && !playerEl.classList.contains('hidden')) {
+				closePlayer();
+			}
+		}
+	});
+</script>
