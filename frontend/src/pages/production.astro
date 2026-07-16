@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+export const prerender = true;
+
 interface Video {
 	title: string;
 	description: string;
@@ -12,11 +14,11 @@ interface Video {
 }
 
 const youtubeApiKey = import.meta.env.YOUTUBE_API_KEY;
-const channelId = 'UCEQxQm4eB6lsMuKK2WFyUAA';
+const playlistId = 'UUEQxQm4eB6lsMuKK2WFyUAA';
 
 // Debug: Check if API key is loaded (safe)
 console.log('[production] YouTube API Key loaded:', youtubeApiKey ? `${youtubeApiKey.slice(0, 8)}...` : 'NOT FOUND');
-console.log('[production] Channel ID:', channelId);
+console.log('[production] Playlist ID:', playlistId);
 
 const getVideos = async (): Promise<Video[]> => {
 	try {
@@ -24,9 +26,9 @@ const getVideos = async (): Promise<Video[]> => {
 			throw new Error('YouTube API key is missing. Please set YOUTUBE_API_KEY in your .env file.');
 		}
 
-		// Validate channel ID to prevent corruption issues
-		if (!channelId || channelId.length !== 24 || !channelId.startsWith('UC')) {
-			throw new Error(`Invalid channel ID: ${channelId}`);
+		// Validate playlist ID to prevent corruption issues
+		if (!playlistId || playlistId.length !== 24 || !playlistId.startsWith('UU')) {
+			throw new Error(`Invalid playlist ID: ${playlistId}`);
 		}
 
 		// Step 1: Fetch all videos with pagination (max 50 per request)
@@ -34,34 +36,34 @@ const getVideos = async (): Promise<Video[]> => {
 		let nextPageToken: string | null = null;
 		let hasMore = true;
 		let pageCount = 0;
-		const maxPages = 10; // Safety limit to prevent infinite loops
+		const maxPages = 2; // Reduced to 2 for testing to conserve API quota
 
 		while (hasMore && pageCount < maxPages) {
 			pageCount++;
-			let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=50&order=date&type=video&key=${youtubeApiKey}`;
+			let playlistUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${youtubeApiKey}`;
 			
 			if (nextPageToken) {
-				searchUrl += `&pageToken=${nextPageToken}`;
+				playlistUrl += `&pageToken=${nextPageToken}`;
 			}
 			
 			const maskedKey = youtubeApiKey ? `${youtubeApiKey.slice(0, 8)}...` : 'MISSING';
-			console.log(`[production] Fetching page ${pageCount}:`, searchUrl.replace(youtubeApiKey, maskedKey));
+			console.log(`[production] Fetching page ${pageCount}:`, playlistUrl.replace(youtubeApiKey, maskedKey));
 			
-			const searchRes = await fetch(searchUrl, {
+			const playlistRes = await fetch(playlistUrl, {
 				headers: {
 					'Accept': 'application/json',
 				},
 			});
 			
-			if (!searchRes.ok) {
-				const errorText = await searchRes.text();
+			if (!playlistRes.ok) {
+				const errorText = await playlistRes.text();
 				console.error('[production] API Error Response:', errorText);
-				throw new Error(`YouTube API search failed with status ${searchRes.status}: ${errorText}`);
+				throw new Error(`YouTube API playlistItems failed with status ${playlistRes.status}: ${errorText}`);
 			}
 
-			const searchData = await searchRes.json();
+			const playlistData = await playlistRes.json();
 			
-			if (!searchData.items || searchData.items.length === 0) {
+			if (!playlistData.items || playlistData.items.length === 0) {
 				if (pageCount === 1) {
 					throw new Error('No videos found in API response');
 				}
@@ -69,11 +71,11 @@ const getVideos = async (): Promise<Video[]> => {
 			}
 
 			// Filter out LIVE videos (case-insensitive)
-			const filteredItems = searchData.items.filter((item: any) => 
+			const filteredItems = playlistData.items.filter((item: any) => 
 				!item.snippet?.title?.toUpperCase().includes('LIVE')
 			);
 			
-			const liveCount = searchData.items.length - filteredItems.length;
+			const liveCount = playlistData.items.length - filteredItems.length;
 			if (liveCount > 0) {
 				console.log(`[production] Filtered out ${liveCount} LIVE video(s) from page ${pageCount}`);
 			}
@@ -82,7 +84,7 @@ const getVideos = async (): Promise<Video[]> => {
 			console.log(`[production] Page ${pageCount}: Fetched ${filteredItems.length} videos (Total: ${allItems.length})`);
 
 			// Check if there are more pages
-			nextPageToken = searchData.nextPageToken || null;
+			nextPageToken = playlistData.nextPageToken || null;
 			hasMore = !!nextPageToken;
 		}
 
@@ -94,7 +96,7 @@ const getVideos = async (): Promise<Video[]> => {
 
 		// Step 2: Extract video IDs and fetch statistics (in batches of 50)
 		const allVideoIds = allItems
-			.map((item: any) => item.id?.videoId)
+			.map((item: any) => item.snippet?.resourceId?.videoId)
 			.filter((id: string | undefined) => id);
 
 		if (allVideoIds.length === 0) {
@@ -142,7 +144,7 @@ const getVideos = async (): Promise<Video[]> => {
 		// Step 3: Map to Video interface (NO SLICE - include all videos)
 		const videos: Video[] = allItems.map((item: any) => {
 			const snippet = item.snippet;
-			const videoId = item.id?.videoId;
+			const videoId = snippet?.resourceId?.videoId;
 			const views = statsMap.get((videoId || '') as string) || null;
 
 			return {
