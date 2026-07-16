@@ -6,8 +6,9 @@ type StreamItem = {
 	description: string;
 	url: string;
 	publishedAt: string;
-	// Real per-video view counts aren't in the RSS feed (see getVideoViews
-	// below) — null means "couldn't determine it," not "zero views."
+	// Real view counts are fetched separately via the YouTube Data API's
+	// videos.list statistics field (see fetchStreamsFromApi below) — null
+	// means "couldn't determine it," not "zero views."
 	views: number | null;
 	duration: string;
 	badge: string;
@@ -15,7 +16,20 @@ type StreamItem = {
 	videoId?: string;
 };
 
-const channelUrl = 'https://www.youtube.com/@aviethodigital/streams';
+const youtubeApiKey = import.meta.env.YOUTUBE_API_KEY;
+const channelId = 'UCEQxQm4eB6lsMuKK2WFyUAA';
+
+// Short-lived in-memory cache so a burst of page views doesn't re-hit the
+// YouTube API (and its quota) on every single request. Lives for the
+// lifetime of the server process/instance — on a long-running Node server
+// that means it's shared across all visitors until it expires; on
+// serverless/edge platforms each cold-start instance keeps its own copy,
+// so the effective TTL there is closer to "per warm instance" than
+// global. Good enough to smooth out normal traffic; if you need a
+// guaranteed cross-instance cache on serverless, that's what a real KV
+// (Cloudflare KV, Vercel KV, Upstash, etc.) is for.
+const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+let streamsCache: { data: StreamItem[]; fetchedAt: number } | null = null;
 
 // Real YouTube Live Stream Videos from @aviethodigital
 const fallbackStreams: StreamItem[] = [
@@ -65,82 +79,171 @@ const fallbackStreams: StreamItem[] = [
 	}
 ];
 
-// The RSS feed below doesn't reliably include real view counts, so each
-// video's watch page is fetched individually to read the actual figure
-// straight out of YouTube's page data. Returns null (not a made-up number)
-// if that also fails, so the UI can show "unavailable" instead of a lie.
-const getVideoViews = async (videoId: string): Promise<number | null> => {
-	try {
-		const res = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
-			headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
-		});
-		if (!res.ok) throw new Error(`Watch page fetch failed with status ${res.status}`);
+// search.list with eventType=live/completed turned out to be an unreliable
+// filter — YouTube's search index isn't the authoritative source for
+// "was this video actually broadcast live," so it was letting regular
+// uploads (and premieres) slip into the results. The reliable way to
+// check that is a video's own liveStreamingDetails field, which is only
+// present on videos that actually went live — the same signal YouTube
+// itself uses for the channel's Live tab
+// (https://www.youtube.com/@aviethodigital/streams).
+//
+// That means walking the channel's real upload list first (there's no
+// "give me only past broadcasts" list endpoint), then checking each
+// video individually.
 
-		const html = await res.text();
-		const viewMatch = html.match(/"viewCount":"(\d+)"/);
-		if (!viewMatch?.[1]) throw new Error('Could not find viewCount in watch page HTML');
-
-		return parseInt(viewMatch[1], 10);
-	} catch (err) {
-		console.error(`[streams] Failed to fetch real view count for video ${videoId}:`, err);
-		return null;
+const fetchUploadsPlaylistId = async (): Promise<string> => {
+	const url = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${youtubeApiKey}`;
+	const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+	if (!res.ok) {
+		const errorText = await res.text();
+		throw new Error(`YouTube API channels lookup failed with status ${res.status}: ${errorText}`);
 	}
+
+	const data = await res.json();
+	const uploadsPlaylistId = data.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+	if (!uploadsPlaylistId) {
+		throw new Error('Could not resolve uploads playlist ID for this channel');
+	}
+
+	return uploadsPlaylistId;
+};
+
+const fetchAllUploadedVideoIds = async (playlistId: string): Promise<string[]> => {
+	const ids: string[] = [];
+	let nextPageToken: string | null = null;
+	let hasMore = true;
+	let pageCount = 0;
+	const maxPages = 20; // up to 1000 videos — safety limit
+
+	while (hasMore && pageCount < maxPages) {
+		pageCount++;
+		let url = `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${playlistId}&maxResults=50&key=${youtubeApiKey}`;
+		if (nextPageToken) {
+			url += `&pageToken=${nextPageToken}`;
+		}
+
+		const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+		if (!res.ok) {
+			const errorText = await res.text();
+			throw new Error(`YouTube API playlistItems fetch failed with status ${res.status}: ${errorText}`);
+		}
+
+		const data = await res.json();
+		for (const item of data.items || []) {
+			const videoId = item.contentDetails?.videoId;
+			if (videoId) ids.push(videoId);
+		}
+
+		nextPageToken = data.nextPageToken || null;
+		hasMore = !!nextPageToken;
+	}
+
+	return ids;
+};
+
+const fetchVideoDetails = async (videoIds: string[]): Promise<any[]> => {
+	const details: any[] = [];
+	const batchSize = 50; // the API's per-request max for a videos.list id list
+
+	for (let i = 0; i < videoIds.length; i += batchSize) {
+		const batchIds = videoIds.slice(i, i + batchSize).join(',');
+		const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,liveStreamingDetails&id=${batchIds}&key=${youtubeApiKey}`;
+		const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+		if (!res.ok) {
+			const errorText = await res.text();
+			throw new Error(`YouTube API videos fetch failed with status ${res.status}: ${errorText}`);
+		}
+
+		const data = await res.json();
+		details.push(...(data.items || []));
+	}
+
+	return details;
+};
+
+const fetchStreamsFromApi = async (): Promise<StreamItem[]> => {
+	if (!youtubeApiKey) {
+		throw new Error('YouTube API key is missing. Please set YOUTUBE_API_KEY in your .env file.');
+	}
+
+	if (!channelId || channelId.length !== 24 || !channelId.startsWith('UC')) {
+		throw new Error(`Invalid channel ID: ${channelId}`);
+	}
+
+	const uploadsPlaylistId = await fetchUploadsPlaylistId();
+	const videoIds = await fetchAllUploadedVideoIds(uploadsPlaylistId);
+
+	if (videoIds.length === 0) {
+		throw new Error('Channel has no uploaded videos');
+	}
+
+	const details = await fetchVideoDetails(videoIds);
+
+	// The one filter that actually matches YouTube's own "Live" tab:
+	// only videos that have an actualStartTime (meaning they genuinely
+	// went live at some point), not just any video that happened to show
+	// up in a keyword search.
+	const liveOnly = details.filter((v) => v.liveStreamingDetails?.actualStartTime);
+
+	if (liveOnly.length === 0) {
+		throw new Error('No live stream broadcasts found for this channel');
+	}
+
+	liveOnly.sort(
+		(a, b) =>
+			new Date(b.liveStreamingDetails.actualStartTime).getTime() -
+			new Date(a.liveStreamingDetails.actualStartTime).getTime()
+	);
+
+	return liveOnly.map((v) => {
+		const snippet = v.snippet;
+		const videoId = v.id;
+		const lsd = v.liveStreamingDetails;
+		const isLive = Boolean(lsd.actualStartTime) && !lsd.actualEndTime;
+
+		return {
+			title: snippet?.title || 'Untitled Stream',
+			description: snippet?.description || 'No description available',
+			url: `https://www.youtube.com/watch?v=${videoId}`,
+			publishedAt: lsd.actualStartTime || snippet?.publishedAt || new Date().toISOString(),
+			views: v.statistics?.viewCount ? parseInt(v.statistics.viewCount, 10) : null,
+			duration: isLive ? 'Live now' : 'Live replay',
+			badge: isLive ? 'Live' : 'Replay',
+			thumbnail:
+				snippet?.thumbnails?.high?.url ||
+				snippet?.thumbnails?.medium?.url ||
+				snippet?.thumbnails?.default?.url,
+			videoId,
+		};
+	});
 };
 
 const getStreams = async (): Promise<StreamItem[]> => {
+	// Serve straight from cache if it's still fresh — skips the YouTube
+	// API entirely.
+	if (streamsCache && Date.now() - streamsCache.fetchedAt < CACHE_TTL_MS) {
+		console.log('[streams] Serving from in-memory cache');
+		return streamsCache.data;
+	}
+
 	try {
-		const res = await fetch(channelUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } });
-		if (!res.ok) throw new Error(`Channel page fetch failed with status ${res.status}`);
-
-		const html = await res.text();
-		const channelIdMatch = html.match(/"channelId":"([^"]+)"/) || html.match(/"browseId":"([^"]+)"/);
-		if (!channelIdMatch?.[1]) throw new Error('Could not find channelId/browseId in channel page HTML (YouTube may have changed its markup)');
-
-		const feedRes = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelIdMatch[1]}`, {
-			headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
-		});
-		if (!feedRes.ok) throw new Error(`RSS feed fetch failed with status ${feedRes.status}`);
-
-		const feed = await feedRes.text();
-		const entries = Array.from(feed.matchAll(/<entry>([\s\S]*?)<\/entry>/g));
-		if (entries.length === 0) throw new Error('RSS feed returned zero entries');
-
-		const parsedEntries = entries.slice(0, 6).map((entry) => {
-			const c = entry[1];
-			const videoId = c.match(/<yt:videoId>([\s\S]*?)<\/yt:videoId>/)?.[1]?.trim() ?? undefined;
-			const title = c.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? 'Untitled';
-			const published = c.match(/<published>([\s\S]*?)<\/published>/)?.[1] ?? new Date().toISOString();
-			const link = videoId ? `https://www.youtube.com/watch?v=${videoId}` : channelUrl;
-			const desc = c.match(/<media:description>([\s\S]*?)<\/media:description>/)?.[1] ?? 'Recent broadcast';
-
-			// Try multiple thumbnail quality options for better reliability
-			// hqdefault.jpg (480x360) → mqdefault.jpg (320x180) → default.jpg (120x90)
-			const thumbnail = videoId 
-				? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` 
-				: undefined;
-
-			return {
-				title: title.replace(/<!\[CDATA\[|\]\]>/g, '').trim(),
-				description: desc.replace(/<!\[CDATA\[|\]\]>/g, '').replace(/\s+/g, ' ').trim(),
-				url: link,
-				publishedAt: published,
-				duration: 'Live replay',
-				badge: 'Recent',
-				thumbnail,
-				videoId,
-			};
-		});
-
-		// Fetched in parallel — one failed lookup only nulls out that
-		// video's view count, it doesn't fall back to fallbackStreams.
-		return await Promise.all(
-			parsedEntries.map(async (item) => ({
-				...item,
-				views: item.videoId ? await getVideoViews(item.videoId) : null,
-			}))
-		);
+		const data = await fetchStreamsFromApi();
+		streamsCache = { data, fetchedAt: Date.now() };
+		return data;
 	} catch (err) {
-		console.error('[streams] Falling back to static stream list:', err);
+		console.error('[streams] Fetch failed:', err);
+
+		// Prefer serving a stale cached copy over the hardcoded fallback —
+		// "a bit old" beats "not real data" — and don't refresh the cache
+		// timestamp, so the next request tries the API again instead of
+		// locking in the stale copy for another full TTL window.
+		if (streamsCache) {
+			console.warn('[streams] Serving stale cache after fetch failure');
+			return streamsCache.data;
+		}
+
+		console.warn('[streams] No cache available — falling back to static stream list');
 		return fallbackStreams;
 	}
 };
