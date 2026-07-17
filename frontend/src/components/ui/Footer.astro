@@ -4,7 +4,8 @@
 import logo from '../../assets/logo/Avietho_logo.png';
 import mapImg from '../../assets/imgs/avietho_map.png';
 import landmarkImg from '../../assets/imgs/landmark.png';
-import phoneIcon from '../../assets/icons/telephone_icon.png';
+import cellPhoneIcon from '../../assets/icons/cellphoneContanct_icon.png';
+import telephoneIcon from '../../assets/icons/telephone_icon.png';
 import emailIcon from '../../assets/icons/email_icon.png';
 import facebookIcon from '../../assets/icons/facebook_icon.png';
 ---
@@ -93,12 +94,22 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 							CONTACT US
 						</h3>
 						<div class="flex flex-col gap-4">
+							<!-- Landline -->
+							<a
+								href="tel:+63270001366"
+								class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
+							>
+								<img src={telephoneIcon.src} alt="Phone" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+								<span class="text-sm group-hover:translate-x-1 transition-transform duration-200">
+									+63 2 7000 1366
+								</span>
+							</a>
 							<!-- Phone -->
 							<a
 								href="tel:+6397831987"
 								class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
 							>
-								<img src={phoneIcon.src} alt="Phone" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+								<img src={cellPhoneIcon.src} alt="Phone" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
 								<span class="text-sm group-hover:translate-x-1 transition-transform duration-200">
 									+639 783 1987
 								</span>
@@ -124,7 +135,7 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 							>
 								<img src={facebookIcon.src} alt="Facebook" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
 								<span class="text-sm group-hover:translate-x-1 transition-transform duration-200">
-									Facebook
+									https:/facebook.com/aviethodigital
 								</span>
 							</a>
 						</div>
@@ -154,11 +165,11 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 						</h3>
 				<ul class="text-text-subtle text-sm space-y-3">
 					<!-- Placeholder content, replace as needed -->
-					<li><a href='https://tanauancity.gov.ph/' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>tanauancity.gov.ph</span></a></li>
-					<li><a href='https://gad.tanauancity.gov.ph/' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>gad.tanauancity.gov.ph</span></a></li>
-					<li><a href='https://www.youtube.com/watch?v=AhegrxF80J4&t=8669s' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>8th Annual MOTW</span></a></li>
-					<li><a href='https://www.facebook.com/watch/?v=1033529352173106' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>Siklabuhay same day</span></a></li>
-					<li><a href='https://aviethodigital.com/article/mwpl-2025-a-queen-in-the-making' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>MWPL 2025</span></a></li>
+					<li><a href='https://tanauancity.gov.ph/' target='_blank' rel='noopener noreferrer' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>tanauancity.gov.ph</span></a></li>
+					<li><a href='https://gad.tanauancity.gov.ph/' target='_blank' rel='noopener noreferrer' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>gad.tanauancity.gov.ph</span></a></li>
+					<li><a href='https://www.youtube.com/watch?v=AhegrxF80J4&t=8669s' target='_blank' rel='noopener noreferrer' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>8th Annual MOTW</span></a></li>
+					<li><a href='https://www.facebook.com/watch/?v=1033529352173106' target='_blank' rel='noopener noreferrer' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>Siklabuhay same day</span></a></li>
+					<li><a href='https://aviethodigital.com/article/mwpl-2025-a-queen-in-the-making' target='_blank' rel='noopener noreferrer' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>MWPL 2025</span></a></li>
 				</ul>
 					</div>
 				</div>
