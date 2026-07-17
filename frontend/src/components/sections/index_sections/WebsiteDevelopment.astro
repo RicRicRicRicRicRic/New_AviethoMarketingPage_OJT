@@ -66,29 +66,29 @@ const contentData = [
 					<h2 class="text-3xl md:text-4xl font-heading text-accent mb-6" id="content-title">
 						{contentData[0].title}
 					</h2>
-					<p class="text-lg font-body text-gray-300 mb-6 leading-relaxed" id="content-paragraph">
+					<p class="text-lg font-body text-gray-300 mb-6 leading-relaxed shine-item" id="content-paragraph">
 						{contentData[0].content}
 					</p>
 				</div>
 
-			<ul class="space-y-3">
-				<li class="flex items-start">
-					<span class="text-accent mr-2">✓</span>
-					<span class="text-gray-300">Static-first architecture for optimal performance</span>
-				</li>
-				<li class="flex items-start">
-					<span class="text-accent mr-2">✓</span>
-					<span class="text-gray-300">WCAG 2.1 AA accessibility compliance</span>
-				</li>
-				<li class="flex items-start">
-					<span class="text-accent mr-2">✓</span>
-					<span class="text-gray-300">Secure, decoupled backend integration</span>
-				</li>
-				<li class="flex items-start">
-					<span class="text-accent mr-2">✓</span>
-					<span class="text-gray-300">Responsive design for all devices</span>
-				</li>
-			</ul>
+				<ul class="space-y-3">
+					<li class="flex items-start">
+						<span class="text-accent mr-2">✓</span>
+						<span class="text-gray-300">Static-first architecture for optimal performance</span>
+					</li>
+					<li class="flex items-start">
+						<span class="text-accent mr-2">✓</span>
+						<span class="text-gray-300">WCAG 2.1 AA accessibility compliance</span>
+					</li>
+					<li class="flex items-start">
+						<span class="text-accent mr-2">✓</span>
+						<span class="text-gray-300">Secure, decoupled backend integration</span>
+					</li>
+					<li class="flex items-start">
+						<span class="text-accent mr-2">✓</span>
+						<span class="text-gray-300">Responsive design for all devices</span>
+					</li>
+				</ul>
 			</div>
 			<div class="flex flex-col items-center">
 				<!-- Animation Wrapper -->
@@ -147,6 +147,42 @@ const contentData = [
 		</div>
 	</div>
 </section>
+
+<style>
+	@keyframes shine {
+		0% { transform: translateX(-100%); }
+		100% { transform: translateX(100%); }
+	}
+	.animate-shine::after {
+		animation: shine 1.5s ease-in-out;
+	}
+	.shine-item {
+		position: relative;
+		overflow: hidden;
+		padding: 0.75rem;
+		border-radius: 0.5rem;
+	}
+	.shine-item::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		transform: translateX(-100%);
+		background: linear-gradient(to right, transparent, var(--color-accent), transparent);
+		opacity: 0.2;
+		pointer-events: none;
+	}
+	/* Active switcher button styling */
+	.switcher-btn.border-accent {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+	
+	/* Hover effect for active switcher buttons */
+	.switcher-btn.border-accent:hover {
+		border-color: var(--color-accent-hover);
+		color: var(--color-accent-hover);
+	}
+</style>
 
 <script>
 	// Content data (duplicated for client-side access)
@@ -240,6 +276,7 @@ const contentData = [
 	const contentDisplay = document.getElementById('content-display');
 	const contentTitle = document.getElementById('content-title');
 	const contentParagraph = document.getElementById('content-paragraph');
+	let shineTimeout: number | null = null;
 
 	// Set initial active state
 	if (buttons.length > 0) {
@@ -263,6 +300,26 @@ const contentData = [
 					contentTitle.textContent = content.title;
 					contentParagraph.textContent = content.content;
 					contentDisplay.style.opacity = '1';
+					
+				// Trigger shine effect on content paragraph (once per switch)
+				const contentPara = document.getElementById('content-paragraph');
+				if (contentPara) {
+					// Clear any pending timeout to prevent conflicts
+					if (shineTimeout !== null) {
+						clearTimeout(shineTimeout);
+					}
+					
+					contentPara.classList.remove('animate-shine');
+					// Force reflow to restart animation
+					void contentPara.offsetWidth;
+					contentPara.classList.add('animate-shine');
+					
+					// Remove class after animation completes
+					shineTimeout = window.setTimeout(() => {
+						contentPara.classList.remove('animate-shine');
+						shineTimeout = null;
+					}, 1500);
+				}
 				}, 300);
 			}
 		});
