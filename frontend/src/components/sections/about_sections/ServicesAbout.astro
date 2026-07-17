@@ -9,7 +9,7 @@
 
 	<div class="relative z-10 max-w-7xl mx-auto">
 		
-		<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center mb-12">
+		<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center mb-20">
 			<div class="lg:col-span-5">
 				<div class="flex items-center gap-3 mb-4">
 					<span class="h-[1px] w-8 bg-accent"></span>
@@ -80,166 +80,117 @@
 				</p>
 			</div>
 		</div>
+	</div>
 
-		<!-- Service Cards Grid -->
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
+	<!-- Endless Linear Showcase Container (Full-screen breakout) -->
+	<div class="relative w-full overflow-hidden py-4">
+		
+		<!-- Subtle left/right fade masks to blend slideshow into the background -->
+		<div class="absolute left-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none"></div>
+		<div class="absolute right-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none"></div>
+
+		<!-- Slideshow Track Wrapper -->
+		<div class="flex w-max gap-6 hover:pause-marquee" id="marquee-track">
 			
-			<!-- Digital PR Card -->
-			<div class="group relative h-[320px] bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
-				
-				<div class="absolute inset-0 overflow-hidden z-0">
-					<img
-						src="/DigitalPR.png"
-						alt="Digital PR"
-						class="w-full h-full object-cover object-center opacity-40 group-hover:opacity-60 transition-all duration-700 ease-out mix-blend-luminosity group-hover:mix-blend-normal group-hover:scale-110"
-					/>
-					<div class="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/10"></div>
-				</div>
-
-				<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500 z-10"></div>
-
-				<div class="relative z-20 h-full p-6 flex flex-col justify-between">
-					<div class="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-						<svg class="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-						</svg>
+			<!-- Original Cards Set -->
+			<div class="flex gap-6 animate-marquee">
+				<!-- Digital PR Card -->
+				<div class="carousel-item group relative h-[320px] w-[290px] md:w-[320px] flex-shrink-0 bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
+					<div class="absolute inset-0 overflow-hidden z-0">
+						<img src="/DigitalPR.png" alt="Digital PR" class="w-full h-full object-cover object-center opacity-40 group-hover:opacity-60 transition-all duration-700 ease-out mix-blend-luminosity group-hover:mix-blend-normal group-hover:scale-110" />
+						<div class="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/10"></div>
 					</div>
-
-					<div>
-						<h3 class="text-2xl font-bold text-foreground mb-2 tracking-wide">
-							Digital PR
-						</h3>
-						<p class="text-sm text-text-subtle font-light leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-2">
-							Build credibility and strengthen your public image.
-						</p>
+					<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500 z-10"></div>
+					<div class="relative z-20 h-full p-6 flex flex-col justify-between">
+						<div class="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+							<svg class="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+							</svg>
+						</div>
+						<div>
+							<h3 class="text-2xl font-bold text-foreground mb-2 tracking-wide">Digital PR</h3>
+							<p class="text-sm text-text-subtle font-light leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-2">Build credibility and strengthen your public image.</p>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<!-- Social Media Card -->
-			<div class="group relative h-[320px] bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
-				
-				<div class="absolute inset-0 overflow-hidden">
-					<img
-						src="/SocialMedia.png"
-						alt="Social Media"
-						class="w-full h-full object-cover object-center brightness-75 contrast-110 opacity-80 transition-all duration-700 ease-out group-hover:brightness-100 group-hover:opacity-100 group-hover:scale-110"
-					/>
-					<div class="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/10"></div>
-				</div>
-
-				<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500 z-10"></div>
-
-				<div class="relative z-20 h-full p-6 flex flex-col justify-between">
-					<div class="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-						<svg class="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-						</svg>
+				<!-- Social Media Card -->
+				<div class="carousel-item group relative h-[320px] w-[290px] md:w-[320px] flex-shrink-0 bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
+					<div class="absolute inset-0 overflow-hidden">
+						<img src="/SocialMedia.png" alt="Social Media" class="w-full h-full object-cover object-center brightness-75 contrast-110 opacity-80 transition-all duration-700 ease-out group-hover:brightness-100 group-hover:opacity-100 group-hover:scale-110" />
+						<div class="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/10"></div>
 					</div>
-
-					<div>
-						<h3 class="text-2xl font-bold text-foreground mb-2 tracking-wide">
-							Digital & Social Media Marketing
-						</h3>
-						<p class="text-sm text-text-subtle font-light leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-2">
-							Grow your audience through engaging content and strategy.
-						</p>
+					<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500 z-10"></div>
+					<div class="relative z-20 h-full p-6 flex flex-col justify-between">
+						<div class="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+							<svg class="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+							</svg>
+						</div>
+						<div>
+							<h3 class="text-2xl font-bold text-foreground mb-2 tracking-wide">Digital & Social Media Marketing</h3>
+							<p class="text-sm text-text-subtle font-light leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-2">Grow your audience through engaging content and strategy.</p>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<!-- Video Production Card -->
-			<div class="group relative h-[320px] bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
-				
-				<div class="absolute inset-0 overflow-hidden z-0">
-					<img
-						src="/VideoProduction.png"
-						alt="Video Production"
-						class="w-full h-full object-cover object-center opacity-55 group-hover:opacity-75 transition-all duration-700 ease-out mix-blend-luminosity group-hover:mix-blend-normal group-hover:scale-110"
-					/>
-					<div class="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/10"></div>
-				</div>
-
-				<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500 z-10"></div>
-
-				<div class="relative z-20 h-full p-6 flex flex-col justify-between">
-					<div class="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-						<svg class="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-						</svg>
+				<!-- Video Production Card -->
+				<div class="carousel-item group relative h-[320px] w-[290px] md:w-[320px] flex-shrink-0 bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
+					<div class="absolute inset-0 overflow-hidden z-0">
+						<img src="/VideoProduction.png" alt="Video Production" class="w-full h-full object-cover object-center opacity-55 group-hover:opacity-75 transition-all duration-700 ease-out mix-blend-luminosity group-hover:mix-blend-normal group-hover:scale-110" />
+						<div class="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/10"></div>
 					</div>
-
-					<div>
-						<h3 class="text-2xl font-bold text-foreground mb-2 tracking-wide">
-							Video & Live Streaming Services
-						</h3>
-						<p class="text-sm text-text-subtle font-light leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-2">
-							Create compelling visual stories that inspire action.
-						</p>
+					<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500 z-10"></div>
+					<div class="relative z-20 h-full p-6 flex flex-col justify-between">
+						<div class="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+							<svg class="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+							</svg>
+						</div>
+						<div>
+							<h3 class="text-2xl font-bold text-foreground mb-2 tracking-wide">Video & Live Streaming Services</h3>
+							<p class="text-sm text-text-subtle font-light leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-2">Create compelling visual stories that inspire action.</p>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<!-- Web Development Card -->
-			<div class="group relative h-[320px] bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
-				
-				<div class="absolute inset-0 overflow-hidden">
-					<img
-						src="/WebDevelopment.png"
-						alt="Web Development"
-						class="w-full h-full object-cover object-center brightness-75 contrast-110 opacity-80 transition-all duration-700 ease-out group-hover:brightness-100 group-hover:opacity-100 group-hover:scale-110"
-					/>
-					<div class="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/10"></div>
-				</div>
-
-				<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500 z-10"></div>
-
-				<div class="relative z-20 h-full p-6 flex flex-col justify-between">
-					<div class="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-						<svg class="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6M9 16h6M9 8h6M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" />
-						</svg>
+				<!-- Web Development Card -->
+				<div class="carousel-item group relative h-[320px] w-[290px] md:w-[320px] flex-shrink-0 bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
+					<div class="absolute inset-0 overflow-hidden">
+						<img src="/WebDevelopment.png" alt="Web Development" class="w-full h-full object-cover object-center brightness-75 contrast-110 opacity-80 transition-all duration-700 ease-out group-hover:brightness-100 group-hover:opacity-100 group-hover:scale-110" />
+						<div class="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/10"></div>
 					</div>
-
-					<div>
-						<h3 class="text-2xl font-bold text-foreground mb-2 tracking-wide">
-							Web Development
-						</h3>
-						<p class="text-sm text-text-subtle font-light leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-2">
-							Build modern, responsive websites designed for growth.
-						</p>
+					<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500 z-10"></div>
+					<div class="relative z-20 h-full p-6 flex flex-col justify-between">
+						<div class="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+							<svg class="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6M9 16h6M9 8h6M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" />
+							</svg>
+						</div>
+						<div>
+							<h3 class="text-2xl font-bold text-foreground mb-2 tracking-wide">Web Development</h3>
+							<p class="text-sm text-text-subtle font-light leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-2">Build modern, responsive websites designed for growth.</p>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<!-- Multimedia & Branding Card -->
-			<div class="group relative h-[320px] bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
-				
-				<div class="absolute inset-0 overflow-hidden">
-					<img
-						src="/MultimediaBranding.png"
-						alt="Multimedia & Branding"
-						class="w-full h-full object-cover object-center brightness-75 contrast-110 opacity-80 transition-all duration-700 ease-out group-hover:brightness-100 group-hover:opacity-100 group-hover:scale-110"
-					/>
-					<div class="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/10"></div>
-				</div>
-
-				<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500 z-10"></div>
-
-				<div class="relative z-20 h-full p-6 flex flex-col justify-between">
-					<div class="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-						<svg class="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-						</svg>
+				<!-- Multimedia & Branding Card -->
+				<div class="carousel-item group relative h-[320px] w-[290px] md:w-[320px] flex-shrink-0 bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
+					<div class="absolute inset-0 overflow-hidden">
+						<img src="/MultimediaBranding.png" alt="Multimedia & Branding" class="w-full h-full object-cover object-center brightness-75 contrast-110 opacity-80 transition-all duration-700 ease-out group-hover:brightness-100 group-hover:opacity-100 group-hover:scale-110" />
+						<div class="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/10"></div>
 					</div>
-
-					<div>
-						<h3 class="text-2xl font-bold text-foreground mb-2 tracking-wide">
-							Multimedia & Branding
-						</h3>
-						<p class="text-sm text-text-subtle font-light leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-2">
-							Establish a powerful and cohesive brand identity.
-						</p>
+					<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500 z-10"></div>
+					<div class="relative z-20 h-full p-6 flex flex-col justify-between">
+						<div class="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+							<svg class="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+							</svg>
+						</div>
+						<div>
+							<h3 class="text-2xl font-bold text-foreground mb-2 tracking-wide">Multimedia & Branding</h3>
+							<p class="text-sm text-text-subtle font-light leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-2">Establish a powerful and cohesive brand identity.</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -247,7 +198,7 @@
 		</div>
 
 		<!-- CTA Section -->
-		<div class="text-center mt-20 pt-12 border-t border-border/50">
+		<div class="text-center mt-20 pt-12 border-t border-border/50 max-w-7xl mx-auto">
 			<h3 class="text-3xl md:text-4xl font-bold text-foreground mb-4">
 				Ready to grow your brand?
 			</h3>
@@ -261,3 +212,46 @@
 
 	</div>
 </section>
+
+<!-- Hardware-Accelerated Infinite CSS Animation Styles -->
+<style>
+	/* Keyframe shifts the element left exactly 100% of the single group's width */
+	@keyframes marquee {
+		0% {
+			transform: translateX(0%);
+		}
+		100% {
+			transform: translateX(calc(-100% - 24px)); /* 24px accounts for the layout gap-6 */
+		}
+	}
+
+	.animate-marquee {
+		animation: marquee 35s linear infinite;
+	}
+
+	/* Pause slide animation when user hovers a card so they can inspect or click it */
+	.hover\:pause-marquee:hover .animate-marquee {
+		animation-play-state: paused;
+	}
+</style>
+
+<!-- TypeScript-safe Dynamic Clone Setup -->
+<script>
+	const marqueeTrack = document.getElementById('marquee-track') as HTMLDivElement | null;
+	
+	if (marqueeTrack) {
+		const firstSet = marqueeTrack.querySelector('.animate-marquee') as HTMLDivElement | null;
+		
+		if (firstSet) {
+			// Clone the entire set of cards once and append it. 
+			// Because the keyframe translates 100% of one set, this makes it endlessly seamless.
+			const clone = firstSet.cloneNode(true) as HTMLDivElement;
+			clone.setAttribute('aria-hidden', 'true');
+			
+			// Remove any duplicate IDs from cloned structure to keep HTML valid
+			clone.removeAttribute('id');
+			
+			marqueeTrack.appendChild(clone);
+		}
+	}
+</script>
