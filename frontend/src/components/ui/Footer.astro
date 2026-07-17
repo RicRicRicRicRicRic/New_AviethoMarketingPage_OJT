@@ -15,7 +15,7 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 	<!-- Top Section: Logo/Description + Services -->
 	<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 ">
 		<!-- Left Column: Logo and Description -->
-		<div class="w-full lg:col-span-1">
+		<div class="w-full lg:col-span-1 flex flex-col items-center text-center lg:items-start lg:text-left">
 			<img src={logo.src} alt="Avietho Logo" class="h-19 w-auto mb-4" />
 			<p class="text-text-subtle text-base mb-8 w-80 font-body">
 				Professional digital marketing solutions for businesses of all sizes. From website development to social media management, we help you grow your online presence.
@@ -24,10 +24,10 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 
 		<!-- Right Column: Services -->
 		<div class="w-full lg:col-span-2">
-			<!-- Services Grid -->
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-				<!-- Digital PR -->
-				<div class="flex flex-col w-full">
+		<!-- Services Grid -->
+		<div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2">
+			<!-- Digital PR -->
+			<div class="flex flex-col w-full items-center text-center sm:items-start sm:text-left">
 					<h4 class="font-heading font-semibold text-accent text-lg mb-2">Digital PR</h4>
 					<ul class="flex flex-col space-y-1 text-text-subtle text-base gap-2 w-32 text-sm font-body">
 						<li > Online Media Relations</li>
@@ -38,8 +38,8 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 					</ul>
 				</div>
 
-				<!-- Social Media -->
-				<div class="flex flex-col w-full">
+			<!-- Social Media -->
+			<div class="flex flex-col w-full items-center text-center sm:items-start sm:text-left">
 					<h4 class="font-heading font-semibold text-accent text-lg mb-2">Social Media</h4>
 					<ul class="flex flex-col space-y-1 text-text-subtle text-base gap-2 w-32 text-sm font-body">
 						<li > Social Media Strategy</li>
@@ -50,8 +50,8 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 					</ul>
 				</div>
 
-				<!-- Video Production -->
-				<div class="flex flex-col w-full">
+			<!-- Video Production -->
+			<div class="flex flex-col w-full items-center text-center sm:items-start sm:text-left">
 					<h4 class="font-semibold text-accent text-lg mb-2">Video Production</h4>
 					<ul class="flex flex-col space-y-1 text-text-subtle text-base gap-2 w-32 text-sm">
 						<li > Corporate Videos</li>
@@ -62,8 +62,8 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 					</ul>
 				</div>
 
-				<!-- Web Development -->
-				<div class="flex flex-col w-full">
+			<!-- Web Development -->
+			<div class="flex flex-col w-full items-center text-center sm:items-start sm:text-left">
 					<h4 class="font-semibold text-accent text-lg mb-2">Web Development</h4>
 					<ul class="flex flex-col space-y-1 text-text-subtle text-base gap-2 w-32 text-sm">
 						<li > Website Design</li>
@@ -80,70 +80,115 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 	<!-- Horizontal Divider -->
 	<hr class="border-t border-muted my-16" />
 
-	<!-- Bottom Section: Contact, Address, and Map -->
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
-		<!-- Column 1: Contact Information -->
-		<div class="flex flex-col items-center">
-			<div class="w-fit">
-				<h3 class="font-heading text-accent text-lg font-semibold mb-6">
-					CONTACT US
-				</h3>
-				<div class="flex flex-col gap-4">
-					<!-- Phone -->
-					<a
-						href="tel:+6397831987"
-						class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
-					>
-						<img src={phoneIcon.src} alt="Phone" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
-						<span class="text-sm group-hover:translate-x-1 transition-transform duration-200">
-							+639 783 1987
-						</span>
-					</a>
+	<!-- Bottom Section: Contact, Address, Testimonials, Newsletter, and Map -->
+	<div class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8">
+		<!-- Left Section: Contact, Address, Testimonials, and Newsletter -->
+		<div class="flex flex-col gap-8">
+		<!-- Top Row: Contact, Address, and Testimonials -->
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-center lg:items-start">
+			<!-- Column 1: Contact Information -->
+			<div class="flex flex-col items-center text-center lg:text-left">
+					<div class="w-fit">
+						<h3 class="font-heading text-accent text-lg font-semibold mb-6">
+							CONTACT US
+						</h3>
+						<div class="flex flex-col gap-4">
+							<!-- Phone -->
+							<a
+								href="tel:+6397831987"
+								class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
+							>
+								<img src={phoneIcon.src} alt="Phone" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+								<span class="text-sm group-hover:translate-x-1 transition-transform duration-200">
+									+639 783 1987
+								</span>
+							</a>
 
-					<!-- Email -->
-					<a
-						href="mailto:marketing.avietho@gmail.com"
-						class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
-					>
-						<img src={emailIcon.src} alt="Email" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
-						<span class="text-sm group-hover:translate-x-1 transition-transform duration-200">
-							marketing.avietho@gmail.com
-						</span>
-					</a>
+							<!-- Email -->
+							<a
+								href="mailto:marketing.avietho@gmail.com"
+								class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
+							>
+								<img src={emailIcon.src} alt="Email" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+								<span class="text-sm group-hover:translate-x-1 transition-transform duration-200">
+									marketing.avietho@gmail.com
+								</span>
+							</a>
 
-					<!-- Social Media -->
-					<a
-						href="https://www.facebook.com/aviethodigital"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
-					>
-						<img src={facebookIcon.src} alt="Facebook" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
-						<span class="text-sm group-hover:translate-x-1 transition-transform duration-200">
-							Facebook
-						</span>
-					</a>
+							<!-- Social Media -->
+							<a
+								href="https://www.facebook.com/aviethodigital"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
+							>
+								<img src={facebookIcon.src} alt="Facebook" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+								<span class="text-sm group-hover:translate-x-1 transition-transform duration-200">
+									Facebook
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
+				<!-- Column 2: Address -->
+				<!-- The outer div centers this entire block on the screen -->
+				<div class="flex flex-col items-center text-center lg:text-left">
+					<div class="w-fit">
+						<h3 class="font-heading text-accent text-lg font-semibold mb-4">
+							The Office
+						</h3>
+						<ul class="text-text-subtle text-sm space-y-3">
+							<li>Admiralty Bldg. 1101</li>
+							<li>Alabang-Zapote Rd.</li>
+							<li>Madrigal Business Park</li>
+							<li>Brgy. Ayala Alabang</li>
+							<li>Muntinlupa City, Philippines</li>
+						</ul>
+					</div>
+				</div>
+				<!-- Column 3: Case Studies -->
+				<div class="flex flex-col items-center text-center lg:text-left">
+					<div class="w-fit">
+						<h3 class="font-heading text-accent text-lg font-semibold mb-4">
+							Case Studies
+						</h3>
+				<ul class="text-text-subtle text-sm space-y-3">
+					<!-- Placeholder content, replace as needed -->
+					<li><a href='https://tanauancity.gov.ph/' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>tanauancity.gov.ph</span></a></li>
+					<li><a href='https://gad.tanauancity.gov.ph/' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>gad.tanauancity.gov.ph</span></a></li>
+					<li><a href='https://www.youtube.com/watch?v=AhegrxF80J4&t=8669s' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>8th Annual MOTW</span></a></li>
+					<li><a href='https://www.facebook.com/watch/?v=1033529352173106' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>Siklabuhay same day</span></a></li>
+					<li><a href='https://aviethodigital.com/article/mwpl-2025-a-queen-in-the-making' class='block transition-all duration-200 hover:text-accent group'><span class='group-hover:translate-x-1 transition-transform duration-200 inline-block'>MWPL 2025</span></a></li>
+				</ul>
+					</div>
+				</div>
+			</div>
+			
+		<!-- Newsletter Section -->
+		<div class="w-full text-center sm:text-left">
+				<div class="bg-background-elevated rounded-lg p-4">
+				<p class="text-text-subtle text-base mb-6 text-center sm:text-left">
+						Get our latest design trends, marketing insights, and project showcases delivered straight to your inbox. Join our community of creators and stay ahead of the curve.
+					</p>
+			<form class="flex flex-col sm:flex-row items-center bg-background border border-muted rounded-lg overflow-hidden w-full max-w-md mx-auto sm:mx-0">
+					<input 
+						type="email" 
+						placeholder="Enter your email" 
+						class="px-4 py-3 bg-transparent border-none outline-none focus:outline-none flex-grow text-text-subtle"
+						required
+					/>
+				<button 
+					type="submit" 
+					class="px-6 py-3 text-accent font-body font-semibold transition-colors duration-300 hover:text-accent-hover"
+				>
+					Subscribe
+				</button>
+				</form>
 				</div>
 			</div>
 		</div>
-		<!-- Column 2: Address -->
-		<!-- The outer div centers this entire block on the screen -->
-		<div class="flex flex-col items-center">
-			<div class="w-fit">
-				<h3 class="font-heading text-accent text-lg font-semibold mb-4">
-					The Office
-				</h3>
-				<ul class="text-text-subtle text-sm space-y-2">
-					<li>Admiralty Bldg. 1101</li>
-					<li>Alabang-Zapote Rd.</li>
-					<li>Madrigal Business Park</li>
-					<li>Brgy. Ayala Alabang</li>
-					<li>Muntinlupa City, Philippines</li>
-				</ul>
-			</div>
-		</div>
-		<!-- Column 3: Map -->
-		<div class="flex flex-col justify-center items-start">
+		<!-- Column 4: Map -->
+		<div class="flex flex-col justify-center items-center lg:items-start">
 			<div class="relative group">
 				<img src={mapImg.src} alt="Avietho Location Map" class="w-88 h-88 rounded-full object-cover shadow-lg border-2 border-muted" />
 					<a 
