@@ -12,148 +12,173 @@ import facebookIcon from '../../assets/icons/facebook_icon.png';
 
 <footer class="w-full bg-background-elevated border-t border-muted">
 	<div class="max-w-7xl mx-auto -px-4 py-40 lg:py-16">
-		<!-- Main content grid -->
-		<div class="flex flex-col lg:flex-row gap-6">
-			<!-- Left Column: Services Accordion -->
-			<div class="w-full lg:w-6/10 ">
-				<img src={logo.src} alt="Avietho Logo" class="h-14 w-auto mb-4" />
-				<p class="text-text-subtle text-base mb-8 ">
-					Professional digital marketing solutions for businesses of all sizes. From website development to social media management, we help you grow your online presence.
-				</p>
-				<h3 class="font-heading text-accent text-xl font-semibold mb-6">
-					OUR SERVICES
-				</h3>
+	<!-- Top Section: Logo/Description + Services -->
+	<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 ">
+		<!-- Left Column: Logo and Description -->
+		<div class="w-full lg:col-span-1">
+			<img src={logo.src} alt="Avietho Logo" class="h-19 w-auto mb-4" />
+			<p class="text-text-subtle text-base mb-8 w-80 font-body">
+				Professional digital marketing solutions for businesses of all sizes. From website development to social media management, we help you grow your online presence.
+			</p>
+		</div>
 
-				<!-- Services Grid -->
-				<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-					<!-- Digital PR -->
-					<div class="flex flex-col w-full">
-						<h4 class="font-semibold text-accent text-lg mb-2">Digital PR</h4>
-						<ul class="flex flex-col space-y-1 text-text-subtle text-base">
-							<li class="pl-2 -indent-2">• Online Media Relations</li>
-							<li class="pl-2 -indent-2">• Influencer Marketing</li>
-							<li class="pl-2 -indent-2">• Online Reputation Management</li>
-							<li class="pl-2 -indent-2">• Digital Content Creation</li>
-							<li class="pl-2 -indent-2">• Social Media PR</li>
-						</ul>
-					</div>
-
-					<!-- Social Media -->
-					<div class="flex flex-col w-full">
-						<h4 class="font-semibold text-accent text-lg mb-2">Social Media</h4>
-						<ul class="flex flex-col space-y-1 text-text-subtle text-base">
-							<li class="pl-2 -indent-2">• Social Media Strategy</li>
-							<li class="pl-2 -indent-2">• Content Creation</li>
-							<li class="pl-2 -indent-2">• Community Management</li>
-							<li class="pl-2 -indent-2">• Analytics & Reporting</li>
-							<li class="pl-2 -indent-2">• Brand Management</li>
-						</ul>
-					</div>
-
-					<!-- Video Production -->
-					<div class="flex flex-col w-full">
-						<h4 class="font-semibold text-accent text-lg mb-2">Video Production</h4>
-						<ul class="flex flex-col space-y-1 text-text-subtle text-base">
-							<li class="pl-2 -indent-2">• Corporate Videos</li>
-							<li class="pl-2 -indent-2">• Event Videography</li>
-							<li class="pl-2 -indent-2">• Live Streaming</li>
-							<li class="pl-2 -indent-2">• Commercial Production</li>
-							<li class="pl-2 -indent-2">• Post-Production</li>
-						</ul>
-					</div>
-
-					<!-- Web Development -->
-					<div class="flex flex-col w-full">
-						<h4 class="font-semibold text-accent text-lg mb-2">Web Development</h4>
-						<ul class="flex flex-col space-y-1 text-text-subtle text-base">
-							<li class="pl-2 -indent-2">• Website Design</li>
-							<li class="pl-2 -indent-2">• Frontend Development</li>
-							<li class="pl-2 -indent-2">• Backend Development</li>
-							<li class="pl-2 -indent-2">• E-commerce Solutions</li>
-							<li class="pl-2 -indent-2">• SEO & Analytics</li>
-						</ul>
-					</div>
+		<!-- Right Column: Services -->
+		<div class="w-full lg:col-span-2">
+			<!-- Services Grid -->
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+				<!-- Digital PR -->
+				<div class="flex flex-col w-full">
+					<h4 class="font-heading font-semibold text-accent text-lg mb-2">Digital PR</h4>
+					<ul class="flex flex-col space-y-1 text-text-subtle text-base gap-2 w-32 text-sm font-body">
+						<li > Online Media Relations</li>
+						<li > Influencer Marketing</li>
+						<li > Online Reputation Management</li>
+						<li > Digital Content Creation</li>
+						<li > Social Media PR</li>
+					</ul>
 				</div>
-			</div>
-
-			<!-- Right Column: Contact Information -->
-			<div class="w-full lg:w-4/10">
-			<h3 class="font-heading text-accent text-xl font-semibold mb-6 ">
-				CONTACT US
-			</h3>
-				<div class="flex flex-col gap-4">
-				<!-- Phone -->
-				<a
-					href="tel:+6397831987"
-					class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
-				>
-					<img src={phoneIcon.src} alt="Phone" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
-					<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
-						+639 783 1987
-					</span>
-				</a>
-
-				<!-- Email -->
-				<a
-					href="mailto:marketing.avietho@gmail.com"
-					class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
-				>
-					<img src={emailIcon.src} alt="Email" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
-					<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
-						marketing.avietho@gmail.com
-					</span>
-				</a>
 
 				<!-- Social Media -->
-				<a
-					href="https://www.facebook.com/aviethodigital"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group"
-				>
-					<img src={facebookIcon.src} alt="Facebook" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
-					<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
-						Facebook
-					</span>
-				</a>
+				<div class="flex flex-col w-full">
+					<h4 class="font-heading font-semibold text-accent text-lg mb-2">Social Media</h4>
+					<ul class="flex flex-col space-y-1 text-text-subtle text-base gap-2 w-32 text-sm font-body">
+						<li > Social Media Strategy</li>
+						<li > Content Creation</li>
+						<li > Community Management</li>
+						<li > Analytics & Reporting</li>
+						<li > Brand Management</li>
+					</ul>
 				</div>
-				
-				<div class="mt-8 flex justify-end relative group">
-					<img src={mapImg.src} alt="Avietho Location Map" class="w-90 h-90 rounded-full object-cover shadow-lg border-2 border-muted" />
-					<a 
-						href="https://maps.app.goo.gl/KyDMwmYMADs5c5LC7" 
-						target="_blank" 
-						rel="noopener noreferrer"
-						class="absolute bottom-4 right-35 top-29 w-20 h-20 z-10"
+
+				<!-- Video Production -->
+				<div class="flex flex-col w-full">
+					<h4 class="font-heading font-semibold text-accent text-lg mb-2">Video Production</h4>
+					<ul class="flex flex-col space-y-1 text-text-subtle text-base gap-2 w-32 text-sm font-body">
+						<li > Corporate Videos</li>
+						<li > Event Videography</li>
+						<li > Live Streaming</li>
+						<li > Commercial Production</li>
+						<li > Post-Production</li>
+					</ul>
+				</div>
+
+				<!-- Web Development -->
+				<div class="flex flex-col w-full">
+					<h4 class="font-heading font-semibold text-accent text-lg mb-2">Web Development</h4>
+					<ul class="flex flex-col space-y-1 text-text-subtle text-base gap-2 w-32 text-sm font-body">
+						<li > Website Design</li>
+						<li > Frontend Development</li>
+						<li > Backend Development</li>
+						<li > E-commerce Solutions</li>
+						<li > SEO & Analytics</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Horizontal Divider -->
+	<hr class="border-t border-muted my-16" />
+
+	<!-- Bottom Section: Contact, Address, and Map -->
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
+		<!-- Column 1: Contact Information -->
+		<div class="flex flex-col items-center">
+			<div class="w-fit">
+				<h3 class="font-heading text-accent text-xl font-semibold mb-6">
+					CONTACT US
+				</h3>
+				<div class="flex flex-col gap-4">
+					<!-- Phone -->
+					<a
+						href="tel:+6397831987"
+						class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group font-body"
 					>
-					<img 
-						src={landmarkImg.src} 
-						alt="Avietho Landmark" 
-						class="w-full h-full object-contain drop-shadow-xl transition-all duration-500 animate-bob hover:scale-110 icon-hover cursor-pointer" 
-					/>
+						<img src={phoneIcon.src} alt="Phone" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+						<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
+							+639 783 1987
+						</span>
+					</a>
+
+					<!-- Email -->
+					<a
+						href="mailto:marketing.avietho@gmail.com"
+						class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group font-body"
+					>
+						<img src={emailIcon.src} alt="Email" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+						<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
+							marketing.avietho@gmail.com
+						</span>
+					</a>
+
+					<!-- Social Media -->
+					<a
+						href="https://www.facebook.com/aviethodigital"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-3 text-text-subtle hover:text-accent transition-colors duration-200 group font-body"
+					>
+						<img src={facebookIcon.src} alt="Facebook" class="w-5 h-5 icon-idle transition-transform duration-300 group-hover:scale-110 group-hover:icon-hover" />
+						<span class="text-base group-hover:translate-x-1 transition-transform duration-200">
+							Facebook
+						</span>
 					</a>
 				</div>
 			</div>
 		</div>
-
-
-
+		<!-- Column 2: Address -->
+		<!-- The outer div centers this entire block on the screen -->
+		<div class="flex flex-col items-center">
+			<div class="w-fit">
+				<h3 class="font-heading text-accent text-xl font-semibold mb-4">
+					The Office
+				</h3>
+				<ul class="text-text-subtle text-base space-y-2 font-body">
+					<li>Admiralty Bldg. 1101</li>
+					<li>Alabang-Zapote Rd.</li>
+					<li>Madrigal Business Park</li>
+					<li>Brgy. Ayala Alabang</li>
+					<li>Muntinlupa City, Philippines</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Column 3: Map -->
+		<div class="flex flex-col justify-center items-start">
+			<div class="relative group">
+				<img src={mapImg.src} alt="Avietho Location Map" class="w-75 h-75 rounded-full object-cover shadow-lg border-2 border-muted" />
+					<a 
+						href="https://maps.app.goo.gl/KyDMwmYMADs5c5LC7" 
+						target="_blank" 
+						rel="noopener noreferrer"
+						class="absolute inset-0 z-10 flex items-center justify-center"
+					>
+					<div class="flex items-center justify-center">
+						<img 
+						src={landmarkImg.src} 
+						alt="Avietho Landmark" 
+						class="w-20 h-20 mb-40 object-contain drop-shadow-xl transition-all duration-500 animate-bob hover:scale-110 icon-hover cursor-pointer" 
+						/>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
 
 		<style>
 			@keyframes bob {
-				0%, 100% { transform: translateY(0); }
-				50% { transform: translateY(-12px); }
+				0%, 100% { transform: translateY(-25px); }
+				50% { transform: translateY(-40px); }
 			}
 			.animate-bob {
-				animation: bob 5s ease-in-out infinite;
+				animation: bob 2s ease-in-out infinite;
 			}
 		</style>
 
 		<!-- Bottom Section: Copyright -->
 		<div class="mt-12 pt-8 border-t border-muted">
-			<p class="text-center text-text-muted text-base">
-				© 2026 Avietho Digital Marketing. All rights reserved.
-			</p>
+		<p class="text-center text-text-muted text-base font-body">
+			© 2026 Avietho Digital Marketing. All rights reserved.
+		</p>
 		</div>
 	</div>
 </footer>
