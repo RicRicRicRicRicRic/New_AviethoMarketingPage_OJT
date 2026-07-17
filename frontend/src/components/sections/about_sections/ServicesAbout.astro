@@ -3,7 +3,6 @@
     <div class="absolute inset-0 pointer-events-none">
         <div class="absolute top-1/4 -right-20 w-[500px] h-[500px] bg-accent/10 blur-[150px] rounded-full"></div>
         <div class="absolute -bottom-20 -left-20 w-[400px] h-[400px] bg-accent/10 blur-[130px] rounded-full"></div>
-        
         <div class="absolute inset-0 opacity-[0.02]" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 40px 40px;"></div>
     </div>
 
@@ -95,12 +94,12 @@
             </button>
         </div>
 
-        <!-- Service Cards Carousel -->
+        <!-- Service Cards Carousel (Uses calc to explicitly map exactly 3 items at a time desktop side) -->
         <div id="services-carousel" class="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 no-scrollbar max-w-7xl mx-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
             
             <!-- Digital PR Card -->
-            <div class="carousel-item group relative h-[320px] w-[290px] md:w-[320px] flex-shrink-0 snap-start bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
-                <div class="absolute inset-0 overflow-hidden z-0">
+            <div class="carousel-item group relative h-[320px] w-[290px] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-center bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
+                <div class="absolute inset-0 overflow-hidden z-0 item-image-container transition-all duration-500">
                     <img
                         src="/DigitalPR.png"
                         alt="Digital PR"
@@ -123,8 +122,8 @@
             </div>
 
             <!-- Social Media Card -->
-            <div class="carousel-item group relative h-[320px] w-[290px] md:w-[320px] flex-shrink-0 snap-start bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
-                <div class="absolute inset-0 overflow-hidden">
+            <div class="carousel-item group relative h-[320px] w-[290px] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-center bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
+                <div class="absolute inset-0 overflow-hidden item-image-container transition-all duration-500">
                     <img
                         src="/SocialMedia.png"
                         alt="Social Media"
@@ -147,8 +146,8 @@
             </div>
 
             <!-- Video Production Card -->
-            <div class="carousel-item group relative h-[320px] w-[290px] md:w-[320px] flex-shrink-0 snap-start bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
-                <div class="absolute inset-0 overflow-hidden z-0">
+            <div class="carousel-item group relative h-[320px] w-[290px] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-center bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
+                <div class="absolute inset-0 overflow-hidden z-0 item-image-container transition-all duration-500">
                     <img
                         src="/VideoProduction.png"
                         alt="Video Production"
@@ -171,8 +170,8 @@
             </div>
 
             <!-- Web Development Card -->
-            <div class="carousel-item group relative h-[320px] w-[290px] md:w-[320px] flex-shrink-0 snap-start bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
-                <div class="absolute inset-0 overflow-hidden">
+            <div class="carousel-item group relative h-[320px] w-[290px] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-center bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
+                <div class="absolute inset-0 overflow-hidden item-image-container transition-all duration-500">
                     <img
                         src="/WebDevelopment.png"
                         alt="Web Development"
@@ -195,8 +194,8 @@
             </div>
 
             <!-- Multimedia & Branding Card -->
-            <div class="carousel-item group relative h-[320px] w-[290px] md:w-[320px] flex-shrink-0 snap-start bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
-                <div class="absolute inset-0 overflow-hidden">
+            <div class="carousel-item group relative h-[320px] w-[290px] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-center bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01] border border-border rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:border-accent hover:shadow-[0_25px_60px_rgba(201,164,76,0.18)] cursor-pointer">
+                <div class="absolute inset-0 overflow-hidden item-image-container transition-all duration-500">
                     <img
                         src="/MultimediaBranding.png"
                         alt="Multimedia & Branding"
@@ -236,18 +235,36 @@
     </div>
 </section>
 
-<!-- Hide native scrollbars with styling -->
+<!-- Blur/Fade CSS and utility modifications -->
 <style>
     #services-carousel {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
     #services-carousel::-webkit-scrollbar {
-        display: none; /* Chrome, Safari and Opera */
+        display: none;
+    }
+    
+    /* Dynamic styling applied via Intersection Observer classes */
+    .carousel-item {
+        opacity: 0.35;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .carousel-item .item-image-container {
+        filter: blur(6px);
+        transition: filter 0.5s ease;
+    }
+    
+    /* Target active/centered slide element explicitly */
+    .carousel-item.is-active {
+        opacity: 1;
+    }
+    .carousel-item.is-active .item-image-container {
+        filter: blur(0px);
     }
 </style>
 
-<!-- True Infinite Bidirectional Carousel Logic with TypeScript Fixes -->
+<!-- Infinite Bidirectional Center Focus Carousel Logic -->
 <script>
     const carousel = document.getElementById('services-carousel') as HTMLDivElement | null;
     const prevBtn = document.getElementById('carousel-prev') as HTMLButtonElement | null;
@@ -258,7 +275,7 @@
         const totalOriginals = originalItems.length;
         const gap = 24; // Tailwind gap-6 is 24px
 
-        // 1. Clone items BOTH to the start and end so Left & Right always work
+        // 1. Clone items BOTH to the start and end so Left & Right work infinitely
         originalItems.slice().reverse().forEach(item => {
             const clone = item.cloneNode(true) as HTMLElement;
             clone.setAttribute('aria-hidden', 'true');
@@ -287,19 +304,41 @@
         initCarousel();
         window.addEventListener('resize', initCarousel);
 
-        // 3. Silent reset when crossing boundary clones
+        // 3. Setup IntersectionObserver to track the element exactly in the middle of the viewport
+        const observerOptions = {
+            root: carousel,
+            rootMargin: '0px -33% 0px -33%', // Limits threshold detection space down to the center column zone
+            threshold: 0.4
+        };
+
+        const observerCallback = (entries: IntersectionObserverEntry[]) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-active');
+                } else {
+                    entry.target.classList.remove('is-active');
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        
+        // Target all items inclusive of injected clones
+        const updateObservations = () => {
+            carousel.querySelectorAll('.carousel-item').forEach(item => observer.observe(item));
+        };
+        updateObservations();
+
+        // 4. Silent reset when crossing clone boundaries
         let isScrolling = false;
         let scrollTimeout: ReturnType<typeof setTimeout> | undefined;
 
         const checkAndResetBoundary = () => {
             const setWidth = getSetWidth();
-            
-            // If scrolled too far left into prepend clones, jump silently to middle
             if (carousel.scrollLeft < setWidth - gap) {
                 carousel.style.scrollBehavior = 'auto';
                 carousel.scrollLeft += setWidth;
             } 
-            // If scrolled too far right into append clones, jump silently to middle
             else if (carousel.scrollLeft >= setWidth * 2 - gap) {
                 carousel.style.scrollBehavior = 'auto';
                 carousel.scrollLeft -= setWidth;
@@ -315,7 +354,7 @@
             }, 150);
         });
 
-        // 4. Smooth button controls
+        // 5. Button Controls
         nextBtn.addEventListener('click', () => {
             if (isScrolling) return;
             isScrolling = true;
@@ -326,7 +365,7 @@
             setTimeout(() => {
                 isScrolling = false;
                 checkAndResetBoundary();
-            }, 400); // 400ms matches smooth scroll animation time
+            }, 400); 
         });
 
         prevBtn.addEventListener('click', () => {
