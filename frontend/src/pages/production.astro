@@ -303,6 +303,9 @@ class="video-item animate-reveal-up group cursor-pointer overflow-hidden rounded
 				</div>
 			)}
 
+			<!-- Pagination Controls -->
+			<div id="pagination-controls" class="mt-10 flex justify-center gap-2"></div>
+
 			<!-- Note about Popular sorting -->
 <div class="animate-reveal-up mt-8 text-center text-sm text-zinc-500" style="animation-delay:300ms">
 				<p>Videos are sorted by actual view counts from YouTube.</p>
@@ -395,6 +398,49 @@ class="video-item animate-reveal-up group cursor-pointer overflow-hidden rounded
 		const sortButtons = document.querySelectorAll('.sort-btn');
 		const filterButtons = document.querySelectorAll('.filter-btn');
 		const videoItems = Array.from(document.querySelectorAll('.video-item'));
+		const paginationControls = document.getElementById('pagination-controls');
+		
+		// Pagination state
+		let currentPage = 1;
+		const videosPerPage = 9;
+
+		function renderPage(itemsToDisplay: HTMLElement[]) {
+			// Hide all video items first
+			videoItems.forEach(item => item.classList.add('hidden'));
+			
+			// Calculate start and end indices
+			const startIndex = (currentPage - 1) * videosPerPage;
+			const endIndex = currentPage * videosPerPage;
+			
+			// Show only items in the current page range
+			itemsToDisplay.slice(startIndex, endIndex).forEach(item => {
+				item.classList.remove('hidden');
+			});
+			
+			// Update pagination controls
+			if (!paginationControls) return;
+			
+			const totalPages = Math.ceil(itemsToDisplay.length / videosPerPage);
+			paginationControls.innerHTML = '';
+			
+			if (totalPages <= 1) return;
+			
+			// Create page buttons
+			for (let i = 1; i <= totalPages; i++) {
+				const button = document.createElement('button');
+				button.textContent = String(i);
+				button.className = `rounded-full border px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${
+					i === currentPage 
+						? 'border-accent bg-accent text-zinc-950' 
+						: 'border-white/10 bg-zinc-900/50 text-zinc-400 hover:border-accent/50 hover:text-white'
+				}`;
+				button.addEventListener('click', () => {
+					currentPage = i;
+					renderPage(itemsToDisplay);
+				});
+				paginationControls.appendChild(button);
+			}
+		}
 
 		function sortVideos(criteria: 'latest' | 'popular' | 'oldest') {
 			if (!grid) return;
@@ -412,6 +458,10 @@ class="video-item animate-reveal-up group cursor-pointer overflow-hidden rounded
 			});
 
 			sorted.forEach(item => grid.appendChild(item));
+			
+			// Reset to first page and render
+			currentPage = 1;
+			renderPage(videoItems as HTMLElement[]);
 		}
 
 		function filterVideos(category: string) {
@@ -489,6 +539,11 @@ class="video-item animate-reveal-up group cursor-pointer overflow-hidden rounded
 					item.classList.add('hidden');
 				}
 			});
+			
+			// Filter the videoItems array and render paginated results
+			const filteredResult = videoItems.filter(item => !item.classList.contains('hidden'));
+			currentPage = 1;
+			renderPage(filteredResult as HTMLElement[]);
 		}
 
 		sortButtons.forEach(btn => {
@@ -540,6 +595,9 @@ class="video-item animate-reveal-up group cursor-pointer overflow-hidden rounded
 
 		document.getElementById('close-player')?.addEventListener('click', closePlayer);
 		document.getElementById('player-backdrop')?.addEventListener('click', closePlayer);
+		
+		// Initial render
+		renderPage(videoItems as HTMLElement[]);
 	});
 
 	document.addEventListener('keydown', (e) => {
