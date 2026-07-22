@@ -342,8 +342,8 @@ const {} = Astro.props;
     // Update panel position dynamically
     function updatePanelPosition() {
       const widgetRect = button.getBoundingClientRect();
-      const panelHeight = 200; // Approximate panel height
-      const panelWidth = 240;
+      const panelHeight = panel.offsetHeight || 360;; // Approximate panel height
+      const panelWidth = 150;
       const margin = 12;
       
       const spaceBelow = window.innerHeight - widgetRect.bottom - margin;
