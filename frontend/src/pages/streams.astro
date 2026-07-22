@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 
 type StreamItem = {
 	title: string;
@@ -17,7 +17,7 @@ type StreamItem = {
 };
 
 const youtubeApiKey = import.meta.env.YOUTUBE_API_KEY;
-const channelId = 'UCEQxQm4eB6lsMuKK2WFyUAA';
+const channelId = "UCEQxQm4eB6lsMuKK2WFyUAA";
 
 // Short-lived in-memory cache so a burst of page views doesn't re-hit the
 // YouTube API (and its quota) on every single request. Lives for the
@@ -34,49 +34,53 @@ let streamsCache: { data: StreamItem[]; fetchedAt: number } | null = null;
 // Real YouTube Live Stream Videos from @aviethodigital
 const fallbackStreams: StreamItem[] = [
 	{
-		title: 'LIVE | The 8th Annual Man of the World Finals Night at Palacio de Maynila',
-		description: 'The 8th Annual Man of the World Finals Night at Palacio de Maynila Powered by Avietho Digital. #ManoftheWorld2026 #AviethoDigital.',
-		url: 'https://www.youtube.com/watch?v=AhegrxF80J4',
-		publishedAt: '2026-06-06T18:30:00Z',
+		title: "LIVE | The 8th Annual Man of the World Finals Night at Palacio de Maynila",
+		description:
+			"The 8th Annual Man of the World Finals Night at Palacio de Maynila Powered by Avietho Digital. #ManoftheWorld2026 #AviethoDigital.",
+		url: "https://www.youtube.com/watch?v=AhegrxF80J4",
+		publishedAt: "2026-06-06T18:30:00Z",
 		views: 47000,
-		duration: 'Live replay',
-		badge: 'Popular',
-		videoId: 'AhegrxF80J4',
-		thumbnail: 'https://i.ytimg.com/vi/AhegrxF80J4/hqdefault.jpg',
+		duration: "Live replay",
+		badge: "Popular",
+		videoId: "AhegrxF80J4",
+		thumbnail: "https://i.ytimg.com/vi/AhegrxF80J4/hqdefault.jpg",
 	},
 	{
-		title: 'LIVE | The Philippine International D\' Elite Gala of Man of the World 2026',
-		description: 'The Philippine International D\' Elite Gala of Man of the World 2026 at Palacio de Maynila. #ManoftheWorld2026 #AviethoDigital.',
-		url: 'https://www.youtube.com/watch?v=Uw29e-tUW3Y',
-		publishedAt: '2026-06-01T15:00:00Z',
+		title: "LIVE | The Philippine International D' Elite Gala of Man of the World 2026",
+		description:
+			"The Philippine International D' Elite Gala of Man of the World 2026 at Palacio de Maynila. #ManoftheWorld2026 #AviethoDigital.",
+		url: "https://www.youtube.com/watch?v=Uw29e-tUW3Y",
+		publishedAt: "2026-06-01T15:00:00Z",
 		views: 10500,
-		duration: 'Live replay',
-		badge: 'Recent',
-		videoId: 'Uw29e-tUW3Y',
-		thumbnail: 'https://i.ytimg.com/vi/Uw29e-tUW3Y/hqdefault.jpg',
+		duration: "Live replay",
+		badge: "Recent",
+		videoId: "Uw29e-tUW3Y",
+		thumbnail: "https://i.ytimg.com/vi/Uw29e-tUW3Y/hqdefault.jpg",
 	},
 	{
-		title: 'Avietho Digital POV Episode 7 (Marj De Leon)',
-		description: 'Avietho Digital\'s exclusive interview with Landco Sales Director and Licensed Real Estate Broker Ms. Marj De Leon as she talks about the gift of life—family, friends, and career. Voices that lead. Stories that inspire.',
-		url: 'https://www.youtube.com/watch?v=cFRLpDkrZWw',
-		publishedAt: '2025-09-11T12:00:00Z',
+		title: "Avietho Digital POV Episode 7 (Marj De Leon)",
+		description:
+			"Avietho Digital's exclusive interview with Landco Sales Director and Licensed Real Estate Broker Ms. Marj De Leon as she talks about the gift of life—family, friends, and career. Voices that lead. Stories that inspire.",
+		url: "https://www.youtube.com/watch?v=cFRLpDkrZWw",
+		publishedAt: "2025-09-11T12:00:00Z",
 		views: 249,
-		duration: 'Interview',
-		badge: 'POV',
-		videoId: 'cFRLpDkrZWw',
-		thumbnail: 'https://i.ytimg.com/vi/cFRLpDkrZWw/hqdefault.jpg',
+		duration: "Interview",
+		badge: "POV",
+		videoId: "cFRLpDkrZWw",
+		thumbnail: "https://i.ytimg.com/vi/cFRLpDkrZWw/hqdefault.jpg",
 	},
 	{
-		title: 'AVIETHO DIGITAL PROGRAM (Intro)',
-		description: 'Explore the world of news, entertainment, food, and travels at Avietho Digital. Stay informed and entertained through our digital programs such as Period Podcast, KaladKain, Istorya, Transparency Talk, Say What, and Legaltok.',
-		url: 'https://www.youtube.com/watch?v=up-QvShfPrw',
-		publishedAt: '2025-03-25T08:00:00Z',
+		title: "AVIETHO DIGITAL PROGRAM (Intro)",
+		description:
+			"Explore the world of news, entertainment, food, and travels at Avietho Digital. Stay informed and entertained through our digital programs such as Period Podcast, KaladKain, Istorya, Transparency Talk, Say What, and Legaltok.",
+		url: "https://www.youtube.com/watch?v=up-QvShfPrw",
+		publishedAt: "2025-03-25T08:00:00Z",
 		views: 1210,
-		duration: 'Program',
-		badge: 'Intro',
-		videoId: 'up-QvShfPrw',
-		thumbnail: 'https://i.ytimg.com/vi/up-QvShfPrw/hqdefault.jpg',
-	}
+		duration: "Program",
+		badge: "Intro",
+		videoId: "up-QvShfPrw",
+		thumbnail: "https://i.ytimg.com/vi/up-QvShfPrw/hqdefault.jpg",
+	},
 ];
 
 // search.list with eventType=live/completed turned out to be an unreliable
@@ -94,22 +98,29 @@ const fallbackStreams: StreamItem[] = [
 
 const fetchUploadsPlaylistId = async (): Promise<string> => {
 	const url = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${youtubeApiKey}`;
-	const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+	const res = await fetch(url, { headers: { Accept: "application/json" } });
 	if (!res.ok) {
 		const errorText = await res.text();
-		throw new Error(`YouTube API channels lookup failed with status ${res.status}: ${errorText}`);
+		throw new Error(
+			`YouTube API channels lookup failed with status ${res.status}: ${errorText}`,
+		);
 	}
 
 	const data = await res.json();
-	const uploadsPlaylistId = data.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+	const uploadsPlaylistId =
+		data.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
 	if (!uploadsPlaylistId) {
-		throw new Error('Could not resolve uploads playlist ID for this channel');
+		throw new Error(
+			"Could not resolve uploads playlist ID for this channel",
+		);
 	}
 
 	return uploadsPlaylistId;
 };
 
-const fetchAllUploadedVideoIds = async (playlistId: string): Promise<string[]> => {
+const fetchAllUploadedVideoIds = async (
+	playlistId: string,
+): Promise<string[]> => {
 	const ids: string[] = [];
 	let nextPageToken: string | null = null;
 	let hasMore = true;
@@ -123,10 +134,14 @@ const fetchAllUploadedVideoIds = async (playlistId: string): Promise<string[]> =
 			url += `&pageToken=${nextPageToken}`;
 		}
 
-		const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+		const res = await fetch(url, {
+			headers: { Accept: "application/json" },
+		});
 		if (!res.ok) {
 			const errorText = await res.text();
-			throw new Error(`YouTube API playlistItems fetch failed with status ${res.status}: ${errorText}`);
+			throw new Error(
+				`YouTube API playlistItems fetch failed with status ${res.status}: ${errorText}`,
+			);
 		}
 
 		const data = await res.json();
@@ -147,12 +162,16 @@ const fetchVideoDetails = async (videoIds: string[]): Promise<any[]> => {
 	const batchSize = 50; // the API's per-request max for a videos.list id list
 
 	for (let i = 0; i < videoIds.length; i += batchSize) {
-		const batchIds = videoIds.slice(i, i + batchSize).join(',');
+		const batchIds = videoIds.slice(i, i + batchSize).join(",");
 		const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,liveStreamingDetails&id=${batchIds}&key=${youtubeApiKey}`;
-		const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+		const res = await fetch(url, {
+			headers: { Accept: "application/json" },
+		});
 		if (!res.ok) {
 			const errorText = await res.text();
-			throw new Error(`YouTube API videos fetch failed with status ${res.status}: ${errorText}`);
+			throw new Error(
+				`YouTube API videos fetch failed with status ${res.status}: ${errorText}`,
+			);
 		}
 
 		const data = await res.json();
@@ -164,10 +183,12 @@ const fetchVideoDetails = async (videoIds: string[]): Promise<any[]> => {
 
 const fetchStreamsFromApi = async (): Promise<StreamItem[]> => {
 	if (!youtubeApiKey) {
-		throw new Error('YouTube API key is missing. Please set YOUTUBE_API_KEY in your .env file.');
+		throw new Error(
+			"YouTube API key is missing. Please set YOUTUBE_API_KEY in your .env file.",
+		);
 	}
 
-	if (!channelId || channelId.length !== 24 || !channelId.startsWith('UC')) {
+	if (!channelId || channelId.length !== 24 || !channelId.startsWith("UC")) {
 		throw new Error(`Invalid channel ID: ${channelId}`);
 	}
 
@@ -175,7 +196,7 @@ const fetchStreamsFromApi = async (): Promise<StreamItem[]> => {
 	const videoIds = await fetchAllUploadedVideoIds(uploadsPlaylistId);
 
 	if (videoIds.length === 0) {
-		throw new Error('Channel has no uploaded videos');
+		throw new Error("Channel has no uploaded videos");
 	}
 
 	const details = await fetchVideoDetails(videoIds);
@@ -184,16 +205,18 @@ const fetchStreamsFromApi = async (): Promise<StreamItem[]> => {
 	// only videos that have an actualStartTime (meaning they genuinely
 	// went live at some point), not just any video that happened to show
 	// up in a keyword search.
-	const liveOnly = details.filter((v) => v.liveStreamingDetails?.actualStartTime);
+	const liveOnly = details.filter(
+		(v) => v.liveStreamingDetails?.actualStartTime,
+	);
 
 	if (liveOnly.length === 0) {
-		throw new Error('No live stream broadcasts found for this channel');
+		throw new Error("No live stream broadcasts found for this channel");
 	}
 
 	liveOnly.sort(
 		(a, b) =>
 			new Date(b.liveStreamingDetails.actualStartTime).getTime() -
-			new Date(a.liveStreamingDetails.actualStartTime).getTime()
+			new Date(a.liveStreamingDetails.actualStartTime).getTime(),
 	);
 
 	return liveOnly.map((v) => {
@@ -203,13 +226,18 @@ const fetchStreamsFromApi = async (): Promise<StreamItem[]> => {
 		const isLive = Boolean(lsd.actualStartTime) && !lsd.actualEndTime;
 
 		return {
-			title: snippet?.title || 'Untitled Stream',
-			description: snippet?.description || 'No description available',
+			title: snippet?.title || "Untitled Stream",
+			description: snippet?.description || "No description available",
 			url: `https://www.youtube.com/watch?v=${videoId}`,
-			publishedAt: lsd.actualStartTime || snippet?.publishedAt || new Date().toISOString(),
-			views: v.statistics?.viewCount ? parseInt(v.statistics.viewCount, 10) : null,
-			duration: isLive ? 'Live now' : 'Live replay',
-			badge: isLive ? 'Live' : 'Replay',
+			publishedAt:
+				lsd.actualStartTime ||
+				snippet?.publishedAt ||
+				new Date().toISOString(),
+			views: v.statistics?.viewCount
+				? parseInt(v.statistics.viewCount, 10)
+				: null,
+			duration: isLive ? "Live now" : "Live replay",
+			badge: isLive ? "Live" : "Replay",
 			thumbnail:
 				snippet?.thumbnails?.high?.url ||
 				snippet?.thumbnails?.medium?.url ||
@@ -223,7 +251,7 @@ const getStreams = async (): Promise<StreamItem[]> => {
 	// Serve straight from cache if it's still fresh — skips the YouTube
 	// API entirely.
 	if (streamsCache && Date.now() - streamsCache.fetchedAt < CACHE_TTL_MS) {
-		console.log('[streams] Serving from in-memory cache');
+		console.log("[streams] Serving from in-memory cache");
 		return streamsCache.data;
 	}
 
@@ -232,18 +260,20 @@ const getStreams = async (): Promise<StreamItem[]> => {
 		streamsCache = { data, fetchedAt: Date.now() };
 		return data;
 	} catch (err) {
-		console.error('[streams] Fetch failed:', err);
+		console.error("[streams] Fetch failed:", err);
 
 		// Prefer serving a stale cached copy over the hardcoded fallback —
 		// "a bit old" beats "not real data" — and don't refresh the cache
 		// timestamp, so the next request tries the API again instead of
 		// locking in the stale copy for another full TTL window.
 		if (streamsCache) {
-			console.warn('[streams] Serving stale cache after fetch failure');
+			console.warn("[streams] Serving stale cache after fetch failure");
 			return streamsCache.data;
 		}
 
-		console.warn('[streams] No cache available — falling back to static stream list');
+		console.warn(
+			"[streams] No cache available — falling back to static stream list",
+		);
 		return fallbackStreams;
 	}
 };
@@ -254,81 +284,157 @@ const streams = await getStreams();
 <BaseLayout title="Livestreams - Avietho">
 	<div class="section-wrapper">
 		<div class="mx-auto max-w-7xl px-6 py-20 md:px-8 lg:px-10">
-
 			<!-- Header -->
-			<header class="reveal-on-load flex flex-col items-center mx-auto max-w-2xl text-center" style="animation-delay:0ms">
-				<div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-accent">
-					<span class="h-2 w-2 rounded-full bg-accent animate-pulse"></span>
+			<header
+				class="reveal-on-load flex flex-col items-center mx-auto max-w-2xl text-center"
+				style="animation-delay:0ms"
+			>
+				<div
+					class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-accent"
+				>
+					<span class="h-2 w-2 rounded-full bg-accent animate-pulse"
+					></span>
 					Live Showcase
 				</div>
-				<h1 class="mt-5 text-4xl md:text-5xl font-bold text-white tracking-tight">Livestreams</h1>
+				<h1
+					class="mt-5 text-4xl md:text-5xl font-bold text-white tracking-tight"
+				>
+					Livestreams
+				</h1>
 				<p class="mt-4 text-lg text-zinc-400">
-					Broadcasts and replays from <a href="https://www.youtube.com/@aviethodigital" target="_blank" rel="noopener noreferrer" class="text-accent underline underline-offset-4 decoration-accent/40 transition-colors hover:decoration-accent">Avietho Digital</a>.
+					Broadcasts and replays from <a
+						href="https://www.youtube.com/@aviethodigital"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-accent underline underline-offset-4 decoration-accent/40 transition-colors hover:decoration-accent"
+						>Avietho Digital</a
+					>.
 				</p>
 			</header>
 
-			<hr class="reveal-on-load mt-12 border-white/10" style="animation-delay:80ms" />
+			<hr
+				class="reveal-on-load mt-12 border-white/10"
+				style="animation-delay:80ms"
+			/>
 
 			<!-- Sort controls -->
-			<div class="reveal-on-load mt-12 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6" style="animation-delay:160ms">
-				<span class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500">Sort by</span>
-				<button id="sort-latest" class="sort-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer">
+			<div
+				class="reveal-on-load mt-12 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6"
+				style="animation-delay:160ms"
+			>
+				<span
+					class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500"
+					>Sort by</span
+				>
+				<button
+					id="sort-latest"
+					class="sort-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer"
+				>
 					Latest
 				</button>
-				<button id="sort-popular" class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+				<button
+					id="sort-popular"
+					class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
 					Popular
 				</button>
-				<button id="sort-oldest" class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer">
+				<button
+					id="sort-oldest"
+					class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
 					Oldest
 				</button>
 			</div>
 
 			<!-- Grid -->
-			<div class="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3" id="stream-grid">
-				{streams.map((stream, idx) => (
-					<article
-						class="stream-item reveal-on-load group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-black/40"
-						data-video-id={stream.videoId || ""}
-						data-publish-date={stream.publishedAt}
-						data-views={stream.views}
-						style={`animation-delay:${220 + idx * 70}ms`}
-					>
-						<div class="relative aspect-video overflow-hidden bg-zinc-900">
-							{stream.thumbnail ? (
-								<img
-									src={stream.thumbnail}
-									alt={stream.title}
-									class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-									loading="lazy"
-									onerror="this.onerror=null; this.src='/VideoProduction.png'; this.classList.add('object-contain', 'p-4');"
-								/>
-							) : (
-								<div class="flex h-full w-full items-center justify-center bg-zinc-900">
-									<svg class="h-16 w-16 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-									</svg>
+			<div
+				class="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3"
+				id="stream-grid"
+			>
+				{
+					streams.map((stream, idx) => (
+						<article
+							class="stream-item reveal-on-load group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-black/40"
+							data-video-id={stream.videoId || ""}
+							data-publish-date={stream.publishedAt}
+							data-views={stream.views}
+							style={`animation-delay:${220 + idx * 70}ms`}
+						>
+							<div class="relative aspect-video overflow-hidden bg-zinc-900">
+								{stream.thumbnail ? (
+									<img
+										src={stream.thumbnail}
+										alt={stream.title}
+										class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+										loading="lazy"
+										onerror="this.onerror=null; this.src='/VideoProduction.png'; this.classList.add('object-contain', 'p-4');"
+									/>
+								) : (
+									<div class="flex h-full w-full items-center justify-center bg-zinc-900">
+										<svg
+											class="h-16 w-16 text-zinc-700"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="1.5"
+												d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+											/>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="1.5"
+												d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+											/>
+										</svg>
+									</div>
+								)}
+								<div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+									<div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-zinc-950">
+										<span class="ml-0.5 text-xl">▶</span>
+									</div>
 								</div>
-							)}
-							<div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-								<div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-zinc-950">
-									<span class="ml-0.5 text-xl">▶</span>
+								<span class="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-white">
+									{stream.badge}
+								</span>
+							</div>
+							<div class="p-6">
+								<h3 class="text-lg font-semibold leading-snug text-white transition-colors group-hover:text-accent line-clamp-2">
+									{stream.title}
+								</h3>
+								<p class="mt-2 text-sm text-zinc-400 line-clamp-2">
+									{stream.description}
+								</p>
+								<div class="mt-4 flex items-center justify-between text-xs text-zinc-500">
+									<span>
+										{new Date(
+											stream.publishedAt,
+										).toLocaleDateString(undefined, {
+											year: "numeric",
+											month: "short",
+											day: "numeric",
+										})}
+									</span>
+									<span>
+										{stream.views !== null
+											? `${stream.views.toLocaleString()} views`
+											: "Views unavailable"}
+									</span>
 								</div>
 							</div>
-							<span class="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-white">
-								{stream.badge}
-							</span>
-						</div>
-						<div class="p-6">
-							<h3 class="text-lg font-semibold leading-snug text-white transition-colors group-hover:text-accent line-clamp-2">{stream.title}</h3>
-							<p class="mt-2 text-sm text-zinc-400 line-clamp-2">{stream.description}</p>
-							<div class="mt-4 flex items-center justify-between text-xs text-zinc-500">
-								<span>{new Date(stream.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-								<span>{stream.views !== null ? `${stream.views.toLocaleString()} views` : 'Views unavailable'}</span>
-							</div>
-						</div>
-					</article>
-				))}
+						</article>
+					))
+				}
+			</div>
+
+			<!-- Pagination Controls -->
+			<div
+				id="pagination-controls"
+				class="mt-10 flex justify-center gap-2"
+			>
 			</div>
 		</div>
 	</div>
@@ -399,7 +505,10 @@ const streams = await getStreams();
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
-		transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+		transition:
+			background 0.2s ease,
+			border-color 0.2s ease,
+			color 0.2s ease;
 	}
 	#close-player:hover {
 		background: var(--color-accent, #c9a44c);
@@ -451,17 +560,17 @@ const streams = await getStreams();
 	}
 
 	let player: any = null;
-	let currentVideoId = '';
+	let currentVideoId = "";
 
 	function loadYouTubeAPI() {
 		if (window.YT && window.YT.Player) return Promise.resolve();
-		
+
 		return new Promise<void>((resolve) => {
-			const tag = document.createElement('script');
+			const tag = document.createElement("script");
 			tag.src = "https://www.youtube.com/iframe_api";
-			const firstScript = document.getElementsByTagName('script')[0];
+			const firstScript = document.getElementsByTagName("script")[0];
 			firstScript.parentNode?.insertBefore(tag, firstScript);
-			
+
 			window.onYouTubeIframeAPIReady = () => {
 				resolve();
 			};
@@ -475,18 +584,18 @@ const streams = await getStreams();
 		}
 
 		currentVideoId = videoId;
-		const playerEl = document.getElementById('video-player') as HTMLElement;
-		playerEl.classList.remove('hidden');
-		document.body.style.overflow = 'hidden';
+		const playerEl = document.getElementById("video-player") as HTMLElement;
+		playerEl.classList.remove("hidden");
+		document.body.style.overflow = "hidden";
 
 		await loadYouTubeAPI();
 
 		if (player) {
 			player.loadVideoById(videoId);
 		} else {
-			player = new window.YT.Player('player-container', {
-				height: '100%',
-				width: '100%',
+			player = new window.YT.Player("player-container", {
+				height: "100%",
+				width: "100%",
 				videoId: videoId,
 				playerVars: {
 					autoplay: 1,
@@ -495,83 +604,173 @@ const streams = await getStreams();
 				},
 				events: {
 					onReady: (event: any) => event.target.playVideo(),
-				}
+				},
 			});
 		}
 	}
 
 	function closePlayer() {
-		const playerEl = document.getElementById('video-player') as HTMLElement;
-		playerEl.classList.add('hidden');
-		document.body.style.overflow = '';
-		if (player && typeof player.pauseVideo === 'function') {
+		const playerEl = document.getElementById("video-player") as HTMLElement;
+		playerEl.classList.add("hidden");
+		document.body.style.overflow = "";
+		if (player && typeof player.pauseVideo === "function") {
 			player.pauseVideo();
 		}
 	}
 
 	// Attach Event Listeners
-	document.addEventListener('DOMContentLoaded', () => {
-		const grid = document.getElementById('stream-grid');
-		const sortButtons = document.querySelectorAll('.sort-btn');
-		const streamItems = Array.from(document.querySelectorAll('.stream-item'));
+	document.addEventListener("DOMContentLoaded", () => {
+		const grid = document.getElementById("stream-grid");
+		const sortButtons = document.querySelectorAll(".sort-btn");
+		const streamItems = Array.from(
+			document.querySelectorAll(".stream-item"),
+		);
+		const paginationControls = document.getElementById(
+			"pagination-controls",
+		);
+
+		// Pagination state
+		let currentPage = 1;
+		const streamsPerPage = 9;
+
+		function renderPage(itemsToDisplay: HTMLElement[]) {
+			// Hide all stream items first
+			streamItems.forEach((item) => item.classList.add("hidden"));
+
+			// Calculate start and end indices
+			const startIndex = (currentPage - 1) * streamsPerPage;
+			const endIndex = currentPage * streamsPerPage;
+
+			// Show only items in the current page range
+			itemsToDisplay.slice(startIndex, endIndex).forEach((item) => {
+				item.classList.remove("hidden");
+			});
+
+			// Update pagination controls
+			if (!paginationControls) return;
+
+			const totalPages = Math.ceil(
+				itemsToDisplay.length / streamsPerPage,
+			);
+			paginationControls.innerHTML = "";
+
+			if (totalPages <= 1) return;
+
+			// Create page buttons
+			for (let i = 1; i <= totalPages; i++) {
+				const button = document.createElement("button");
+				button.textContent = String(i);
+				button.className = `rounded-full border px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${
+					i === currentPage
+						? "border-accent bg-accent text-zinc-950"
+						: "border-white/10 bg-zinc-900/50 text-zinc-400 hover:border-accent/50 hover:text-white"
+				}`;
+				button.addEventListener("click", () => {
+					currentPage = i;
+					renderPage(itemsToDisplay);
+				});
+				paginationControls.appendChild(button);
+			}
+		}
 
 		// 1. Client-Side Sorting Logic
-		function sortStreams(criteria: 'latest' | 'popular' | 'oldest') {
+		function sortStreams(criteria: "latest" | "popular" | "oldest") {
 			if (!grid) return;
 
 			const sorted = [...streamItems].sort((a, b) => {
-				const dateA = new Date(a.getAttribute('data-publish-date') || '').getTime();
-				const dateB = new Date(b.getAttribute('data-publish-date') || '').getTime();
-				const viewsA = parseInt(a.getAttribute('data-views') || '0', 10);
-				const viewsB = parseInt(b.getAttribute('data-views') || '0', 10);
+				const dateA = new Date(
+					a.getAttribute("data-publish-date") || "",
+				).getTime();
+				const dateB = new Date(
+					b.getAttribute("data-publish-date") || "",
+				).getTime();
+				const viewsA = parseInt(
+					a.getAttribute("data-views") || "0",
+					10,
+				);
+				const viewsB = parseInt(
+					b.getAttribute("data-views") || "0",
+					10,
+				);
 
-				if (criteria === 'latest') return dateB - dateA;
-				if (criteria === 'oldest') return dateA - dateB;
-				if (criteria === 'popular') return viewsB - viewsA;
+				if (criteria === "latest") return dateB - dateA;
+				if (criteria === "oldest") return dateA - dateB;
+				if (criteria === "popular") return viewsB - viewsA;
 				return 0;
 			});
 
 			// Reorders directly inside the DOM so attached event listeners are kept intact
-			sorted.forEach(item => grid.appendChild(item));
+			sorted.forEach((item) => grid.appendChild(item));
+
+			// Reset to first page and render
+			currentPage = 1;
+			renderPage(streamItems as HTMLElement[]);
 		}
 
-		sortButtons.forEach(btn => {
-			btn.addEventListener('click', () => {
+		sortButtons.forEach((btn) => {
+			btn.addEventListener("click", () => {
 				// Style manipulation
-				sortButtons.forEach(b => {
-					b.classList.remove('active', 'bg-accent', 'text-zinc-950', 'border-accent');
-					b.classList.add('bg-zinc-900/50', 'text-zinc-400', 'border-white/10');
+				sortButtons.forEach((b) => {
+					b.classList.remove(
+						"active",
+						"bg-accent",
+						"text-zinc-950",
+						"border-accent",
+					);
+					b.classList.add(
+						"bg-zinc-900/50",
+						"text-zinc-400",
+						"border-white/10",
+					);
 				});
 
-				btn.classList.add('active', 'bg-accent', 'text-zinc-950', 'border-accent');
-				btn.classList.remove('bg-zinc-900/50', 'text-zinc-400', 'border-white/10');
+				btn.classList.add(
+					"active",
+					"bg-accent",
+					"text-zinc-950",
+					"border-accent",
+				);
+				btn.classList.remove(
+					"bg-zinc-900/50",
+					"text-zinc-400",
+					"border-white/10",
+				);
 
 				// Call Sort
 				const sortId = btn.id;
-				if (sortId === 'sort-latest') sortStreams('latest');
-				if (sortId === 'sort-popular') sortStreams('popular');
-				if (sortId === 'sort-oldest') sortStreams('oldest');
+				if (sortId === "sort-latest") sortStreams("latest");
+				if (sortId === "sort-popular") sortStreams("popular");
+				if (sortId === "sort-oldest") sortStreams("oldest");
 			});
 		});
 
 		// 2. Grid Streams Listeners
-		streamItems.forEach(item => {
-			item.addEventListener('click', () => {
-				const videoId = item.getAttribute('data-video-id');
+		streamItems.forEach((item) => {
+			item.addEventListener("click", () => {
+				const videoId = item.getAttribute("data-video-id");
 				playVideo(videoId);
 			});
 		});
 
 		// 3. Close Player Listeners (button + backdrop click)
-		document.getElementById('close-player')?.addEventListener('click', closePlayer);
-		document.getElementById('player-backdrop')?.addEventListener('click', closePlayer);
+		document
+			.getElementById("close-player")
+			?.addEventListener("click", closePlayer);
+		document
+			.getElementById("player-backdrop")
+			?.addEventListener("click", closePlayer);
+
+		// Initial render
+		renderPage(streamItems as HTMLElement[]);
 	});
 
 	// Keyboard escape
-	document.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape') {
-			const playerEl = document.getElementById('video-player') as HTMLElement;
-			if (playerEl && !playerEl.classList.contains('hidden')) {
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape") {
+			const playerEl = document.getElementById(
+				"video-player",
+			) as HTMLElement;
+			if (playerEl && !playerEl.classList.contains("hidden")) {
 				closePlayer();
 			}
 		}
