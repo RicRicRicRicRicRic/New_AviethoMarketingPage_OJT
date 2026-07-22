@@ -115,6 +115,21 @@
     --icon-hover-filter: invert(56%) sepia(61%) saturate(2335%) hue-rotate(233deg) brightness(101%) contrast(96%);
 }
 
+.theme-cyber-neon {
+    --icon-idle-filter: invert(94%) sepia(8%) saturate(350%) hue-rotate(150deg) brightness(97%) contrast(92%);
+    --icon-hover-filter: invert(65%) sepia(85%) saturate(2000%) hue-rotate(145deg) brightness(102%) contrast(101%);
+}
+
+.theme-crimson-eclipse {
+    --icon-idle-filter: invert(93%) sepia(8%) saturate(300%) hue-rotate(320deg) brightness(96%) contrast(92%);
+    --icon-hover-filter: invert(32%) sepia(85%) saturate(3500%) hue-rotate(345deg) brightness(95%) contrast(105%);
+}
+
+.theme-radioactive-rust {
+    --icon-idle-filter: invert(94%) sepia(8%) saturate(300%) hue-rotate(50deg) brightness(96%) contrast(92%);
+    --icon-hover-filter: invert(78%) sepia(85%) saturate(3000%) hue-rotate(75deg) brightness(105%) contrast(105%);
+}
+
 /* Floating animation for social media images */
 @keyframes float-bob {
   0%, 100% {
