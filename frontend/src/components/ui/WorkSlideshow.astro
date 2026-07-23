@@ -9,18 +9,31 @@ interface WorkSlide {
 	alt: string;
 }
 
+// Import slide images statically for Vercel production build compatibility
+import slide1 from '../../assets/slides/work_slide1.jpg';
+import slide2 from '../../assets/slides/work_slide2.jpg';
+import slide3 from '../../assets/slides/work_slide3.jpg';
+import slide4 from '../../assets/slides/work_slide4.jpg';
+import slide5 from '../../assets/slides/work_slide5.jpg';
+import slide6 from '../../assets/slides/work_slide6.jpg';
+import slide7 from '../../assets/slides/work_slide7.jpg';
+import slide8 from '../../assets/slides/work_slide8.jpg';
+import slide9 from '../../assets/slides/work_slide9.jpg';
+import slide10 from '../../assets/slides/work_slide10.jpg';
+import slide11 from '../../assets/slides/work_slide11.jpg';
+
 const workSlides: WorkSlide[] = [
-	{ imagePath: '/src/assets/slides/work_slide1.jpg', alt: 'Work example 1' },
-	{ imagePath: '/src/assets/slides/work_slide2.jpg', alt: 'Work example 2' },
-	{ imagePath: '/src/assets/slides/work_slide3.jpg', alt: 'Work example 3' },
-	{ imagePath: '/src/assets/slides/work_slide4.jpg', alt: 'Work example 4' },
-	{ imagePath: '/src/assets/slides/work_slide5.jpg', alt: 'Work example 5' },
-	{ imagePath: '/src/assets/slides/work_slide6.jpg', alt: 'Work example 6' },
-	{ imagePath: '/src/assets/slides/work_slide7.jpg', alt: 'Work example 7' },
-	{ imagePath: '/src/assets/slides/work_slide8.jpg', alt: 'Work example 8' },
-	{ imagePath: '/src/assets/slides/work_slide9.jpg', alt: 'Work example 9' },
-	{ imagePath: '/src/assets/slides/work_slide10.jpg', alt: 'Work example 10' },
-	{ imagePath: '/src/assets/slides/work_slide11.jpg', alt: 'Work example 11' },
+	{ imagePath: slide1.src, alt: 'Work example 1' },
+	{ imagePath: slide2.src, alt: 'Work example 2' },
+	{ imagePath: slide3.src, alt: 'Work example 3' },
+	{ imagePath: slide4.src, alt: 'Work example 4' },
+	{ imagePath: slide5.src, alt: 'Work example 5' },
+	{ imagePath: slide6.src, alt: 'Work example 6' },
+	{ imagePath: slide7.src, alt: 'Work example 7' },
+	{ imagePath: slide8.src, alt: 'Work example 8' },
+	{ imagePath: slide9.src, alt: 'Work example 9' },
+	{ imagePath: slide10.src, alt: 'Work example 10' },
+	{ imagePath: slide11.src, alt: 'Work example 11' },
 ];
 
 // Split slides into two tracks
