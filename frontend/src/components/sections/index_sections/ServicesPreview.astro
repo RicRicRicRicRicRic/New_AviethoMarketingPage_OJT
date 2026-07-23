@@ -1,6 +1,12 @@
 ---
 // Services preview section - overview of offered services
 import Image from 'astro/components/Image.astro';
+import prIcon from '../../../assets/icons/publicrelations_icon.png';
+import multimediaIcon from '../../../assets/icons/mulimediaBranding_icon.png';
+import digitalMarketingIcon from '../../../assets/icons/digitalSocialMediaMarketing_icon.png';
+import webDevIcon from '../../../assets/icons/webDevelopment_icon.png';
+import liveStreamIcon from '../../../assets/icons/liveStream_icon.png';
+import specializedIcon from '../../../assets/icons/Specialized_icon.png';
 
 type ServiceId = 'digital-pr' | 'social-media' | 'video-production' | 'post-production' | 'live-streaming' | 'specialized';
 
@@ -18,13 +24,13 @@ interface Props {
 }
 
 // Type-safe icon mapping
-const iconMap: Record<ServiceId, string> = {
-	'digital-pr': '/src/assets/icons/publicrelations_icon.png',
-	'social-media': '/src/assets/icons/mulimediaBranding_icon.png',
-	'video-production': '/src/assets/icons/digitalSocialMediaMarketing_icon.png',
-	'post-production': '/src/assets/icons/webDevelopment_icon.png',
-	'live-streaming': '/src/assets/icons/liveStream_icon.png',
-	'specialized': '/src/assets/icons/Specialized_icon.png'
+const iconMap: Record<ServiceId, any> = {
+	'digital-pr': prIcon,
+	'social-media': multimediaIcon,
+	'video-production': digitalMarketingIcon,
+	'post-production': webDevIcon,
+	'live-streaming': liveStreamIcon,
+	'specialized': specializedIcon
 };
 
 const { 
