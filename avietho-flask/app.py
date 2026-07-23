@@ -1,3 +1,4 @@
+import os
 import sys
 import subprocess
 import threading
@@ -22,11 +23,38 @@ collection = None
 def init_model():
     global embedding_model, chroma_client, collection
     if embedding_model is None:
+        print("Initializing embedding model and Chroma DB client...")
         embedding_model = SentenceTransformer(EMBEDDING_MODEL)
         chroma_client = chromadb.PersistentClient(path=DB_PATH)
         collection = chroma_client.get_or_create_collection("avietho_pages")
+        
+        # Auto-build vector index if collection is empty
+        if collection.count() == 0:
+            print("Chroma collection empty. Auto-building index from ./data...")
+            try:
+                from train_model import build_index
+                build_index()
+                collection = chroma_client.get_collection("avietho_pages")
+            except Exception as e:
+                print(f"Auto-index build error: {e}")
 
-# ----- Training endpoint (unchanged) -----
+# Pre-initialize model during startup so first chat request is fast
+try:
+    init_model()
+except Exception as err:
+    print(f"Warning: Model pre-initialization deferred to request time: {err}")
+
+# ----- Health Check Endpoints -----
+@app.route('/', methods=['GET'])
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({
+        "status": "healthy",
+        "service": "avietho-flask",
+        "model_loaded": embedding_model is not None
+    }), 200
+
+# ----- Training endpoint -----
 training_status = {"running": False, "message": "Not started"}
 
 def run_training():
@@ -58,7 +86,7 @@ def get_status():
 @app.route('/chat', methods=['POST'])
 def chat():
     init_model()
-    data = request.get_json()
+    data = request.get_json() or {}
     user_message = data.get('message', '').strip().lower()
     if not user_message:
         return jsonify({"reply": "Please provide a message."}), 400
@@ -70,9 +98,7 @@ def chat():
         n_results=3,
         include=["documents", "metadatas", "distances"]
     )
-    candidates = results['documents'][0]
-    distances = results['distances'][0]
-
+    candidates = results['documents'][0] if results.get('documents') else []
 
     if not candidates:
         reply = "I don't have enough information to answer that."
@@ -129,5 +155,5 @@ def chat():
     return jsonify({"reply": reply})
 
 if __name__ == '__main__':
-    init_model()
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
