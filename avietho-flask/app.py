@@ -27,18 +27,20 @@ def init_model():
         embedding_model = SentenceTransformer(EMBEDDING_MODEL)
         chroma_client = chromadb.PersistentClient(path=DB_PATH)
         collection = chroma_client.get_or_create_collection("avietho_pages")
-        
-        # Auto-build vector index if collection is empty
+
+        # In production, the Chroma DB should already be committed to the repo
+        # (built locally via `python train_model.py`). If it's empty here, that
+        # means the DB wasn't committed/deployed correctly — fail loudly instead
+        # of silently rebuilding, which can OOM small instances.
         if collection.count() == 0:
-            print("Chroma collection empty. Auto-building index from ./data...")
-            try:
-                from train_model import build_index
-                build_index()
-                collection = chroma_client.get_collection("avietho_pages")
-            except Exception as e:
-                print(f"Auto-index build error: {e}")
+            print(
+                "WARNING: Chroma collection is empty. Expected a pre-built index "
+                "committed at ./avietho_chroma. Run `python train_model.py` locally "
+                "and commit the resulting folder, then redeploy."
+            )
 
-
+# NOTE: model is now lazy-loaded on first /chat or /train request instead of
+# at import time, so gunicorn can bind to $PORT immediately on boot.
 
 # ----- Health Check Endpoints -----
 @app.route('/', methods=['GET'])
