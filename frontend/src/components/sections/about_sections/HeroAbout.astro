@@ -1,30 +1,31 @@
 ---
-import digitalmarketing from '../../../assets/about/Pik21.jpg';
+import digitalmarketing from "../../../assets/about/Pik21.jpg";
 
-const heroStyle = `
-	background-image:
-		linear-gradient(
-			90deg,
-			rgba(0,0,0,.88) 0%,
-			rgba(0,0,0,.72) 35%,
-			rgba(0,0,0,.60) 60%,
-			rgba(0,0,0,.82) 100%
-		),
-		linear-gradient(
-			180deg,
-			rgba(0,0,0,.55) 0%,
-			rgba(0,0,0,.25) 45%,
-			rgba(0,0,0,.75) 100%
-		),
-		url(${digitalmarketing.src});
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-`;
+const heroStyle = {
+  backgroundImage: `
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.88) 0%,
+      rgba(0,0,0,.72) 35%,
+      rgba(0,0,0,.60) 60%,
+      rgba(0,0,0,.82) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.55) 0%,
+      rgba(0,0,0,.25) 45%,
+      rgba(0,0,0,.75) 100%
+    ),
+    url("${digitalmarketing.src}")
+  `,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+};
 ---
 
 <section
-	class="relative min-h-[calc(100vh-72px)] flex items-center px-4 pt-32 pb-20 overflow-hidden bg-cover bg-center bg-no-repeat"
+	class="relative min-h-[calc(100vh-72px)] flex items-center px-4 pt-32 pb-20 overflow-hidden"
 	style={heroStyle}
 >
 	<div class="relative z-10 max-w-7xl mx-auto w-full">
