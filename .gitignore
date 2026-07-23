@@ -51,3 +51,7 @@ logs/
 secrets.yaml
 credentials.json
 service-account-key.json
+
+# wrangler files
+.wrangler
+/frontend/.wrangler
