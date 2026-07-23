@@ -1,4 +1,4 @@
-avietho-flask/avietho_chroma
+
 /avietho-flask/venv
 
 # --- Python ---
@@ -19,8 +19,7 @@ env/
 .env
 *.env
 
-# --- Chroma vector database ---
-avietho_chroma/
+
 
 # --- Jupyter / notebooks (if you use them) ---
 *.ipynb_checkpoints/
