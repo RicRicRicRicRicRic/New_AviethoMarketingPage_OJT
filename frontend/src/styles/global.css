@@ -155,3 +155,13 @@
     transform: translate(15px, 10px);
   }
 }
+
+/* Drift animation for floating favicons with random directions */
+@keyframes drift {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(var(--drift-x), var(--drift-y));
+  }
+}

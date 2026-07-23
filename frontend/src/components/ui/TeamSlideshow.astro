@@ -104,7 +104,7 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 						}
 				});
 
-				// ADD THIS LINE: Dispatch the event so TeamPreview can hear it
+				// Dispatch the event so TeamPreview can hear it
 				const currentMember = this.members[this.currentIndex];
 				document.dispatchEvent(new CustomEvent('slideshowChanged', { 
 						detail: { member: currentMember }, 
@@ -112,24 +112,37 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 				}));
 		}
 
-		private next(): void {
+		private dispatchDirection(dir: 'right' | 'left'): void {
+			document.dispatchEvent(new CustomEvent('slideshowDirection', {
+				detail: { direction: dir === 'right' ? -1 : 1 },
+				bubbles: true
+			}));
+		}
+
+		private next(userInitiated: boolean = false): void {
 			this.currentIndex = (this.currentIndex + 1) % this.members.length;
 			// Rotate the DOM elements array rather than moving elements
 			const leaving = this.slotOrder.shift()!;
 			this.slotOrder.push(leaving);
+			if (userInitiated) {
+				this.dispatchDirection('right');
+			}
 			this.applySlots(true);
 		}
 
-		private prev(): void {
+		private prev(userInitiated: boolean = false): void {
 			this.currentIndex = (this.currentIndex - 1 + this.members.length) % this.members.length;
 			const entering = this.slotOrder.pop()!;
 			this.slotOrder.unshift(entering);
+			if (userInitiated) {
+				this.dispatchDirection('left');
+			}
 			this.applySlots(true);
 		}
 
 		private startAutoplay(): void {
 			this.stopAutoplay();
-			this.autoplayTimer = setInterval(() => { if (!this.isDragging) this.next(); }, AUTOPLAY_DELAY);
+			this.autoplayTimer = setInterval(() => { if (!this.isDragging) this.next(false); }, AUTOPLAY_DELAY);
 		}
 
 		private stopAutoplay(): void {
@@ -164,9 +177,11 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 				if (!this.isDragging || e.pointerId !== this.pointerId) return;
 				this.isDragging = false;
 				
-				if (this.dragDeltaX <= -DRAG_THRESHOLD) this.next();
-				else if (this.dragDeltaX >= DRAG_THRESHOLD) this.prev();
-				else {
+				if (this.dragDeltaX <= -DRAG_THRESHOLD) {
+					this.next(true);
+				} else if (this.dragDeltaX >= DRAG_THRESHOLD) {
+					this.prev(true);
+				} else {
 					const centerSlot = this.slotOrder[2];
 					centerSlot.style.transition = 'transform 0.3s ease-out';
 					centerSlot.style.transform = '';

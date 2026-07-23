@@ -6,6 +6,8 @@
 import TeamSlideshow from '../../ui/TeamSlideshow.astro';
 import type { ImageMetadata } from 'astro';
 
+const faviconImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/favicons/*.{png,jpg,jpeg,svg,ico}', { eager: true });
+
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/imgs/*.{png,jpg,jpeg,svg}', { eager: true });
 
 const jojo = images['/src/assets/imgs/jojo.png']?.default;
@@ -61,8 +63,38 @@ function formatDescription(description: string, name: string): string {
 }
 ---
 
-<section class="py-20 px-4 py-40 bg-background-elevated w-full h-full ">
-	<div class="w-full h-full">
+<section class="py-20 px-4 py-40 bg-background-elevated w-full h-full relative">
+	<!-- Floating Favicon Background Layer -->
+	<div class="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-20">
+		{Object.values(faviconImages).flatMap((favicon, faviconIndex) => {
+			// Create multiple instances of each favicon for richer background
+			const instances = [];
+			const instancesPerFavicon = 3; // Adjust this number to increase/decrease density
+
+			for (let i = 0; i < instancesPerFavicon; i++) {
+				const globalIndex = faviconIndex * instancesPerFavicon + i;
+				// Generate pseudo-random deterministic placements based on global index
+				const randomTop = (globalIndex * 17) % 85 + 5;
+				const randomLeft = (globalIndex * 31) % 90 + 5;
+				const randomDuration = 12 + (globalIndex % 7);
+				const randomDelay = (globalIndex * 0.7) % 5;
+				const randomSize = 24 + (globalIndex % 3) * 8; // Vary sizes: 24px, 32px, 40px
+
+				instances.push(
+					<img
+						src={favicon.default.src}
+						alt=""
+						class="absolute object-contain icon-hover floating-favicon"
+						style={`top: ${randomTop}%; left: ${randomLeft}%; width: ${randomSize}px; height: ${randomSize}px;`}
+					/>
+				);
+			}
+
+			return instances;
+		})}
+	</div>
+
+	<div class="w-full h-full relative z-10">
 		<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center max-w-7xl mx-auto">
 			
 			<!-- Left Column: Name and Job Title -->
@@ -142,4 +174,73 @@ function formatDescription(description: string, name: string): string {
 			}, 200);
 		}
 	});
+
+	// Floating favicon animation with viewport wrapping
+	const floatingIcons = document.querySelectorAll('.floating-favicon');
+	const iconData: Array<{ element: HTMLElement; x: number; y: number; vx: number; vy: number }> = [];
+	let driftVelocity = 0;
+
+	// Listen for slideshow direction changes and accumulate velocity smoothly
+	document.addEventListener('slideshowDirection', (e: any) => {
+		const { direction } = e.detail; // 1 for right, -1 for left
+		// Accumulate impulse rather than overwriting so rapid clicks blend smoothly
+		driftVelocity += direction * 8.0; 
+	});
+
+	// Initialize icon positions and velocities
+	floatingIcons.forEach((icon, index) => {
+		const rect = icon.getBoundingClientRect();
+		const parentRect = icon.parentElement!.getBoundingClientRect();
+		
+		// Random velocity between -0.3 and 0.3 pixels per frame
+		const vx = (Math.random() - 0.5) * 0.6;
+		const vy = (Math.random() - 0.5) * 0.6;
+		
+		iconData.push({
+			element: icon as HTMLElement,
+			x: rect.left - parentRect.left,
+			y: rect.top - parentRect.top,
+			vx: vx,
+			vy: vy
+		});
+	});
+
+	// Animation loop
+	function animateIcons() {
+		iconData.forEach(data => {
+			const parentRect = data.element.parentElement!.getBoundingClientRect();
+			const iconRect = data.element.getBoundingClientRect();
+			const iconWidth = iconRect.width;
+			const iconHeight = iconRect.height;
+
+			// Update position with drift velocity
+			data.x += data.vx + driftVelocity;
+			data.y += data.vy;
+
+			// Wrap around viewport
+			if (data.x > parentRect.width) {
+				data.x = -iconWidth;
+			} else if (data.x < -iconWidth) {
+				data.x = parentRect.width;
+			}
+
+			if (data.y > parentRect.height) {
+				data.y = -iconHeight;
+			} else if (data.y < -iconHeight) {
+				data.y = parentRect.height;
+			}
+
+			// Apply new position
+			data.element.style.left = `${data.x}px`;
+			data.element.style.top = `${data.y}px`;
+		});
+
+		// Smoother damping factor (e.g. 0.92 instead of 0.95) for a longer glide decay
+		driftVelocity *= 0.92;
+
+		requestAnimationFrame(animateIcons);
+	}
+
+	// Start animation
+	animateIcons();
 </script>
