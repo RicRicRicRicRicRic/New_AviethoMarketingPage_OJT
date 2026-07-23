@@ -38,11 +38,7 @@ def init_model():
             except Exception as e:
                 print(f"Auto-index build error: {e}")
 
-# Pre-initialize model during startup so first chat request is fast
-try:
-    init_model()
-except Exception as err:
-    print(f"Warning: Model pre-initialization deferred to request time: {err}")
+
 
 # ----- Health Check Endpoints -----
 @app.route('/', methods=['GET'])
