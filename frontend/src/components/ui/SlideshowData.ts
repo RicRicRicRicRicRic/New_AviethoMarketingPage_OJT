@@ -1,15 +1,15 @@
 // Slideshow data for client/partner logos
 // Maps slide images to their corresponding client names
 
-import hero_slide1 from '/src/assets/slides/hero_slide1.png';
-import hero_slide2 from '/src/assets/slides/hero_slide2.png';
-import hero_slide3 from '/src/assets/slides/hero_slide3.png';
-import hero_slide4 from '/src/assets/slides/hero_slide4.png';
-import hero_slide5 from '/src/assets/slides/hero_slide5.png';
-import hero_slide6 from '/src/assets/slides/hero_slide6.png';
-import hero_slide7 from '/src/assets/slides/hero_slide7.png';
-import hero_slide8 from '/src/assets/slides/hero_slide8.png';
-import hero_slide9 from '/src/assets/slides/hero_slide9.png';
+import hero_slide1 from '../../assets/slides/hero_slide1.png';
+import hero_slide2 from '../../assets/slides/hero_slide2.png';
+import hero_slide3 from '../../assets/slides/hero_slide3.png';
+import hero_slide4 from '../../assets/slides/hero_slide4.png';
+import hero_slide5 from '../../assets/slides/hero_slide5.png';
+import hero_slide6 from '../../assets/slides/hero_slide6.png';
+import hero_slide7 from '../../assets/slides/hero_slide7.png';
+import hero_slide8 from '../../assets/slides/hero_slide8.png';
+import hero_slide9 from '../../assets/slides/hero_slide9.png';
 
 export interface SlideData {
 	id: number;
