@@ -6,6 +6,8 @@ interface Props {
 
 const { title = 'HIGHLIGHTS' } = Astro.props;
 
+import pointerIcon from '../../../assets/icons/pointer_icon.png';
+
 const videoClips = [
 	{ id: 1, source: 'youtube', videoId: 'uZMcbP0_S7c', title: 'Highlight Reel 01' },
 	{ id: 2, source: 'youtube', videoId: 'PJJpbt_Kdmw', title: 'Highlight Reel 02' },
@@ -164,12 +166,12 @@ const videoClips = [
 		<!-- Vertical Bar with Draggable Pointer (on the right) -->
 			<div class="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-64 flex-shrink-0 z-20">
 				<div class="w-1 h-64 bg-white/10 rounded-full absolute left-1/4 -translate-x-1/2 top-0"></div>
-			<img
-				src="/src/assets/icons/pointer_icon.png"
-				alt="Draggable pointer"
-				class="absolute left-1/2 -translate-x-[calc(50%-1px)] cursor-grab active:cursor-grabbing w-6 h-6 icon-idle hover:icon-hover"
-				id="dragPointer"
-			/>
+	<img
+		src={pointerIcon.src}
+		alt="Draggable pointer"
+		class="absolute left-1/2 -translate-x-[calc(50%-1px)] cursor-grab active:cursor-grabbing w-6 h-6 icon-idle hover:icon-hover"
+		id="dragPointer"
+	/>
 			</div>
 		</div>
 	</div>
