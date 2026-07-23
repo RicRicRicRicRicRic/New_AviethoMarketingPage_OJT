@@ -8,10 +8,10 @@ import type { ImageMetadata } from 'astro';
 
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/imgs/*.{png,jpg,jpeg,svg}', { eager: true });
 
-const jojo = images['../../assets/imgs/jojo.png']?.default;
-const migz = images['../../assets/imgs/migz.png']?.default;
-const gella = images['../../assets/imgs/gella.png']?.default;
-const rickie = images['../../assets/imgs/rickie.png']?.default;
+const jojo = images['/src/assets/imgs/jojo.png']?.default;
+const migz = images['/src/assets/imgs/migz.png']?.default;
+const gella = images['/src/assets/imgs/gella.png']?.default;
+const rickie = images['/src/assets/imgs/rickie.png']?.default;
 
 interface TeamMember {
 	name: string;
