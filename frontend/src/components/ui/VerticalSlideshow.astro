@@ -34,9 +34,9 @@ const {
 					class="slide-bar flex items-center gap-4 p-4 rounded-lg bg-white/5 backdrop-blur-md border-2 border-white/30 transition-all duration-700 ease-in-out pointer-events-none opacity-40"
 					data-slide-index={index}
 				>
-						<div class="slide-image flex-shrink-0 w-16 h-16 rounded-md overflow-hidden bg-transparent">
+					<div class="slide-image flex-shrink-0 w-16 h-16 rounded-md overflow-hidden bg-transparent">
 						<img
-							src={slide.image}
+							src={slide.image.src}
 							alt={slide.clientName}
 							class="w-full h-full object-contain p-2"
 							loading="lazy"
