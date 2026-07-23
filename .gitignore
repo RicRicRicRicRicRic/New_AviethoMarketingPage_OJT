@@ -55,3 +55,6 @@ service-account-key.json
 # wrangler files
 .wrangler
 /frontend/.wrangler
+.wrangler/*
+/frontend/.wrangler/*
+*.wrangler/*
