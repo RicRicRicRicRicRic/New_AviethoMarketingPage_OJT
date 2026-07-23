@@ -77,8 +77,9 @@ const {
 
     function updateLogoFilter() {
       const body = document.body;
-      const isDefaultTheme = body.classList.contains('theme-default');
-      
+      const isDefaultTheme = body.classList.contains('theme-default') || 
+          (!Array.from(body.classList).some(c => c.startsWith('theme-')));
+
       if (isDefaultTheme) {
         logo!.classList.remove('icon-hover');
       } else {

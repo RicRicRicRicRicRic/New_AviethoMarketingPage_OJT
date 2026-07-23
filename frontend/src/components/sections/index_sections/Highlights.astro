@@ -465,14 +465,14 @@ const videoClips = [
 			}
 			if (playerMount) playerMount.classList.remove('hidden');
 
-			if (player && playerReady && typeof player.loadVideoById === 'function' && clip.videoId) {
+			if (player && playerReady && typeof player.cueVideoById === 'function' && clip.videoId) {
 				playerMount?.classList.add('is-switching');
-				player.loadVideoById(clip.videoId);
+				player.cueVideoById(clip.videoId);
 				isMuted ? player.mute() : player.unMute();
 				setTimeout(() => playerMount?.classList.remove('is-switching'), 200);
 			} else if (playerMount && clip.videoId) {
 				// API failed to load — graceful fallback to a plain embed with native controls
-				playerMount.innerHTML = `<iframe src="https://www.youtube.com/embed/${clip.videoId}?autoplay=1&mute=1&playsinline=1" title="${clip.title}" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="pointer-events:auto;"></iframe>`;
+				playerMount.innerHTML = `<iframe src="https://www.youtube.com/embed/${clip.videoId}?autoplay=0&mute=1&playsinline=1" title="${clip.title}" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="pointer-events:auto;"></iframe>`;
 			}
 		};
 
@@ -587,7 +587,7 @@ const videoClips = [
 				width: '100%',
 				height: '100%',
 				playerVars: {
-					autoplay: 1,
+					autoplay: 0,
 					mute: 0,
 					controls: 0,
 					disablekb: 1,
@@ -598,31 +598,12 @@ const videoClips = [
 					enablejsapi: 1,
 				},
 				events: {
-					onReady: () => {
-						playerReady = true;
-						player.unMute();
-						player.playVideo();
-						setPlayIcon(true);
-						progressRafId = requestAnimationFrame(tickProgress);
-						fetchTitle(videoClips[0], 0);
-
-						// Most browsers block autoplay-with-sound unless the visitor already
-						// interacted with the site. Detect that and fall back to a muted
-						// autoplay (which browsers always allow) so the video still plays,
-						// updating the mute button to match reality.
-						setTimeout(() => {
-							// Skip entirely if a Drive clip is already what's on screen — this
-							// only concerns the (possibly now-hidden) YouTube player's own state.
-							if (videoClips[currentVideoIndex]?.source === 'drive') return;
-							if (player.getPlayerState() !== 1 /* PLAYING */) {
-								isMuted = true;
-								player.mute();
-								player.playVideo();
-								muteIcon?.classList.remove('hidden');
-								unmuteIcon?.classList.add('hidden');
-							}
-						}, 1200);
-					},
+				onReady: () => {
+					playerReady = true;
+					player.unMute();
+					progressRafId = requestAnimationFrame(tickProgress);
+					fetchTitle(videoClips[0], 0);
+				},
 					onStateChange: (event: any) => {
 						// The YouTube player is never actually destroyed when switching to a
 						// Drive clip — it's just paused and hidden, so it can still fire events
