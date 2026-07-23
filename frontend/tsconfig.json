@@ -4,7 +4,11 @@
     ".astro/types.d.ts",
     "src/**/*.astro",
     "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*.tsx",
+    "./worker-configuration.d.ts"
   ],
-  "exclude": ["dist", "node_modules"]
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
 }
