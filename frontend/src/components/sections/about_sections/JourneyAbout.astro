@@ -1,3 +1,9 @@
+---
+import Foundation from '../../../assets/placeholder_about/Foundation.png';
+import growthExpansion from '../../../assets/placeholder_about/growth-expansion.jpg';
+import innovation from '../../../assets/placeholder_about/innovation.jpg';
+---
+
 <section class="relative py-28 px-4 overflow-hidden bg-background">
 
 	<div class="absolute inset-0 pointer-events-none">
@@ -30,10 +36,10 @@
 
 			<div class="relative grid lg:grid-cols-2 gap-12 items-center mb-24">
 
-			<div class="order-2 lg:order-1">
+	<div class="order-2 lg:order-1">
 	<div class="rounded-3xl overflow-hidden border border-accent/20 bg-card h-[320px]">
 		<img
-			src="/Foundation.png"
+			src={Foundation.src}
 			alt="Foundation"
 			class="w-full h-full object-cover"
 			loading="lazy"
@@ -87,7 +93,7 @@
 	<div>
 		<div class="rounded-3xl overflow-hidden border border-accent/20 bg-card h-[320px]">
 			<img
-				src="/growth-expansion.jpg"
+				src={growthExpansion.src}
 				alt="Growth & Expansion"
 				class="w-full h-full object-cover"
 				loading="lazy"
@@ -102,7 +108,7 @@
 	<div class="order-2 lg:order-1">
 		<div class="rounded-3xl overflow-hidden border border-accent/20 bg-card h-[320px]">
 			<img
-				src="/innovation.jpg"
+				src={innovation.src}
 				alt="Innovation"
 				class="w-full h-full object-cover"
 				loading="lazy"
