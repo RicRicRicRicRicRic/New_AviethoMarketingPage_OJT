@@ -2,7 +2,7 @@
 // Navbar.astro — sticky, glass-blurred navigation
 // Refactored to use Tailwind utility classes and design system tokens
 import { Image } from "astro:assets";
-import logo from "../../assets/logo/Avietho_logo.png";
+import logo from "../../assets/logo/Avietho_logo_nav.png";
 
 interface NavLink {
 	href: string;
@@ -45,7 +45,7 @@ const isActiveLink = (href: string): boolean => {
 				<Image
 					src={logo}
 					alt="Avietho Logo"
-					class="h-auto w-14 transition-opacity duration-200 hover:opacity-82"
+					class="h-14 w-auto transition-opacity duration-200 hover:opacity-82"
 				/>
 			</a>
 
