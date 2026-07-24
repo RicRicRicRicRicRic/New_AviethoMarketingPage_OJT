@@ -1,4 +1,4 @@
-<section class="relative py-32 px-4 overflow-hidden bg-background">
+<section class="relative py-6 md:py-8 px-4 overflow-hidden bg-background min-h-screen flex flex-col justify-center">
 	<div class="absolute inset-0 pointer-events-none">
 		<div
 			class="absolute top-24 left-20 w-80 h-80 rounded-full bg-accent/10 blur-[130px]"
@@ -10,181 +10,178 @@
 		</div>
 	</div>
 
-	<div class="relative z-10 max-w-7xl mx-auto">
-		<div class="text-center max-w-3xl mx-auto mb-20">
+	<div class="relative z-10 max-w-7xl mx-auto w-full">
+		<!-- Section Header -->
+		<div class="text-center max-w-3xl mx-auto mb-6 md:mb-8">
 			<p
-				class="text-accent tracking-[0.35em] font-semibold uppercase mb-5"
+				class="text-accent tracking-[0.35em] text-[11px] font-semibold uppercase mb-1.5"
 			>
 				Our Identity
 			</p>
 
-			<h2 class="text-5xl md:text-6xl font-bold text-foreground mb-6">
+			<h2 class="text-2xl md:text-4xl font-bold text-foreground mb-2">
 				The Story Behind
 				<span class="text-accent"> Avietho</span>
 			</h2>
 
-			<p class="text-lg text-text-muted leading-8">
+			<p class="text-xs md:text-sm text-text-muted leading-relaxed max-w-2xl mx-auto">
 				Every great brand begins with a meaningful name. Ours represents
 				family, innovation, and a shared vision that continues to
 				inspire every project we create.
 			</p>
 		</div>
 
-		<div class="grid lg:grid-cols-2 gap-14 items-center">
-			<div>
+		<!-- Main Split Content Grid -->
+		<div class="grid lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+			<!-- Card 1: Name Breakdown -->
+			<div class="flex flex-col justify-center">
 				<div
-					class="relative bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.02] border border-border rounded-[32px] p-10 backdrop-blur-xl"
+					class="relative bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.02] border border-border rounded-2xl p-5 md:p-7 backdrop-blur-xl h-full flex flex-col justify-between"
 				>
 					<div
-						class="absolute left-0 top-12 w-1 h-20 bg-accent rounded-full"
+						class="absolute left-0 top-6 w-1 h-14 bg-accent rounded-full"
 					>
 					</div>
 
-					<p
-						class="uppercase tracking-[0.3em] text-accent text-sm font-semibold mb-5 ml-5"
-					>
-						THE NAME
-					</p>
-
-					<h3
-						class="text-4xl md:text-5xl font-bold text-foreground leading-tight ml-5 mb-8"
-					>
-						A Meaning Behind
-						<span class="text-accent"> Every Letter</span>
-					</h3>
-
-					<p class="text-lg text-text-subtle leading-9 ml-5 mb-10">
-						
-
-						<span
-							class="block mt-3 text-xl font-semibold tracking-[0.15em] text-accent"
+					<div>
+						<p
+							class="uppercase tracking-[0.3em] text-accent text-[11px] font-semibold mb-1.5 ml-3.5"
 						>
-							AV • IE • TH • O
-						</span>
+							THE NAME
+						</p>
 
-						<span class="block mt-3">
+						<h3
+							class="text-xl md:text-2xl font-bold text-foreground leading-tight ml-3.5 mb-2.5"
+						>
+							A Meaning Behind
+							<span class="text-accent"> Every Letter</span>
+						</h3>
+
+						<p class="text-xs md:text-sm text-text-subtle leading-relaxed ml-3.5 mb-5">
+							<span
+								class="block text-base font-semibold tracking-[0.15em] text-accent mb-0.5"
+							>
+								AV • IE • TH • O
+							</span>
 							Representing four siblings united by one mission—to help businesses grow through strategic digital marketing, creativity, technology, and purposeful storytelling.
-						</span>
-					</p>
+						</p>
+					</div>
 
-					<div class="grid grid-cols-2 gap-5">
+					<div class="grid grid-cols-2 gap-3">
 						<div
-							class="group bg-foreground/[0.03] border border-border rounded-2xl p-6 hover:border-accent/50 hover:-translate-y-2 transition-all duration-500"
+							class="group bg-foreground/[0.03] border border-border rounded-xl p-3.5 hover:border-accent/50 hover:-translate-y-0.5 transition-all duration-300"
 						>
-							<div class="text-3xl font-bold text-accent mb-2">
+							<div class="text-lg font-bold text-accent mb-0.5">
 								AV
 							</div>
-
-							<p class="font-semibold text-foreground mb-2">
+							<p class="font-semibold text-foreground text-xs mb-0.5">
 								Audience Vision
 							</p>
-
-							<p class="text-text-muted text-sm">
+							<p class="text-text-muted text-[11px] leading-tight">
 								A clear purpose guiding every decision.
 							</p>
 						</div>
 
 						<div
-							class="group bg-foreground/[0.03] border border-border rounded-2xl p-6 hover:border-accent/50 hover:-translate-y-2 transition-all duration-500"
+							class="group bg-foreground/[0.03] border border-border rounded-xl p-3.5 hover:border-accent/50 hover:-translate-y-0.5 transition-all duration-300"
 						>
-							<div class="text-3xl font-bold text-accent mb-2">
+							<div class="text-lg font-bold text-accent mb-0.5">
 								IE
 							</div>
-
-							<p class="font-semibold text-foreground mb-2">
+							<p class="font-semibold text-foreground text-xs mb-0.5">
 								Innovation & Engagement
 							</p>
-
-							<p class="text-text-muted text-sm">
-								Ideas transformed into impactful experiences.
+							<p class="text-text-muted text-[11px] leading-tight">
+								Ideas transformed into experiences.
 							</p>
 						</div>
 
 						<div
-							class="group bg-foreground/[0.03] border border-border rounded-2xl p-6 hover:border-accent/50 hover:-translate-y-2 transition-all duration-500"
+							class="group bg-foreground/[0.03] border border-border rounded-xl p-3.5 hover:border-accent/50 hover:-translate-y-0.5 transition-all duration-300"
 						>
-							<div class="text-3xl font-bold text-accent mb-2">
+							<div class="text-lg font-bold text-accent mb-0.5">
 								TH
 							</div>
-
-							<p class="font-semibold text-foreground mb-2">
+							<p class="font-semibold text-foreground text-xs mb-0.5">
 								Technology Hub
 							</p>
-
-							<p class="text-text-muted text-sm">
-								Always adapting to a changing digital world.
+							<p class="text-text-muted text-[11px] leading-tight">
+								Adapting to a dynamic digital world.
 							</p>
 						</div>
 
 						<div
-							class="group bg-foreground/[0.03] border border-border rounded-2xl p-6 hover:border-accent/50 hover:-translate-y-2 transition-all duration-500"
+							class="group bg-foreground/[0.03] border border-border rounded-xl p-3.5 hover:border-accent/50 hover:-translate-y-0.5 transition-all duration-300"
 						>
-							<div class="text-3xl font-bold text-accent mb-2">
+							<div class="text-lg font-bold text-accent mb-0.5">
 								O
 							</div>
-
-							<p class="font-semibold text-foreground mb-2">
+							<p class="font-semibold text-foreground text-xs mb-0.5">
 								Optimization
 							</p>
-
-							<p class="text-text-muted text-sm">
-								Four founders working together as one team.
+							<p class="text-text-muted text-[11px] leading-tight">
+								Four founders working as one team.
 							</p>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div>
+			<!-- Card 2: Family Legacy & Quote -->
+			<div class="flex flex-col justify-center">
 				<div
-					class="relative bg-gradient-to-br from-background-elevated to-surface border border-accent/15 rounded-[32px] p-12 overflow-hidden backdrop-blur-xl"
+					class="relative bg-gradient-to-br from-background-elevated to-surface border border-accent/15 rounded-2xl p-5 md:p-7 overflow-hidden backdrop-blur-xl h-full flex flex-col justify-between"
 				>
 					<div
 						class="absolute -top-16 -right-16 w-64 h-64 bg-accent/10 rounded-full blur-[100px]"
 					>
 					</div>
 
-					<div class="relative z-10 text-center">
-						<div
-							class="mx-auto mb-10 w-36 h-36 rounded-full border border-accent/40 bg-accent/10 flex items-center justify-center"
-						>
-							<span class="text-6xl font-bold text-accent">
-								A
-							</span>
+					<div class="relative z-10 text-center flex flex-col items-center justify-between h-full">
+						<div>
+							<div
+								class="mx-auto mb-3 w-16 h-16 md:w-20 md:h-20 rounded-full border border-accent/40 bg-accent/10 flex items-center justify-center"
+							>
+								<span class="text-2xl md:text-3xl font-bold text-accent">
+									A
+								</span>
+							</div>
+
+							<p
+								class="uppercase tracking-[0.35em] text-accent text-[11px] font-semibold mb-1.5"
+							>
+								Founded by Four Siblings
+							</p>
+
+							<h3 class="text-2xl md:text-3xl font-bold text-foreground mb-3">
+								A Family Legacy
+							</h3>
+
+							<p class="text-xs md:text-sm text-text-subtle leading-relaxed mb-4 max-w-md mx-auto">
+								What began as a family dream evolved into a trusted
+								digital marketing agency serving businesses,
+								government institutions, and political leaders
+								throughout the Philippines.
+							</p>
 						</div>
 
-						<p
-							class="uppercase tracking-[0.35em] text-accent text-sm font-semibold mb-4"
-						>
-							Founded by Four Siblings
-						</p>
+						<div class="w-full">
+							<div
+								class="w-full h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent mb-4"
+							>
+							</div>
 
-						<h3 class="text-5xl font-bold text-foreground mb-8">
-							A Family Legacy
-						</h3>
+							<blockquote
+								class="italic text-base md:text-lg text-foreground leading-relaxed mb-3"
+							>
+								"Every successful brand begins with a meaningful
+								story. Our mission is to help you tell yours."
+							</blockquote>
 
-						<p class="text-lg text-text-subtle leading-9 mb-10">
-							What began as a family dream evolved into a trusted
-							digital marketing agency serving businesses,
-							government institutions, and political leaders
-							throughout the Philippines.
-						</p>
-
-						<div
-							class="w-full h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent mb-10"
-						>
+							<p class="text-accent font-semibold text-xs md:text-sm">
+								— Avietho Digital Marketing
+							</p>
 						</div>
-
-						<blockquote
-							class="italic text-2xl text-foreground leading-relaxed mb-8"
-						>
-							"Every successful brand begins with a meaningful
-							story. Our mission is to help you tell yours."
-						</blockquote>
-
-						<p class="text-accent font-semibold text-lg">
-							— Avietho Digital Marketing
-						</p>
 					</div>
 				</div>
 			</div>
