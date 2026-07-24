@@ -578,6 +578,7 @@ const videos = await getVideos();
 
 		// Pagination state
 		let currentPage = 1;
+		let currentFilter = "all"; // Track active filter
 		const videosPerPage = 9;
 
 		function renderPage(itemsToDisplay: HTMLElement[]) {
@@ -645,13 +646,14 @@ const videos = await getVideos();
 
 			sorted.forEach((item) => grid.appendChild(item));
 
-			// Reset to first page and render
-			currentPage = 1;
-			renderPage(videoItems as HTMLElement[]);
+			// Re-apply the current filter instead of showing all items
+			filterVideos(currentFilter);
 		}
 
 		function filterVideos(category: string) {
 			if (!grid) return;
+
+			currentFilter = category;
 
 			videoItems.forEach((item) => {
 				const title = (
