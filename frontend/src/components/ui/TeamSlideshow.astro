@@ -63,7 +63,6 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 		private slotOrder: HTMLElement[];
 		private autoplayTimer: ReturnType<typeof setInterval> | null;
 		private isDragging: boolean;
-		private dragStartX: number;
 		private dragDeltaX: number;
 		private pointerId: number | null;
 
@@ -72,7 +71,6 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 			this.currentIndex = startIndex;
 			this.autoplayTimer = null;
 			this.isDragging = false;
-			this.dragStartX = 0;
 			this.dragDeltaX = 0;
 			this.pointerId = null;
 			this.wrapper = document.getElementById('slideshow-wrapper');
@@ -92,7 +90,7 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 						SLOT_CLASSES.forEach((c) => el.classList.remove(c));
 						el.classList.add(SLOT_CLASSES[i]);
 						
-						el.style.transition = animate ? 'all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none';
+						el.style.transition = animate ? 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
 						el.style.transform = ''; 
 
 						const offset = SLOT_OFFSETS[i];
@@ -157,19 +155,23 @@ const slotOffsets = [-2, -1, 0, 1, 2];
 			const onPointerDown = (e: PointerEvent) => {
 				this.isDragging = true;
 				this.pointerId = e.pointerId;
-				this.dragStartX = e.clientX;
 				this.dragDeltaX = 0;
+				const centerSlot = this.slotOrder[2];
+				if (centerSlot) {
+					centerSlot.style.transition = 'none';
+				}
 				this.wrapper?.setPointerCapture(e.pointerId);
 				this.stopAutoplay();
 			};
 
 			const onPointerMove = (e: PointerEvent) => {
 				if (!this.isDragging || e.pointerId !== this.pointerId) return;
-				this.dragDeltaX = e.clientX - this.dragStartX;
+				// Use incremental movementX to avoid absolute coordinate jumping offsets
+				this.dragDeltaX += e.movementX;
 				const centerSlot = this.slotOrder[2]; // Index 2 is always is-center
 				if (centerSlot) {
 					centerSlot.style.transition = 'none';
-					centerSlot.style.transform = `translateX(${this.dragDeltaX}px) translateY(-50%) scale(1)`;
+					centerSlot.style.transform = `translateX(-50%) translateX(${this.dragDeltaX}px) translateY(-50%) scale(1)`;
 				}
 			};
 
