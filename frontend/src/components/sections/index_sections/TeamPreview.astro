@@ -8,6 +8,13 @@ import type { ImageMetadata } from 'astro';
 
 const faviconImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/favicons/*.{png,jpg,jpeg,svg,ico}', { eager: true });
 
+const faviconMap: Record<string, string> = {
+	'Photographer': faviconImages['/src/assets/favicons/Photographer.png']?.default?.src ?? '',
+	'Creative Director': faviconImages['/src/assets/favicons/Creative Director.png']?.default?.src ?? '',
+	'Online Editor': faviconImages['/src/assets/favicons/Online Editor.png']?.default?.src ?? '',
+	'Public Relations Specialist & Social Media Manager': faviconImages['/src/assets/favicons/Public Relations.png']?.default?.src ?? '',
+};
+
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/imgs/*.{png,jpg,jpeg,svg}', { eager: true });
 
 const jojo = images['/src/assets/imgs/jojo.png']?.default;
@@ -65,33 +72,26 @@ function formatDescription(description: string, name: string): string {
 
 <section class="py-20 px-4 py-40 bg-background-elevated w-full h-full relative">
 	<!-- Floating Favicon Background Layer -->
-	<div class="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-20">
-		{Object.values(faviconImages).flatMap((favicon, faviconIndex) => {
-			// Create multiple instances of each favicon for richer background
+	<div id="favicon-container" class="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-20 transition-opacity duration-500" data-favicon-map={JSON.stringify(faviconMap)}>
+		{(() => {
+			const initialPath = faviconMap[teamMembers[currentIndex].jobTitle] || Object.values(faviconImages)[0]?.default.src;
 			const instances = [];
-			const instancesPerFavicon = 3; // Adjust this number to increase/decrease density
-
-			for (let i = 0; i < instancesPerFavicon; i++) {
-				const globalIndex = faviconIndex * instancesPerFavicon + i;
-				// Generate pseudo-random deterministic placements based on global index
-				const randomTop = (globalIndex * 17) % 85 + 5;
-				const randomLeft = (globalIndex * 31) % 90 + 5;
-				const randomDuration = 12 + (globalIndex % 7);
-				const randomDelay = (globalIndex * 0.7) % 5;
-				const randomSize = 24 + (globalIndex % 3) * 8; // Vary sizes: 24px, 32px, 40px
+			for (let i = 0; i < 12; i++) {
+				const randomTop = (i * 17) % 85 + 5;
+				const randomLeft = (i * 31) % 90 + 5;
+				const randomSize = 24 + (i % 3) * 8;
 
 				instances.push(
 					<img
-						src={favicon.default.src}
+						src={initialPath}
 						alt=""
 						class="absolute object-contain icon-hover floating-favicon"
 						style={`top: ${randomTop}%; left: ${randomLeft}%; width: ${randomSize}px; height: ${randomSize}px;`}
 					/>
 				);
 			}
-
 			return instances;
-		})}
+		})()}
 	</div>
 
 	<div class="w-full h-full relative z-10">
@@ -147,6 +147,25 @@ function formatDescription(description: string, name: string): string {
 	// Listen for custom slideshow events to update text
 	document.addEventListener('slideshowChanged', (e: any) => {
 		const { member } = e.detail;
+		
+		// Favicon fade swap
+		const faviconContainer = document.getElementById('favicon-container');
+		if (faviconContainer) {
+			faviconContainer.style.opacity = '0';
+			setTimeout(() => {
+				const faviconMapData = faviconContainer.dataset.faviconMap;
+				if (faviconMapData) {
+					const faviconMap = JSON.parse(faviconMapData);
+					const newSrc = faviconMap[member.jobTitle];
+					if (newSrc) {
+						document.querySelectorAll('.floating-favicon').forEach((img) => {
+							(img as HTMLImageElement).src = newSrc;
+						});
+					}
+				}
+				faviconContainer.style.opacity = '0.2';
+			}, 250);
+		}
 		
 		if (nameEl && jobTitleEl && descEl && teamInfo && teamDescription) {
 			// Fade out
