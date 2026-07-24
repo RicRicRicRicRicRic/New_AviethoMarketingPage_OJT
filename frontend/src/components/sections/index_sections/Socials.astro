@@ -28,10 +28,10 @@ const socialImages = [
 
 // Social media icons array (only the 4 main platforms)
 const socialIcons = [
-	{ name: 'Facebook', src: facebookIcon.src, alt: 'Facebook' },
-	{ name: 'Instagram', src: instagramIcon.src, alt: 'Instagram' },
-	{ name: 'TikTok', src: tiktokIcon.src, alt: 'TikTok' },
-	{ name: 'YouTube', src: youtubeIcon.src, alt: 'YouTube' },
+	{ name: 'Facebook', src: facebookIcon.src, alt: 'Facebook', url: 'https://facebook.com/aviethodigital' },
+	{ name: 'Instagram', src: instagramIcon.src, alt: 'Instagram', url: 'https://www.instagram.com/aviethodigital/' },
+	{ name: 'TikTok', src: tiktokIcon.src, alt: 'TikTok', url: 'https://www.tiktok.com/@aviethodigital' },
+	{ name: 'YouTube', src: youtubeIcon.src, alt: 'YouTube', url: 'https://www.youtube.com/@AviethoDigital/videos' },
 ];
 ---
 
@@ -144,7 +144,9 @@ const socialIcons = [
 					<div class="flex items-center justify-center gap-4 ">
 						{socialIcons.map((icon) => (
 							<a 
-								href="#" 
+								href={icon.url} 
+								target="_blank"
+								rel="noopener noreferrer"
 								class="h-12 w-12 rounded-full flex items-center justify-center bg-[var(--color-background)] border border-accent/20 hover:scale-110 hover:bg-accent/10 transition-all duration-300 group flex-shrink-0"
 								title={icon.name}
 							>
