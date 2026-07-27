@@ -306,6 +306,13 @@ import '../styles/global.css';
       statusMsg.textContent = '✓ Message sent successfully!';
       statusMsg.className = 'status-msg success';
       form.reset();
+
+      // Automatically hide the message after 4 seconds
+      setTimeout(() => {
+        statusMsg.textContent = '';
+        statusMsg.className = 'mt-4 text-xs font-semibold text-center';
+      }, 2000);
+
     } catch (error) {
       statusMsg.textContent = '✕ Failed to send message. Please try again.';
       statusMsg.className = 'status-msg error';
