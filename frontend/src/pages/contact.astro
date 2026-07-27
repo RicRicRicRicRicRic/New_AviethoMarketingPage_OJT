@@ -140,12 +140,20 @@ import '../styles/global.css';
                   class="manual-input w-full bg-transparent border-b border-border/80 rounded-none py-2 text-foreground placeholder:text-text-muted/40 focus:border-accent focus:outline-none transition" 
                 />
               </div>
+
+              <!-- STRICT NUMERIC-ONLY PHONE NUMBER INPUT -->
               <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-text-subtle mb-1">Phone Number</label>
                 <input 
-                  type="text" 
+                  type="tel" 
+                  id="phone-input"
                   name="contact_number" 
+                  maxlength="11"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
                   autocomplete="one-time-code"
+                  onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                  oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                   class="manual-input w-full bg-transparent border-b border-border/80 rounded-none py-2 text-foreground placeholder:text-text-muted/40 focus:border-accent focus:outline-none transition" 
                 />
               </div>
@@ -279,7 +287,23 @@ import '../styles/global.css';
       input.value = '';
     });
 
-    // 2. Inquiry Pill Selection Handling
+    // 2. Strict Keydown Handling for Phone Input (Prevents typing letters)
+    const phoneInput = document.getElementById('phone-input') as HTMLInputElement | null;
+    if (phoneInput) {
+      phoneInput.addEventListener('keydown', (e: KeyboardEvent) => {
+        // Allow navigation/editing keys
+        const allowed = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
+        if (allowed.includes(e.key) || e.ctrlKey || e.metaKey) {
+          return;
+        }
+        // Block any key that is not a digit (0-9)
+        if (!/^[0-9]$/.test(e.key)) {
+          e.preventDefault();
+        }
+      });
+    }
+
+    // 3. Inquiry Pill Selection Handling
     const buttons = document.querySelectorAll('.inquiry-btn');
     const inactiveClasses = ['border-border', 'bg-surface/50', 'text-text-subtle'];
     const activeClasses = ['border-accent', 'bg-accent', 'text-background', 'shadow-md', 'shadow-accent/20'];
@@ -296,7 +320,7 @@ import '../styles/global.css';
       });
     });
 
-    // 3. Smooth Downscaling Scroll Animation for HQ + Direct Comm section
+    // 4. Smooth Downscaling Scroll Animation for HQ + Direct Comm section
     const sidebar = document.getElementById('sticky-sidebar');
     if (sidebar) {
       window.addEventListener('scroll', () => {
