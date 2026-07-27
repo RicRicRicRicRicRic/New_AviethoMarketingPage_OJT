@@ -4,17 +4,16 @@ import '../styles/global.css';
 ---
 
 <BaseLayout title="Contact — Avietho Digital">
-  <!-- Reduced top vertical padding on main container from py-12/py-20 to pt-4 pb-12 -->
+  <!-- Main container -->
   <main class="max-w-7xl mx-auto px-6 md:px-12 pt-4 pb-12 font-body">
 
     <!-- HERO / AGENCY BANNER SECTION -->
-    <!-- Reduced top padding from p-8/p-16 to pt-6 pb-8 px-8 md:pt-8 md:pb-12 md:px-16 -->
     <section class="relative overflow-hidden rounded-3xl pt-6 pb-8 px-8 md:pt-8 md:pb-12 md:px-16 mb-12 shadow-2xl backdrop-blur-md">
       <!-- Glow effect backdrop -->
       <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="relative z-10 max-w-3xl">
-        <!-- UPDATED HEADER TAGLINE TO MATCH DESIGN IMAGE -->
+        <!-- HEADER TAGLINE -->
         <div class="inline-flex items-center gap-3 text-xs md:text-sm font-semibold tracking-[0.2em] uppercase text-accent mb-4">
           <span class="w-8 h-[1px] bg-accent/60"></span>
           <span>Contact · Advertise · Collaborate · Partner</span>
@@ -62,8 +61,8 @@ import '../styles/global.css';
       </div>
     </section>
 
-    <!-- MAIN INTERACTIVE SECTION (ALIGNED HEIGHTS & PADDING) -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
+    <!-- MAIN INTERACTIVE SECTION -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
       
       <!-- LEFT COLUMN: AGENCY BRIEF FORM PANEL -->
       <div class="lg:col-span-7 bg-background-elevated/60 border border-border rounded-3xl p-8 shadow-xl backdrop-blur-md flex flex-col justify-between">
@@ -144,64 +143,80 @@ import '../styles/global.css';
 
       </div>
 
-      <!-- RIGHT COLUMN: HQ LOCATION & DIRECT CONTACT PANELS -->
-      <div class="lg:col-span-5 flex flex-col justify-between gap-8">
+      <!-- RIGHT COLUMN: HQ & DIRECT CONTACT -->
+      <div class="lg:col-span-5 lg:sticky lg:top-20 self-start">
         
-        <!-- HQ OFFICE CARD -->
-        <div class="bg-background-elevated/60 border border-border rounded-3xl p-8 shadow-xl backdrop-blur-md flex-1 flex flex-col justify-between">
-          <div>
-            <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent mb-4">
-              <span class="w-2 h-2 rounded-full bg-accent"></span>
-              <span>Headquarters</span>
+        <div id="sticky-sidebar" class="flex flex-col justify-start gap-4 p-3 md:p-5 origin-top transition-all duration-300 ease-out">
+          
+          <!-- HQ OFFICE -->
+          <div class="flex flex-col items-start justify-between text-left">
+            <div class="flex flex-col items-start w-full">
+              <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent mb-2.5">
+                <span class="w-6 h-[1px] bg-accent"></span>
+                <span>Headquarters</span>
+              </div>
+
+              <h2 class="text-2xl md:text-[1.7rem] font-heading font-bold text-foreground mb-3 leading-snug">
+                Madrigal Business Park, <br/>
+                <span class="text-accent italic font-normal">Ayala Alabang.</span>
+              </h2>
+
+              <!-- UNIFORM FONT WEIGHT ADDRESS BLOCK -->
+              <address class="not-italic text-text-subtle text-sm font-heading leading-relaxed flex flex-col items-start gap-[4.2px] mb-5">
+                <span>Admiralty Bldg. 1101</span>
+                <span>Alabang-Zapote Rd.</span>
+                <span>Madrigal Business Park</span>
+                <span>Brgy. Ayala Alabang</span>
+                <span>Muntinlupa City, Philippines</span>
+              </address>
             </div>
 
-            <h2 class="text-3xl font-heading font-bold text-foreground mb-4">
-              Madrigal Business Park, <br/>
-              <span class="text-accent italic font-normal">Ayala Alabang.</span>
-            </h2>
-
-            <address class="not-italic text-text-subtle text-sm leading-relaxed space-y-1 mb-6">
-              <p class="font-medium text-foreground">Admiralty Bldg. 1101</p>
-              <p>Alabang-Zapote Rd., Madrigal Business Park</p>
-              <p>Brgy. Ayala Alabang, Muntinlupa City, Philippines</p>
-            </address>
-          </div>
-
-          <div>
-            <a href="https://maps.app.goo.gl/KyDMwmYMADs5c5LC7" class="inline-flex items-center gap-2 bg-surface hover:bg-background-card border border-border px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-foreground hover:text-accent transition">
-              <span>View on Google Maps</span>
-              <span>↗</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- DIRECT LINES CARD -->
-        <div class="bg-background-elevated/60 border border-border rounded-3xl p-8 shadow-xl backdrop-blur-md space-y-4 flex-1 flex flex-col justify-center">
-          <div class="text-xs font-semibold uppercase tracking-widest text-accent mb-2">
-            Direct Communications
-          </div>
-
-          <div class="space-y-3">
-            <div class="flex justify-between items-center py-2.5 border-b border-border/60 text-sm">
-              <span class="text-xs uppercase tracking-wider text-text-muted">Landline</span>
-              <span class="font-mono text-xs font-semibold text-foreground">+63 2 7000 1366</span>
-            </div>
-
-            <div class="flex justify-between items-center py-2.5 border-b border-border/60 text-sm">
-              <span class="text-xs uppercase tracking-wider text-text-muted">Mobile</span>
-              <span class="font-mono text-xs font-semibold text-foreground">+63 9783 1987</span>
-            </div>
-
-            <div class="flex justify-between items-center py-2.5 border-b border-border/60 text-sm">
-              <span class="text-xs uppercase tracking-wider text-text-muted">General</span>
-              <a href="mailto:aviethodigital@gmail.com" class="text-xs font-medium text-foreground hover:text-accent transition truncate max-w-[200px]">aviethodigital@gmail.com</a>
-            </div>
-
-            <div class="flex justify-between items-center py-2.5 text-sm">
-              <span class="text-xs uppercase tracking-wider text-text-muted">Marketing</span>
-              <a href="mailto:marketing.avietho@gmail.com" class="text-xs font-medium text-accent hover:underline transition truncate max-w-[200px]">marketing.avietho@gmail.com</a>
+            <div>
+              <a href="https://maps.app.goo.gl/KyDMwmYMADs5c5LC7" class="inline-flex items-center gap-2 bg-surface hover:bg-background-card border border-border px-4.5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-foreground hover:text-accent transition">
+                <span>View on Google Maps</span>
+                <span>↗</span>
+              </a>
             </div>
           </div>
+
+          <!-- DIRECT LINES -->
+          <div class="space-y-3 flex flex-col justify-center pt-3 mt-1">
+            <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent mb-1.5">
+              <span class="w-6 h-[1px] bg-accent"></span>
+              <span>Direct Communications</span>
+            </div>
+
+            <div class="space-y-1">
+              <div class="group flex justify-between items-center py-2.5 border-b border-border/60 text-sm">
+                <span class="text-xs uppercase tracking-wider text-text-muted">Landline</span>
+                <a href="tel:+63270001366" class="font-heading text-xs md:text-sm font-normal text-foreground group-hover:font-bold group-hover:text-accent transition-all duration-150">
+                  +63 2 7000 1366
+                </a>
+              </div>
+
+              <div class="group flex justify-between items-center py-2.5 border-b border-border/60 text-sm">
+                <span class="text-xs uppercase tracking-wider text-text-muted">Mobile</span>
+                <a href="tel:+6397831987" class="font-heading text-xs md:text-sm font-normal text-foreground group-hover:font-bold group-hover:text-accent transition-all duration-150">
+                  +63 9783 1987
+                </a>
+              </div>
+
+              <div class="group flex justify-between items-center py-2.5 border-b border-border/60 text-sm">
+                <span class="text-xs uppercase tracking-wider text-text-muted">General</span>
+                <a href="mailto:aviethodigital@gmail.com" class="font-heading text-xs md:text-sm font-normal text-foreground group-hover:font-bold group-hover:text-accent transition-all duration-150 truncate max-w-[210px]">
+                  aviethodigital@gmail.com
+                </a>
+              </div>
+
+              <div class="group flex justify-between items-center py-2.5 border-b border-border/60 text-sm">
+                <span class="text-xs uppercase tracking-wider text-text-muted">Marketing</span>
+                <a href="mailto:marketing.avietho@gmail.com" class="font-heading text-xs md:text-sm font-normal text-foreground group-hover:font-bold group-hover:text-accent transition-all duration-150 truncate max-w-[210px]">
+                  marketing.avietho@gmail.com
+                </a>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -211,28 +226,36 @@ import '../styles/global.css';
 
 </BaseLayout>
 
-<!-- SCRIPT TO HANDLE TOGGLE HIGHLIGHT ON INQUIRY BUTTONS -->
+<!-- SCRIPT FOR DYNAMIC SCROLL ANIMATION & PILL TOGGLES -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // 1. Inquiry Pill Selection Handling
     const buttons = document.querySelectorAll('.inquiry-btn');
-
-    // Classes for inactive state
     const inactiveClasses = ['border-border', 'bg-surface/50', 'text-text-subtle'];
-    // Classes for active state
     const activeClasses = ['border-accent', 'bg-accent', 'text-background', 'shadow-md', 'shadow-accent/20'];
 
     buttons.forEach((btn) => {
       btn.addEventListener('click', () => {
-        // Reset all buttons to inactive
         buttons.forEach((b) => {
           b.classList.remove(...activeClasses);
           b.classList.add(...inactiveClasses);
         });
 
-        // Set clicked button to active state
         btn.classList.remove(...inactiveClasses);
         btn.classList.add(...activeClasses);
       });
     });
+
+    // 2. Smooth Downscaling Scroll Animation for HQ + Direct Comm section
+    const sidebar = document.getElementById('sticky-sidebar');
+    if (sidebar) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 150) {
+          sidebar.classList.add('scale-95', 'opacity-95');
+        } else {
+          sidebar.classList.remove('scale-95', 'opacity-95');
+        }
+      }, { passive: true });
+    }
   });
 </script>
