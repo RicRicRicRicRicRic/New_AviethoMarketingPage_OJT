@@ -73,6 +73,7 @@ const {} = Astro.props;
     let isExpanded = false;
     let isDragging = false;
     let hasMoved = false;
+    let dragEndTime = 0; // Track when drag ended to prevent click after drag
     let startX = 0;
     let startY = 0;
     let initialLeft = 24;
@@ -281,7 +282,14 @@ const {} = Astro.props;
       hasMoved = false;
     }
 
-    button.addEventListener('click', togglePanel);
+    // Handle tap vs drag distinction - only toggle if not dragged
+    button.addEventListener('click', (e) => {
+      const timeSinceDrag = Date.now() - dragEndTime;
+      // Only toggle if: not moved AND (not just finished dragging OR drag ended > 100ms ago)
+      if (!hasMoved && (isDragging || timeSinceDrag > 100)) {
+        togglePanel();
+      }
+    });
 
     // Add click handlers to theme buttons
     const themeButtons = panel.querySelectorAll('button');
@@ -306,7 +314,11 @@ const {} = Astro.props;
 
     // Start drag
     function startDrag(e: Event) {
-      e.preventDefault();
+      // Only prevent default for mouse events to avoid text selection
+      // Don't prevent default for touch events to allow click events on mobile
+      if (e.type === 'mousedown') {
+        e.preventDefault();
+      }
       
       isDragging = true;
       hasMoved = false;
@@ -369,8 +381,8 @@ const {} = Astro.props;
       const deltaX = clientX - startX;
       const deltaY = clientY - startY;
 
-      // Mark as moved if dragged more than 3px
-      if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) {
+      // Mark as moved if dragged more than 6px (prevents micro-movements from triggering drag)
+      if (Math.abs(deltaX) > 6 || Math.abs(deltaY) > 6) {
         hasMoved = true;
       }
 
@@ -409,6 +421,8 @@ const {} = Astro.props;
       localStorage.setItem('colorPaletteY', currentTop.toString());
 
       isDragging = false;
+      // Don't reset hasMoved here - let it persist to prevent click after drag
+      // hasMoved will be reset on the next startDrag call
 
       document.removeEventListener('mousemove', onDrag);
       document.removeEventListener('mouseup', endDrag);
