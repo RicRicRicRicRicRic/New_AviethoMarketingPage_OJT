@@ -239,7 +239,7 @@ const videos = await getVideos();
 		<div class="mx-auto max-w-7xl px-6 py-20 md:px-8 lg:px-10">
 			<!-- Header -->
 			<header
-				class="animate-reveal-up flex flex-col items-center mx-auto max-w-2xl text-center"
+				class="reveal-on-load flex flex-col items-center mx-auto max-w-2xl text-center"
 				style="animation-delay:0ms"
 			>
 				<div
@@ -266,103 +266,103 @@ const videos = await getVideos();
 			</header>
 
 			<hr
-				class="animate-reveal-up mt-12 border-white/10"
+				class="reveal-on-load mt-12 border-white/10"
 				style="animation-delay:80ms"
 			/>
 
-	<!-- Sort controls -->
-	<div
-		class="animate-reveal-up mt-8 flex w-full flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6"
-		style="animation-delay:200ms"
-	>
-		<span
-			class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500"
-			>Sort by</span
-		>
-		<button
-			id="sort-latest"
-			class="sort-btn active rounded-full border border-accent bg-accent px-3 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer sm:px-4"
-		>
-			Latest
-		</button>
-		<button
-			id="sort-popular"
-			class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4"
-		>
-			Popular
-		</button>
-		<button
-			id="sort-oldest"
-			class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4"
-		>
-			Oldest
-		</button>
-	</div>
+			<!-- Sort controls -->
+			<div
+				class="reveal-on-load mt-12 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6"
+				style="animation-delay:160ms"
+			>
+				<span
+					class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500"
+					>Sort by</span
+				>
+				<button
+					id="sort-latest"
+					class="sort-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer"
+				>
+					Latest
+				</button>
+				<button
+					id="sort-popular"
+					class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
+					Popular
+				</button>
+				<button
+					id="sort-oldest"
+					class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
+					Oldest
+				</button>
+			</div>
 
-	<!-- Filter controls -->
-	<div
-		class="animate-reveal-up mt-8 flex w-full flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6"
-		style="animation-delay:200ms"
-	>
-		<span
-			class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500"
-			>Show only:</span
-		>
-		<button
-			id="filter-all"
-			class="filter-btn active rounded-full border border-accent bg-accent px-2 py-1.5 text-xs font-medium text-zinc-950 transition-colors cursor-pointer sm:px-4 sm:text-sm"
-		>
-			All
-		</button>
-		<button
-			id="filter-motw"
-			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
-		>
-			MOTW
-		</button>
-		<button
-			id="filter-pov"
-			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
-		>
-			POV
-		</button>
-		<button
-			id="filter-narrative"
-			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
-		>
-			Narrative
-		</button>
-		<button
-			id="filter-saywhat"
-			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
-		>
-			SAY WHAT?
-		</button>
-		<button
-			id="filter-fashion"
-			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
-		>
-			Fashion
-		</button>
-		<button
-			id="filter-anong-bago"
-			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
-		>
-			Ano'ng Bago?
-		</button>
-		<button
-			id="filter-highlights"
-			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
-		>
-			Highlights
-		</button>
-		<button
-			id="filter-others"
-			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
-		>
-			Others
-		</button>
-	</div>
+			<!-- Filter controls -->
+			<div
+				class="reveal-on-load mt-8 flex flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6"
+				style="animation-delay:200ms"
+			>
+				<span
+					class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500"
+					>Show only:</span
+				>
+				<button
+					id="filter-all"
+					class="filter-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer"
+				>
+					All
+				</button>
+				<button
+					id="filter-motw"
+					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
+					MOTW
+				</button>
+				<button
+					id="filter-pov"
+					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
+					POV
+				</button>
+				<button
+					id="filter-narrative"
+					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
+					Narrative
+				</button>
+				<button
+					id="filter-saywhat"
+					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
+					SAY WHAT?
+				</button>
+				<button
+					id="filter-fashion"
+					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
+					Fashion
+				</button>
+				<button
+					id="filter-anong-bago"
+					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
+					Ano'ng Bago?
+				</button>
+				<button
+					id="filter-highlights"
+					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
+					Highlights
+				</button>
+				<button
+					id="filter-others"
+					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
+				>
+					Others
+				</button>
+			</div>
 
 			<!-- Grid -->
 			{
@@ -373,7 +373,7 @@ const videos = await getVideos();
 					>
 						{videos.map((video, idx) => (
 							<article
-								class="video-item animate-reveal-up group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-black/40"
+								class="video-item reveal-on-load group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-black/40"
 								data-video-id={video.videoId || ""}
 								data-title={video.title}
 								data-publish-date={video.publishedAt}
@@ -414,9 +414,7 @@ const videos = await getVideos();
 									)}
 									<div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
 										<div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-zinc-950">
-											<span class="ml-0.5 text-xl">
-												▶
-											</span>
+											<span class="ml-0.5 text-xl">▶</span>
 										</div>
 									</div>
 								</div>
@@ -461,63 +459,116 @@ const videos = await getVideos();
 			<!-- Pagination Controls -->
 			<div
 				id="pagination-controls"
-				class="mt-25 flex justify-center gap-4"
-			>
-			</div>
-
-			<!-- Note about Popular sorting -->
-			<div
-				class="animate-reveal-up mt-8 text-center text-sm text-zinc-500"
-				style="animation-delay:300ms"
+				class="mt-10 flex justify-center gap-2"
 			>
 			</div>
 		</div>
 	</div>
 
 	<!-- Video pop-up modal -->
-	<div
-		id="video-player"
-		class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4"
-	>
-		<div
-			id="player-backdrop"
-			class="absolute inset-0 bg-black/92 backdrop-blur-[6px]"
-		>
-		</div>
-		<div class="relative w-full max-w-[1100px]">
-			<div
-				class="relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black shadow-[0_30px_80px_rgba(0,0,0,0.6)]"
-			>
-				<div id="player-container" class="h-full w-full"></div>
-				<button
-					id="close-player"
-					aria-label="Close video"
-					class="absolute top-[14px] right-[14px] z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/60 text-lg text-white transition-all duration-200 hover:border-accent hover:bg-accent hover:text-zinc-950"
-					>✕</button
-				>
+	<div id="video-player" class="hidden">
+		<div id="player-backdrop"></div>
+		<div class="video-modal-frame">
+			<div class="video-modal-inner">
+				<div id="player-container"></div>
+				<button id="close-player" aria-label="Close video">✕</button>
 			</div>
 		</div>
 	</div>
 </BaseLayout>
 
 <style>
-	.section-wrapper {
-		min-height: 95vh;
-		width: 100%;
-		overflow-x: hidden;
+	#video-player {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+	}
+	#video-player:not(.hidden) {
+		display: flex;
+	}
+	#player-backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.92);
+		backdrop-filter: blur(6px);
+	}
+	.video-modal-frame {
 		position: relative;
-	}
-
-	.section-wrapper > div {
 		width: 100%;
-		max-width: 100%;
-		overflow-x: hidden;
+		max-width: 1100px;
+	}
+	.video-modal-inner {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		border-radius: 16px;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: #000;
+		box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+	}
+	#player-container {
+		width: 100%;
+		height: 100%;
+	}
+	#close-player {
+		position: absolute;
+		top: 14px;
+		right: 14px;
+		z-index: 10;
+		width: 40px;
+		height: 40px;
+		border-radius: 999px;
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		background: rgba(0, 0, 0, 0.6);
+		color: #fff;
+		font-size: 18px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition:
+			background 0.2s ease,
+			border-color 0.2s ease,
+			color 0.2s ease;
+	}
+	#close-player:hover {
+		background: var(--color-accent, #c9a44c);
+		border-color: var(--color-accent, #c9a44c);
+		color: #0a0a0a;
 	}
 
-	/* Ensure filter/sort buttons wrap properly on mobile */
-	@media (max-width: 640px) {
-		.section-wrapper [class*="flex-wrap"] {
-			gap: 0.5rem;
+	.sort-btn:hover:not(.active),
+	.filter-btn:hover:not(.active) {
+		border-color: rgba(255, 255, 255, 0.3);
+		color: #fff;
+	}
+
+	.reveal-on-load {
+		animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+	}
+	@keyframes reveal-up {
+		from {
+			opacity: 0;
+			transform: translateY(18px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.reveal-on-load {
+			animation: none;
+			opacity: 1;
+			transform: none;
+		}
+		.video-item:hover {
+			transform: none;
 		}
 	}
 </style>
@@ -598,25 +649,20 @@ const videos = await getVideos();
 			"pagination-controls",
 		);
 
-		// Pagination state
 		let currentPage = 1;
-		let currentFilter = "all"; // Track active filter
+		let currentFilter = "all";
 		const videosPerPage = 9;
 
 		function renderPage(itemsToDisplay: HTMLElement[]) {
-			// Hide all video items first
 			videoItems.forEach((item) => item.classList.add("hidden"));
 
-			// Calculate start and end indices
 			const startIndex = (currentPage - 1) * videosPerPage;
 			const endIndex = currentPage * videosPerPage;
 
-			// Show only items in the current page range
 			itemsToDisplay.slice(startIndex, endIndex).forEach((item) => {
 				item.classList.remove("hidden");
 			});
 
-			// Update pagination controls
 			if (!paginationControls) return;
 
 			const totalPages = Math.ceil(itemsToDisplay.length / videosPerPage);
@@ -624,7 +670,6 @@ const videos = await getVideos();
 
 			if (totalPages <= 1) return;
 
-			// Create page buttons
 			for (let i = 1; i <= totalPages; i++) {
 				const button = document.createElement("button");
 				button.textContent = String(i);
@@ -667,8 +712,6 @@ const videos = await getVideos();
 			});
 
 			sorted.forEach((item) => grid.appendChild(item));
-
-			// Re-apply the current filter instead of showing all items
 			filterVideos(currentFilter);
 		}
 
@@ -760,7 +803,6 @@ const videos = await getVideos();
 				}
 			});
 
-			// Filter the videoItems array and render paginated results
 			const filteredResult = videoItems.filter(
 				(item) => !item.classList.contains("hidden"),
 			);
@@ -860,7 +902,6 @@ const videos = await getVideos();
 			.getElementById("player-backdrop")
 			?.addEventListener("click", closePlayer);
 
-		// Initial render
 		renderPage(videoItems as HTMLElement[]);
 	});
 
