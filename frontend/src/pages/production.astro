@@ -270,99 +270,99 @@ const videos = await getVideos();
 				style="animation-delay:80ms"
 			/>
 
-		<!-- Sort controls -->
-		<div
-			class="animate-reveal-up mt-8 flex w-full flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6"
-			style="animation-delay:200ms"
+	<!-- Sort controls -->
+	<div
+		class="animate-reveal-up mt-8 flex w-full flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6"
+		style="animation-delay:200ms"
+	>
+		<span
+			class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500"
+			>Sort by</span
 		>
-				<span
-					class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500"
-					>Sort by</span
-				>
-				<button
-					id="sort-latest"
-					class="sort-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer"
-				>
-					Latest
-				</button>
-				<button
-					id="sort-popular"
-					class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
-				>
-					Popular
-				</button>
-				<button
-					id="sort-oldest"
-					class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
-				>
-					Oldest
-				</button>
-			</div>
+		<button
+			id="sort-latest"
+			class="sort-btn active rounded-full border border-accent bg-accent px-3 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer sm:px-4"
+		>
+			Latest
+		</button>
+		<button
+			id="sort-popular"
+			class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4"
+		>
+			Popular
+		</button>
+		<button
+			id="sort-oldest"
+			class="sort-btn rounded-full border border-white/10 bg-zinc-900/50 px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4"
+		>
+			Oldest
+		</button>
+	</div>
 
-		<!-- Filter controls -->
-		<div
-			class="animate-reveal-up mt-8 flex w-full flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6"
-			style="animation-delay:200ms"
+	<!-- Filter controls -->
+	<div
+		class="animate-reveal-up mt-8 flex w-full flex-wrap items-center justify-center gap-2 border-b border-white/10 pb-6"
+		style="animation-delay:200ms"
+	>
+		<span
+			class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500"
+			>Show only:</span
 		>
-				<span
-					class="mr-2 text-xs uppercase tracking-[0.15em] text-zinc-500"
-					>Show only:</span
-				>
-				<button
-					id="filter-all"
-					class="filter-btn active rounded-full border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors cursor-pointer"
-				>
-					All
-				</button>
-				<button
-					id="filter-motw"
-					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
-				>
-					MOTW
-				</button>
-				<button
-					id="filter-pov"
-					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
-				>
-					POV
-				</button>
-				<button
-					id="filter-narrative"
-					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
-				>
-					Narrative
-				</button>
-				<button
-					id="filter-saywhat"
-					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
-				>
-					SAY WHAT?
-				</button>
-				<button
-					id="filter-fashion"
-					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
-				>
-					Fashion
-				</button>
-				<button
-					id="filter-anong-bago"
-					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
-				>
-					Ano'ng Bago?
-				</button>
-				<button
-					id="filter-highlights"
-					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
-				>
-					Highlights
-				</button>
-				<button
-					id="filter-others"
-					class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-4 py-1.5 text-sm font-medium text-zinc-400 transition-colors cursor-pointer"
-				>
-					Others
-				</button>
-			</div>
+		<button
+			id="filter-all"
+			class="filter-btn active rounded-full border border-accent bg-accent px-2 py-1.5 text-xs font-medium text-zinc-950 transition-colors cursor-pointer sm:px-4 sm:text-sm"
+		>
+			All
+		</button>
+		<button
+			id="filter-motw"
+			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
+		>
+			MOTW
+		</button>
+		<button
+			id="filter-pov"
+			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
+		>
+			POV
+		</button>
+		<button
+			id="filter-narrative"
+			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
+		>
+			Narrative
+		</button>
+		<button
+			id="filter-saywhat"
+			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
+		>
+			SAY WHAT?
+		</button>
+		<button
+			id="filter-fashion"
+			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
+		>
+			Fashion
+		</button>
+		<button
+			id="filter-anong-bago"
+			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
+		>
+			Ano'ng Bago?
+		</button>
+		<button
+			id="filter-highlights"
+			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
+		>
+			Highlights
+		</button>
+		<button
+			id="filter-others"
+			class="filter-btn rounded-full border border-white/10 bg-zinc-900/50 px-2 py-1.5 text-xs font-medium text-zinc-400 transition-colors cursor-pointer sm:px-4 sm:text-sm"
+		>
+			Others
+		</button>
+	</div>
 
 			<!-- Grid -->
 			{
@@ -505,6 +505,20 @@ const videos = await getVideos();
 		min-height: 95vh;
 		width: 100%;
 		overflow-x: hidden;
+		position: relative;
+	}
+
+	.section-wrapper > div {
+		width: 100%;
+		max-width: 100%;
+		overflow-x: hidden;
+	}
+
+	/* Ensure filter/sort buttons wrap properly on mobile */
+	@media (max-width: 640px) {
+		.section-wrapper [class*="flex-wrap"] {
+			gap: 0.5rem;
+		}
 	}
 </style>
 
