@@ -1,0 +1,271 @@
+---
+// Native Three.js 3D Component
+interface Props {
+  modelPath: string;
+}
+
+const { modelPath } = Astro.props;
+---
+
+<div class="relative w-full max-w-2xl mx-auto h-full min-h-[800px] overflow-hidden flex items-center justify-center">
+	<canvas id="webgl-canvas" class="w-full h-full min-h-[600px] block cursor-grab active:cursor-grabbing" data-model={modelPath}></canvas>
+</div>
+
+<script>
+	import * as THREE from 'three';
+	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+	const canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement;
+	if (canvas) {
+		const modelUrl = canvas.dataset.model || '';
+
+		// Scene, Camera, Renderer
+		const scene = new THREE.Scene();
+		const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000) as THREE.PerspectiveCamera;
+		camera.position.set(0, 0, 10); // Start further back to ensure we are outside
+
+		const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+		renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+		// Lighting (Active Theory style ambient + directional)
+		const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+		scene.add(ambientLight);
+
+		const pointLight = new THREE.DirectionalLight(0xffffff, 2);
+		pointLight.position.set(5, 5, 5);
+		scene.add(pointLight);
+
+		let model: THREE.Object3D;
+		let mixer: THREE.AnimationMixer;
+		let animations: THREE.AnimationClip[] = [];
+		let currentAction: THREE.AnimationAction;
+		let isHovering = false;
+		let targetTimeScale = 1.0; // Default animation speed (forward)
+		let currentTimeScale = 1.0; // Current animation speed (for smooth transitions)
+		let lastScrollDirection = 1; // Remember last scroll direction (1 = forward, -1 = reverse)
+		
+		// Color palette state
+		let currentColors = {
+			primary: '#C9A44C',
+			secondary: '#8B7355',
+			emissive: '#C9A44C'
+		};
+
+		// Function to update model colors
+		function updateModelColors(colors: { primary: string; secondary: string; emissive: string }) {
+			if (!model) return;
+			
+			currentColors = colors;
+			
+			// Traverse the model and update all materials
+			model.traverse((child) => {
+				if ((child as THREE.Mesh).isMesh) {
+					const mesh = child as THREE.Mesh;
+					const material = mesh.material;
+					
+					if (material) {
+						// Handle both single materials and material arrays
+						const materials = Array.isArray(material) ? material : [material];
+						
+						materials.forEach((mat, index) => {
+							// Only update MeshStandardMaterial or MeshPhongMaterial
+							if (mat instanceof THREE.MeshStandardMaterial || mat instanceof THREE.MeshPhongMaterial) {
+								// Determine color based on material index or name
+								let targetColor: string;
+								let targetEmissive: string;
+								
+								// Use different colors for different parts of the model
+								if (index === 0 || mat.name.toLowerCase().includes('primary') || mat.name.toLowerCase().includes('main')) {
+									targetColor = colors.primary;
+									targetEmissive = colors.emissive;
+								} else if (index === 1 || mat.name.toLowerCase().includes('secondary') || mat.name.toLowerCase().includes('accent')) {
+									targetColor = colors.secondary;
+									targetEmissive = colors.secondary;
+								} else {
+									// Default to primary color for any other materials
+									targetColor = colors.primary;
+									targetEmissive = colors.emissive;
+								}
+								
+								// Update material color
+								mat.color.set(targetColor);
+								
+								// Update emissive color for glow effect
+								mat.emissive.set(targetEmissive);
+								mat.emissiveIntensity = 0.3; // Subtle glow
+								
+								// Mark material as needing update
+								mat.needsUpdate = true;
+							}
+						});
+					}
+				}
+			});
+		}
+
+		// Load your 3D Model file and auto-frame it from the outside
+		const loader = new GLTFLoader();
+		loader.load(modelUrl, (gltf) => {
+			model = gltf.scene;
+
+			// 1. Compute bounding box to find the center and size of the model
+			const box = new THREE.Box3().setFromObject(model);
+			const center = box.getCenter(new THREE.Vector3());
+			const size = box.getSize(new THREE.Vector3());
+
+			// 2. Center the model at origin (0,0,0) so it doesn't spawn off-center
+			model.position.sub(center); 
+			scene.add(model);
+
+		// 3. Automatically adjust camera distance based on model size to view from outside
+		const maxDim = Math.max(size.x, size.y, size.z);
+		const fov = camera.fov * (Math.PI / 180);
+		let cameraZ = Math.abs(maxDim / (2 * Math.tan(fov / 2)));
+		
+		// Adjust multiplier for larger model while preventing clipping
+		cameraZ *= 1.2; 
+		camera.position.set(0, 0, cameraZ);
+		camera.lookAt(0, 0, 0);
+
+			// 4. Setup animations if available
+			if (gltf.animations && gltf.animations.length > 0) {
+				animations = gltf.animations;
+				mixer = new THREE.AnimationMixer(model);
+				currentAction = mixer.clipAction(animations[0]);
+				currentAction.play();
+			}
+			
+			// Apply initial colors
+			updateModelColors(currentColors);
+
+		}, undefined, (error) => {
+			console.error('An error occurred while loading the 3D model:', error);
+		});
+
+		// Mouse interactivity (Hover to play animation, drag to rotate)
+		let isDragging = false;
+		let previousMousePosition = { x: 0, y: 0 };
+
+		// Hover events (no longer control animation playback)
+		canvas.addEventListener('mouseenter', () => {
+			isHovering = true;
+		});
+
+		canvas.addEventListener('mouseleave', () => {
+			isHovering = false;
+		});
+
+		// Drag events
+		canvas.addEventListener('mousedown', (e) => {
+			isDragging = true;
+			previousMousePosition = { x: e.clientX, y: e.clientY };
+		});
+
+		window.addEventListener('mousemove', (e) => {
+			if (!isDragging || !model) return;
+			const deltaX = e.clientX - previousMousePosition.x;
+			const deltaY = e.clientY - previousMousePosition.y;
+
+			model.rotation.y += deltaX * 0.005;
+			model.rotation.x += deltaY * 0.005;
+
+			previousMousePosition = { x: e.clientX, y: e.clientY };
+		});
+
+		window.addEventListener('mouseup', () => { isDragging = false; });
+
+		// Prevent page scroll and control animation speed when hovering over canvas
+		let scrollTimeout: number;
+		let isScrolling = false;
+		const resetSpeed = () => {
+			// Return to normal speed in the last scroll direction
+			targetTimeScale = lastScrollDirection * 1.0;
+			isScrolling = false;
+		};
+
+		canvas.addEventListener('wheel', (e) => {
+			if (!isHovering) return;
+			
+			// Prevent the page from scrolling
+			e.preventDefault();
+			
+			// Only adjust animation speed when hovering and scrolling
+			if (!model || !mixer || !currentAction) return;
+			
+			// Detect scroll direction from wheel delta
+			const scrollDelta = e.deltaY;
+			
+			// Only trigger on actual scroll movement
+			if (Math.abs(scrollDelta) > 0.5) {
+				isScrolling = true;
+				
+				if (scrollDelta > 0) {
+					// Scrolling down - speed up animation forward (3x speed)
+					targetTimeScale = 3.0;
+					lastScrollDirection = 1; // Remember forward direction
+				} else if (scrollDelta < 0) {
+					// Scrolling up - speed up animation in reverse (-3x speed)
+					targetTimeScale = -3.0;
+					lastScrollDirection = -1; // Remember reverse direction
+				}
+			}
+			
+			// Clear previous timeout and set new one
+			window.clearTimeout(scrollTimeout);
+			
+			// Reset speed after scrolling stops (500ms delay to handle spam scrolling)
+			scrollTimeout = window.setTimeout(resetSpeed, 500);
+		}, { passive: false });
+
+		// Render Loop
+		const clock = new THREE.Clock();
+		function animate() {
+			requestAnimationFrame(animate);
+			const delta = clock.getDelta();
+			
+		// Smoothly interpolate timeScale for smooth speed transitions
+		if (currentAction) {
+			// If scrolling, instantly set to target speed (no lerp for responsive feel)
+			if (isScrolling) {
+				currentTimeScale = targetTimeScale;
+			} else {
+				// If not scrolling, smoothly lerp back to default speed
+				const lerpFactor = 0.15; // Adjust for faster/slower transitions
+				currentTimeScale += (targetTimeScale - currentTimeScale) * lerpFactor;
+			}
+			
+			// Apply smoothed timeScale
+			currentAction.timeScale = currentTimeScale;
+			
+			// Ensure animation is playing
+			currentAction.paused = false;
+		}
+			
+			// Update animation mixer
+			if (mixer) {
+				mixer.update(delta);
+			}
+			
+			renderer.render(scene, camera);
+		}
+		animate();
+
+		// Listen for theme changes from ColorPaletteWidget
+		window.addEventListener('themeChange', ((event: CustomEvent) => {
+			const { themeName, colors } = event.detail;
+			console.log(`Theme changed to: ${themeName}`, colors);
+			updateModelColors(colors);
+		}) as EventListener);
+
+		// Resize handler
+		window.addEventListener('resize', () => {
+			if (!canvas.parentElement) return;
+			const width = canvas.parentElement.clientWidth;
+			const height = canvas.parentElement.clientHeight;
+			camera.aspect = width / height;
+			camera.updateProjectionMatrix();
+			renderer.setSize(width, height);
+		});
+	}
+</script>

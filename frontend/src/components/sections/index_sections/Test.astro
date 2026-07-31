@@ -1,0 +1,19 @@
+---
+// Test section component
+import ThreeScene from '../../ui/ThreeScene.astro';
+
+interface Props {
+	title?: string;
+}
+
+const { title = 'TEST SECTION' } = Astro.props;
+---
+
+<section class="py-40 px-4 w-full h-full overflow-hidden bg-background border-t border-white">
+
+
+		<!-- Native Three.js 3D Model Container -->
+		<ThreeScene modelPath="/models/opera-one-spiral-cubes.glb" />
+
+
+</section>

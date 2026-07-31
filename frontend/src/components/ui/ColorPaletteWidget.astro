@@ -82,86 +82,107 @@ const {} = Astro.props;
     let currentTop = 80;
     let currentTheme = 'Default';
 
-    // Theme definitions
-    const themes = {
-      'Default': {
-        '--color-background': '#0A0A0A',
-        '--color-background-elevated': '#0F0F0F',
-        '--color-background-overlay': '#0D0D0D',
-        '--color-background-card': '#1A1A1A',
-        '--color-foreground': '#F5F5F5',
-        '--color-accent': '#C9A44C',
-        '--color-accent-hover': '#ffb301',
-        '--color-muted': 'rgba(255, 255, 255, 0.1)',
-        '--color-muted-hover': 'rgba(255, 255, 255, 0.45)'
-      },
-      'Blush Noir': {
-        '--color-background': '#0F0E0E',
-        '--color-background-elevated': '#171515',
-        '--color-background-overlay': '#121111',
-        '--color-background-card': '#211E1E',
-        '--color-foreground': '#F2EFEF',
-        '--color-accent': '#E1A7A7',
-        '--color-accent-hover': '#F2C4C4',
-        '--color-muted': 'rgba(225, 167, 167, 0.08)',
-        '--color-muted-hover': 'rgba(225, 167, 167, 0.25)'
-      },
-      'Deep Forest': {
-        '--color-background': '#080D08',
-        '--color-background-elevated': '#0D140D',
-        '--color-background-overlay': '#0A120A',
-        '--color-background-card': '#162116',
-        '--color-foreground': '#E8F0E8',
-        '--color-accent': '#4CAF50',
-        '--color-accent-hover': '#66BB6A',
-        '--color-muted': 'rgba(76, 175, 80, 0.15)',
-        '--color-muted-hover': 'rgba(76, 175, 80, 0.45)'
-      },
-      'Sunset Ember': {
-        '--color-background': '#0D0C0B',
-        '--color-background-elevated': '#141211',
-        '--color-background-overlay': '#110F0E',
-        '--color-background-card': '#1C1917',
-        '--color-foreground': '#E7E5E4',
-        '--color-accent': '#D97706',
-        '--color-accent-hover': '#F59E0B',
-        '--color-muted': 'rgba(217, 119, 6, 0.1)',
-        '--color-muted-hover': 'rgba(217, 119, 6, 0.3)'
-      },
-      'Lavender Slate': {
-        '--color-background': '#0F0F14',
-        '--color-background-elevated': '#16161D',
-        '--color-background-overlay': '#121218',
-        '--color-background-card': '#1F1F28',
-        '--color-foreground': '#E0E0E6',
-        '--color-accent': '#8B5CF6',
-        '--color-accent-hover': '#A78BFA',
-        '--color-muted': 'rgba(139, 92, 246, 0.1)',
-        '--color-muted-hover': 'rgba(139, 92, 246, 0.3)'
-      },
-      'Cyber Neon': {
-        '--color-background': '#090D0F',
-        '--color-background-elevated': '#0E1518',
-        '--color-background-overlay': '#0B1113',
-        '--color-background-card': '#152024',
-        '--color-foreground': '#ECFEFF',
-        '--color-accent': '#06B6D4',
-        '--color-accent-hover': '#22D3EE',
-        '--color-muted': 'rgba(6, 182, 212, 0.12)',
-        '--color-muted-hover': 'rgba(6, 182, 212, 0.35)'
-      },
-      'Crimson Eclipse': {
-        '--color-background': '#0D0A0A',
-        '--color-background-elevated': '#141010',
-        '--color-background-overlay': '#110D0D',
-        '--color-background-card': '#1C1515',
-        '--color-foreground': '#F9F6F6',
-        '--color-accent': '#E11D48',
-        '--color-accent-hover': '#F43F5E',
-        '--color-muted': 'rgba(225, 29, 72, 0.12)',
-        '--color-muted-hover': 'rgba(225, 29, 72, 0.35)'
-      }
-    };
+     // Theme definitions with 3D model colors
+     const themes = {
+       'Default': {
+         '--color-background': '#0A0A0A',
+         '--color-background-elevated': '#0F0F0F',
+         '--color-background-overlay': '#0D0D0D',
+         '--color-background-card': '#1A1A1A',
+         '--color-foreground': '#F5F5F5',
+         '--color-accent': '#C9A44C',
+         '--color-accent-hover': '#ffb301',
+         '--color-muted': 'rgba(255, 255, 255, 0.1)',
+         '--color-muted-hover': 'rgba(255, 255, 255, 0.45)',
+         '--model-primary': '#C9A44C',
+         '--model-secondary': '#8B7355',
+         '--model-emissive': '#C9A44C'
+       },
+       'Blush Noir': {
+         '--color-background': '#0F0E0E',
+         '--color-background-elevated': '#171515',
+         '--color-background-overlay': '#121111',
+         '--color-background-card': '#211E1E',
+         '--color-foreground': '#F2EFEF',
+         '--color-accent': '#E1A7A7',
+         '--color-accent-hover': '#F2C4C4',
+         '--color-muted': 'rgba(225, 167, 167, 0.08)',
+         '--color-muted-hover': 'rgba(225, 167, 167, 0.25)',
+         '--model-primary': '#E1A7A7',
+         '--model-secondary': '#B89090',
+         '--model-emissive': '#E1A7A7'
+       },
+       'Deep Forest': {
+         '--color-background': '#080D08',
+         '--color-background-elevated': '#0D140D',
+         '--color-background-overlay': '#0A120A',
+         '--color-background-card': '#162116',
+         '--color-foreground': '#E8F0E8',
+         '--color-accent': '#4CAF50',
+         '--color-accent-hover': '#66BB6A',
+         '--color-muted': 'rgba(76, 175, 80, 0.15)',
+         '--color-muted-hover': 'rgba(76, 175, 80, 0.45)',
+         '--model-primary': '#4CAF50',
+         '--model-secondary': '#2E7D32',
+         '--model-emissive': '#4CAF50'
+       },
+       'Sunset Ember': {
+         '--color-background': '#0D0C0B',
+         '--color-background-elevated': '#141211',
+         '--color-background-overlay': '#110F0E',
+         '--color-background-card': '#1C1917',
+         '--color-foreground': '#E7E5E4',
+         '--color-accent': '#D97706',
+         '--color-accent-hover': '#F59E0B',
+         '--color-muted': 'rgba(217, 119, 6, 0.1)',
+         '--color-muted-hover': 'rgba(217, 119, 6, 0.3)',
+         '--model-primary': '#D97706',
+         '--model-secondary': '#B45309',
+         '--model-emissive': '#F59E0B'
+       },
+       'Lavender Slate': {
+         '--color-background': '#0F0F14',
+         '--color-background-elevated': '#16161D',
+         '--color-background-overlay': '#121218',
+         '--color-background-card': '#1F1F28',
+         '--color-foreground': '#E0E0E6',
+         '--color-accent': '#8B5CF6',
+         '--color-accent-hover': '#A78BFA',
+         '--color-muted': 'rgba(139, 92, 246, 0.1)',
+         '--color-muted-hover': 'rgba(139, 92, 246, 0.3)',
+         '--model-primary': '#8B5CF6',
+         '--model-secondary': '#6D28D9',
+         '--model-emissive': '#A78BFA'
+       },
+       'Cyber Neon': {
+         '--color-background': '#090D0F',
+         '--color-background-elevated': '#0E1518',
+         '--color-background-overlay': '#0B1113',
+         '--color-background-card': '#152024',
+         '--color-foreground': '#ECFEFF',
+         '--color-accent': '#06B6D4',
+         '--color-accent-hover': '#22D3EE',
+         '--color-muted': 'rgba(6, 182, 212, 0.12)',
+         '--color-muted-hover': 'rgba(6, 182, 212, 0.35)',
+         '--model-primary': '#06B6D4',
+         '--model-secondary': '#0891B2',
+         '--model-emissive': '#22D3EE'
+       },
+       'Crimson Eclipse': {
+         '--color-background': '#0D0A0A',
+         '--color-background-elevated': '#141010',
+         '--color-background-overlay': '#110D0D',
+         '--color-background-card': '#1C1515',
+         '--color-foreground': '#F9F6F6',
+         '--color-accent': '#E11D48',
+         '--color-accent-hover': '#F43F5E',
+         '--color-muted': 'rgba(225, 29, 72, 0.12)',
+         '--color-muted-hover': 'rgba(225, 29, 72, 0.35)',
+         '--model-primary': '#E11D48',
+         '--model-secondary': '#BE123C',
+         '--model-emissive': '#F43F5E'
+       }
+     };
 
     // Load saved position
     const savedX = localStorage.getItem('colorPaletteX');
@@ -196,29 +217,42 @@ const {} = Astro.props;
       updateThemeHighlight();
     }
 
-    // Apply theme to CSS variables and body class
-    function applyTheme(themeName: string) {
-      const theme = themes[themeName as keyof typeof themes];
-      if (!theme) return;
+     // Apply theme to CSS variables and body class
+     function applyTheme(themeName: string) {
+       const theme = themes[themeName as keyof typeof themes];
+       if (!theme) return;
 
-      const root = document.documentElement;
-      const body = document.body;
-      
-      // Remove all theme classes from body
-      Object.keys(themes).forEach(key => {
-        const className = 'theme-' + key.toLowerCase().replace(/\s+/g, '-');
-        body.classList.remove(className);
-      });
-      
-      // Add current theme class to body
-      const themeClass = 'theme-' + themeName.toLowerCase().replace(/\s+/g, '-');
-      body.classList.add(themeClass);
-      
-      // Apply CSS variables
-      Object.entries(theme).forEach(([property, value]) => {
-        root.style.setProperty(property, value);
-      });
-    }
+       const root = document.documentElement;
+       const body = document.body;
+       
+       // Remove all theme classes from body
+       Object.keys(themes).forEach(key => {
+         const className = 'theme-' + key.toLowerCase().replace(/\s+/g, '-');
+         body.classList.remove(className);
+       });
+       
+       // Add current theme class to body
+       const themeClass = 'theme-' + themeName.toLowerCase().replace(/\s+/g, '-');
+       body.classList.add(themeClass);
+       
+       // Apply CSS variables
+       Object.entries(theme).forEach(([property, value]) => {
+         root.style.setProperty(property, value);
+       });
+
+       // Dispatch custom event for 3D model color update
+       const modelColors = {
+         primary: theme['--model-primary'],
+         secondary: theme['--model-secondary'],
+         emissive: theme['--model-emissive']
+       };
+       window.dispatchEvent(new CustomEvent('themeChange', { 
+         detail: { 
+           themeName, 
+           colors: modelColors 
+         } 
+       }));
+     }
 
     // Update theme button highlighting
     function updateThemeHighlight() {
