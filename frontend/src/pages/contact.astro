@@ -188,7 +188,7 @@ import '../styles/global.css';
 
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-subtle mb-1">Your Message</label>
-              <textarea name="message" required rows="3" placeholder="Tell us about your target ROI, current digital presence, timeline, or campaign objectives..." class="w-full bg-transparent border-b border-border/80 rounded-none py-2 text-foreground placeholder:text-text-muted/40 focus:border-accent focus:outline-none transition resize-none"></textarea>
+              <textarea name="message" required rows="3" placeholder="Tell us about your goals, timeline, or project brief..." class="w-full bg-transparent border-b border-border/80 rounded-none py-2 text-foreground placeholder:text-text-muted/40 focus:border-accent focus:outline-none transition resize-none"></textarea>
             </div>
 
             <!-- FORM FOOTER & SUBMIT BUTTON -->
@@ -235,18 +235,24 @@ import '../styles/global.css';
             </address>
           </div>
 
-          <!-- VIEW OUR LOCATION - Opens in a new tab -->
-          <div class="flex items-center my-3 py-2">
-            <a 
-              href="https://maps.app.goo.gl/KyDMwmYMADs5c5LC7" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              class="inline-flex items-center gap-2 text-sm md:text-base font-semibold uppercase tracking-wider text-foreground hover:text-accent transition"
-            >
-              <span>View Our Location</span>
-              <span>↗</span>
-            </a>
-          </div>
+         <!-- VIEW OUR LOCATION - Corner Bracket Accent -->
+<div class="flex items-center my-4 py-3">
+  <a 
+    href="https://maps.app.goo.gl/KyDMwmYMADs5c5LC7" 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    class="group relative inline-flex items-center gap-2 px-4 py-2 text-sm md:text-base font-semibold uppercase tracking-wider text-foreground hover:text-accent transition-colors duration-300"
+  >
+    <!-- Top-Left Corner Bracket -->
+    <span class="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-accent/40 group-hover:border-accent transition-all duration-300"></span>
+    
+    <span>View Our Location</span>
+    <span class="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200">↗</span>
+
+    <!-- Bottom-Right Corner Bracket -->
+    <span class="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-accent/40 group-hover:border-accent transition-all duration-300"></span>
+  </a>
+</div>
 
           <!-- DIRECT LINES -->
           <div class="space-y-3 flex flex-col justify-center pt-2">
