@@ -302,7 +302,10 @@ const getCategoryImages = (cat: Category): string[] => {
 
     <!-- Hero -->
     <section class="hero reveal">
-      <p class="eyebrow">Services</p>
+      <p class="eyebrow">
+        <span class="pulse-dot"></span>
+        Services
+      </p>
       <h1 class="hero-title">
         Comprehensive digital marketing solutions tailored to elevate your brand presence and drive results
       </h1>
@@ -362,7 +365,10 @@ const getCategoryImages = (cat: Category): string[] => {
     <!-- Closing CTA Section -->
     <section class="cta reveal">
       <div class="cta-container">
-        <span class="eyebrow">Ready to Collaborate?</span>
+        <span class="eyebrow">
+          <span class="pulse-dot"></span>
+          Ready to Collaborate?
+        </span>
         <h2 class="cta-title">Ready to take your digital strategy to the next level?</h2>
         
         <p class="cta-description">
@@ -407,6 +413,25 @@ const getCategoryImages = (cat: Category): string[] => {
     color: var(--text-primary);
   }
 
+  /* ---------- Pulse Dot Indicator ---------- */
+  .pulse-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent);
+    border-radius: 9999px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+
   /* ---------- Hero ---------- */
   .hero {
     max-width: 1100px;
@@ -418,6 +443,9 @@ const getCategoryImages = (cat: Category): string[] => {
     align-items: center;
   }
   .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.16em;
@@ -792,6 +820,9 @@ const getCategoryImages = (cat: Category): string[] => {
     .panel-media-track {
       animation: none;
       transform: none;
+    }
+    .pulse-dot {
+      animation: none;
     }
   }
 </style>
