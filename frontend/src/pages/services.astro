@@ -359,11 +359,22 @@ const getCategoryImages = (cat: Category): string[] => {
       );
     })}
 
-    <!-- Closing CTA -->
+    <!-- Closing CTA Section -->
     <section class="cta reveal">
-      <h2 class="cta-title">Let&rsquo;s build your next campaign</h2>
-      <div class="cta-actions">
-        <a href="tel:+6397831987" class="cta-primary">Book a call</a>
+      <div class="cta-container">
+        <span class="eyebrow">Ready to Collaborate?</span>
+        <h2 class="cta-title">Ready to take your digital strategy to the next level?</h2>
+        
+        <p class="cta-description">
+          Whether you need targeted digital PR, high-impact video production, or a full-scale growth campaign, our team is prepared to craft a tailored execution strategy for your brand. Submit your brief today, and our strategy desk will review your objectives promptly.
+        </p>
+
+        <div class="cta-actions">
+          <a href="/contact#inquiry-pills" class="cta-brief-btn">
+            <span>Submit a brief</span>
+            <span class="btn-arrow">→</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
@@ -690,46 +701,72 @@ const getCategoryImages = (cat: Category): string[] => {
     padding: 96px 24px 120px;
     border-top: 1px solid var(--border);
     text-align: center;
+    display: flex;
+    justify-content: center;
   }
+
+  .cta-container {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .cta-title {
     font-size: clamp(1.8rem, 3.6vw, 2.8rem);
     font-weight: 600;
-    margin-bottom: 32px;
+    line-height: 1.25;
+    margin-bottom: 16px;
     color: var(--text-primary);
   }
+
+  .cta-description {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin-bottom: 36px;
+  }
+
   .cta-actions {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 20px;
   }
-  .cta-primary {
+
+  /* Transparent Ghost Button -> Fills on Hover/Focus */
+  .cta-brief-btn {
     display: inline-flex;
     align-items: center;
-    padding: 12px 28px;
+    gap: 8px;
+    padding: 14px 32px;
+    border: 2px solid var(--accent);
     border-radius: 999px;
+    background: transparent;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cta-brief-btn .btn-arrow {
+    font-size: 15px;
+    transition: transform 0.3s ease;
+  }
+
+  .cta-brief-btn:hover,
+  .cta-brief-btn:focus-visible {
     background: var(--accent);
     color: var(--background);
-    font-weight: 600;
-    font-size: 15px;
-    text-decoration: none;
-    transition: filter 0.2s ease, transform 0.2s ease;
+    outline: none;
+    transform: translateY(-2px);
   }
-  .cta-primary:hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
-  }
-  .cta-secondary {
-    color: var(--text-muted);
-    font-size: 15px;
-    text-decoration: none;
-    border-bottom: 1px solid var(--border);
-    transition: color 0.2s ease, border-color 0.2s ease;
-  }
-  .cta-secondary:hover {
-    color: var(--text-primary);
-    border-color: var(--accent);
+
+  .cta-brief-btn:hover .btn-arrow,
+  .cta-brief-btn:focus-visible .btn-arrow {
+    transform: translateX(4px);
   }
 
   /* ---------- Scroll reveal ---------- */
