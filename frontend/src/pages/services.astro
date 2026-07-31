@@ -13,9 +13,7 @@ const skillsEntry = await getEntry('docs', 'skills');
 
 // If the CMS supplies a theme entry, honor it exactly as before. Otherwise,
 // fall back to the site's design tokens from global.css (via var(--...))
-// instead of duplicating hardcoded hex values here. This keeps the page in
-// sync with the global palette by default while still allowing a CMS
-// override, same pattern as ChatWidget.astro / Navbar.astro.
+// instead of duplicating hardcoded hex values here.
 const themeData = skillsEntry?.data?.theme ?? null;
 
 const theme = {
@@ -288,13 +286,6 @@ const categories: Category[] = [
     ],
   },
 ];
-
-// Every image belonging to a category (hero shot + each sub-service's
-// photo, de-duplicated) — used to fill the panel's sliding image frame.
-const getCategoryImages = (cat: Category): string[] => {
-  const all = [cat.heroImage, ...cat.services.map((s) => s.image)];
-  return Array.from(new Set(all));
-};
 ---
 
 <BaseLayout title="Avietho - Our Services">
@@ -321,46 +312,34 @@ const getCategoryImages = (cat: Category): string[] => {
     </section>
 
     <!-- Category panels -->
-    {categories.map((cat, i) => {
-      const images = getCategoryImages(cat);
-      // Doubled so the track can loop seamlessly (translate by -50%, then
-      // reset with no visible seam).
-      const loopImages = [...images, ...images];
-      const slideDuration = `${images.length * 6}s`;
+    {categories.map((cat, i) => (
+      <section id={cat.slug} class={`panel reveal ${i % 2 === 1 ? 'panel-reverse' : ''}`}>
+        <a
+          href={`/projects?category=${encodeURIComponent(cat.title)}#gallery`}
+          class="panel-media panel-media-link"
+          aria-label={`View ${cat.title} projects in our portfolio`}
+        >
+          <img src={cat.heroImage} alt={cat.title} loading="lazy" />
+          <span class="panel-media-cta">View {cat.title} Projects →</span>
+        </a>
+        
+        <div class="panel-body">
+          <span class="panel-number">{cat.number}</span>
+          <h2 class="panel-title">{cat.title}</h2>
+          <p class="panel-intro">{cat.intro}</p>
 
-      return (
-        <section id={cat.slug} class={`panel reveal ${i % 2 === 1 ? 'panel-reverse' : ''}`}>
-          <a
-            href={`/projects?category=${encodeURIComponent(cat.title)}#gallery`}
-            class="panel-media panel-media-link"
-            aria-label={`View ${cat.title} projects in our portfolio`}
-          >
-            <div class="panel-media-track" style={`--slide-duration:${slideDuration};`}>
-              {loopImages.map((src, idx) => (
-                <img src={src} alt="" loading="lazy" aria-hidden={idx >= images.length ? 'true' : 'false'} />
-              ))}
-            </div>
-            <span class="panel-media-cta">View {cat.title} Projects →</span>
-          </a>
-          <div class="panel-scrim"></div>
-          <div class="panel-body">
-            <span class="panel-number">{cat.number}</span>
-            <h2 class="panel-title">{cat.title}</h2>
-            <p class="panel-intro">{cat.intro}</p>
-
-            <div class="service-grid">
-              {cat.services.map((s) => (
-                <div class="service-item">
-                  <h3 class="service-title">{s.title}</h3>
-                  <p class="service-subtitle">{s.subtitle}</p>
-                  <p class="service-desc">{s.description}</p>
-                </div>
-              ))}
-            </div>
+          <div class="service-grid">
+            {cat.services.map((s) => (
+              <div class="service-item">
+                <h3 class="service-title">{s.title}</h3>
+                <p class="service-subtitle">{s.subtitle}</p>
+                <p class="service-desc">{s.description}</p>
+              </div>
+            ))}
           </div>
-        </section>
-      );
-    })}
+        </div>
+      </section>
+    ))}
 
     <!-- Closing CTA Section -->
     <section class="cta reveal">
@@ -387,9 +366,7 @@ const getCategoryImages = (cat: Category): string[] => {
 </BaseLayout>
 
 <script>
-  // Scroll-reveal: panels fade/rise into place as they enter the viewport,
-  // mirroring the quiet, orchestrated motion of bloom3d.studio rather than
-  // scattering effects everywhere.
+  // Scroll-reveal: panels fade/rise into place as they enter the viewport
   const items = document.querySelectorAll<HTMLElement>('.reveal');
 
   const io = new IntersectionObserver(
@@ -424,12 +401,8 @@ const getCategoryImages = (cat: Category): string[] => {
   }
 
   @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.35;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
   }
 
   /* ---------- Hero ---------- */
@@ -507,62 +480,40 @@ const getCategoryImages = (cat: Category): string[] => {
     scroll-margin-top: 90px;
   }
 
-  /* Mobile only: the photo becomes the panel's full-bleed background so
-     text stays readable, instead of stacking above it as its own block.
-     Desktop layout/motion below is untouched. */
-  .panel-scrim {
-    display: none;
-  }
+  /* Mobile Layout (< 900px): Forces static layout and stops sticky scrolling */
   @media (max-width: 899px) {
     .panel {
-      overflow: hidden;
-      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 40px 16px;
+      position: relative;
     }
+
     .panel-media {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      border-radius: 0;
-      border: none;
-      opacity: 0;
-      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .panel.is-visible .panel-media {
-      opacity: 1;
-    }
-    .panel-media img {
-      max-height: none;
-      height: 100%;
-    }
-    .panel-media-track img {
-      height: 100%;
-    }
-    .panel-media-cta {
-      display: none;
-    }
-    .panel-scrim {
-      display: block;
-      position: absolute;
-      inset: 0;
+      position: relative !important;
+      top: auto !important;
+      width: 100%;
+      height: 240px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 8px;
       z-index: 1;
-      background: linear-gradient(
-        180deg,
-        rgba(10, 10, 10, 0.55) 0%,
-        rgba(10, 10, 10, 0.85) 45%,
-        var(--background) 90%
-      );
-      opacity: 0;
-      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .panel.is-visible .panel-scrim {
-      opacity: 1;
+
+    .panel-media img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
     }
+
     .panel-body {
       position: relative;
       z-index: 2;
     }
   }
 
+  /* Desktop Layout (>= 900px) */
   @media (min-width: 900px) {
     .panel {
       grid-template-columns: 0.85fr 1.15fr;
@@ -578,16 +529,18 @@ const getCategoryImages = (cat: Category): string[] => {
     .panel-reverse .panel-body {
       order: 1;
     }
+
+    .panel-media {
+      position: sticky;
+      top: 96px;
+      height: 420px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
   }
 
-  .panel-media {
-    position: sticky;
-    top: 96px;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    background: var(--surface);
-  }
   .panel-media-link {
     display: block;
     cursor: pointer;
@@ -597,7 +550,6 @@ const getCategoryImages = (cat: Category): string[] => {
   .panel-media img {
     width: 100%;
     height: 100%;
-    max-height: 420px;
     object-fit: cover;
     display: block;
     filter: saturate(0.92);
@@ -605,33 +557,6 @@ const getCategoryImages = (cat: Category): string[] => {
   }
   .panel-media:hover img {
     transform: scale(1.03);
-  }
-
-  /* Infinite sliding track: the frame (.panel-media) clips via
-     overflow:hidden above, this track scrolls its doubled image set
-     leftward forever, pausing on hover/focus so it reads as clickable. */
-  .panel-media-track {
-    display: flex;
-    height: 100%;
-    width: max-content;
-    animation: panel-media-slide var(--slide-duration, 20s) linear infinite;
-  }
-  .panel-media-track img {
-    width: auto;
-    height: 420px;
-    max-height: none;
-    flex: 0 0 auto;
-    object-fit: cover;
-    filter: saturate(0.92);
-    transition: none;
-  }
-  .panel-media:hover .panel-media-track,
-  .panel-media:focus-visible .panel-media-track {
-    animation-play-state: paused;
-  }
-  @keyframes panel-media-slide {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
   }
 
   .panel-media-cta {
@@ -761,7 +686,6 @@ const getCategoryImages = (cat: Category): string[] => {
     align-items: center;
   }
 
-  /* Transparent Ghost Button -> Fills on Hover/Focus */
   .cta-brief-btn {
     display: inline-flex;
     align-items: center;
@@ -816,10 +740,6 @@ const getCategoryImages = (cat: Category): string[] => {
     }
     .panel-media img {
       transition: none;
-    }
-    .panel-media-track {
-      animation: none;
-      transform: none;
     }
     .pulse-dot {
       animation: none;
